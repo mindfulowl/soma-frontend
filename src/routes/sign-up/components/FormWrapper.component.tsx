@@ -11,14 +11,11 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import UserFormFields from "./UserFormFields.component";
-import PractitonerForm from "./PractitonerForm.component";
 
 type FormWrapperProps = {
   handleFormFieldChange: (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => void;
-  userType: string;
-  setUserType: (resetUserType: null) => void;
 };
 
 const StyledBox = styled(Box)`
@@ -37,14 +34,10 @@ const StyledLink = styled(Link)`
 `;
 
 const FormWrapper = (props: FormWrapperProps) => {
-  const { handleFormFieldChange, userType, setUserType } = props;
+  const { handleFormFieldChange } = props;
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    console.log(event);
   };
 
   return (
@@ -57,22 +50,9 @@ const FormWrapper = (props: FormWrapperProps) => {
           Sign Up
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          {userType === "user" ? (
-            <UserFormFields handleFormFieldChange={handleFormFieldChange} />
-          ) : (
-            <PractitonerForm />
-          )}
+          <UserFormFields handleFormFieldChange={handleFormFieldChange} />
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 2 }}>
             Sign Up
-          </Button>
-          <Button
-            type="button"
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 2, mb: 2 }}
-            onClick={() => setUserType(null)}
-          >
-            Back
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
