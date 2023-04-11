@@ -31,6 +31,7 @@ const StyledAvatarWrapper = styled(Avatar)`
 
 const StyledLink = styled(Link)`
   color: var(--color-black);
+  margin-top: var(--spacing-md);
 `;
 
 const FormWrapper = (props: FormWrapperProps) => {
