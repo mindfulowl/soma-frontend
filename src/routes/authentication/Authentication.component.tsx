@@ -1,16 +1,13 @@
 import { useState } from "react";
-import styled from "styled-components";
 import FormWrapper from "./components/FormWrapper.component";
+import { Container } from "../../shared/ components/Container";
+import { useLocation } from "react-router-dom";
 
-const Container = styled.div`
-  padding: var(--spacing-md);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const SignUp = () => {
+const Authentication = () => {
   const [formFields, setFormFields] = useState({});
+  const location = useLocation();
+
+  let authType = location.pathname.includes("sign-in") ? "sign-in" : "sign-up";
 
   const handleFormFieldChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -21,9 +18,12 @@ const SignUp = () => {
 
   return (
     <Container>
-      <FormWrapper handleFormFieldChange={handleFormFieldChange} />
+      <FormWrapper
+        handleFormFieldChange={handleFormFieldChange}
+        authType={authType}
+      />
     </Container>
   );
 };
 
-export default SignUp;
+export default Authentication;
