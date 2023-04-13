@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormWrapper from "./components/FormWrapper.component";
 import { Container } from "../../shared/ components/Container";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 const Authentication = () => {
   const [formFields, setFormFields] = useState({});
@@ -15,6 +16,17 @@ const Authentication = () => {
     const { name, value } = e.target;
     setFormFields({ ...formFields, [name]: value });
   };
+
+  const getTest = async () => {
+    const res = await axios.get(
+      "http://ec2-13-40-183-104.eu-west-2.compute.amazonaws.com/products"
+    );
+    console.log("r", res);
+  };
+
+  useEffect(() => {
+    getTest();
+  }, []);
 
   return (
     <Container>

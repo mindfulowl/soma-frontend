@@ -10,7 +10,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import SignUpFormFields from "./AuthFormFields.component";
+import SignUpFormFields from "./AuthFormFields";
 import Verification from "./Verification.component";
 
 const SIGN_UP_FORM_FIELDS = [
