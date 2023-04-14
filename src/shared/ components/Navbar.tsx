@@ -46,7 +46,7 @@ const Navbar = () => {
         <NavLinks>
           <NavLink to="/events">Events</NavLink>
           <NavLink to="/news">News</NavLink>
-          <NavLink to="/sign-in">Sign In</NavLink>
+          <NavLink to="/sign-up">Sign Up</NavLink>
         </NavLinks>
       </NavigationContainer>
       <Outlet />
