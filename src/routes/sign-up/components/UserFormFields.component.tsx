@@ -1,22 +1,21 @@
 import { Grid, TextField } from "@mui/material";
 
-type FormField = {
-  name: string;
-  label: string;
-  type: string;
-  sm?: number;
-  xs?: number;
-};
+const FORM_FIELDS = [
+  { name: "firstName", label: "First Name", type: "text", sm: 6, xs: 12 },
+  { name: "lastName", label: "Last Name", type: "text", sm: 6, xs: 12 },
+  { name: "email", label: "Email", type: "email", xs: 12 },
+  { name: "postCode", label: "Post Code", type: "text", xs: 12 },
+  { name: "password", label: "Password", type: "password", xs: 12 },
+];
 
 type UserFormFieldsProps = {
-  formFields: Array<FormField>;
   handleFormFieldChange: (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => void;
 };
 
-const AuthFormFields = (props: UserFormFieldsProps) => {
-  const { handleFormFieldChange, formFields } = props;
+const UserFormFields = (props: UserFormFieldsProps) => {
+  const { handleFormFieldChange } = props;
 
   const onChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -26,7 +25,7 @@ const AuthFormFields = (props: UserFormFieldsProps) => {
 
   return (
     <Grid container spacing={2}>
-      {formFields.map((field) => {
+      {FORM_FIELDS.map((field) => {
         return (
           <Grid item xs={field.xs} sm={field.sm} key={field.name}>
             <TextField
@@ -43,4 +42,4 @@ const AuthFormFields = (props: UserFormFieldsProps) => {
     </Grid>
   );
 };
-export default AuthFormFields;
+export default UserFormFields;
