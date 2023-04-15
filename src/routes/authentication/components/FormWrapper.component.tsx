@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Box,
   Avatar,
@@ -11,26 +10,16 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import SignUpFormFields from "./AuthFormFields";
-import Verification from "./Verification.component";
-
-const SIGN_UP_FORM_FIELDS = [
-  { name: "firstName", label: "First Name", type: "text", sm: 6, xs: 12 },
-  { name: "lastName", label: "Last Name", type: "text", sm: 6, xs: 12 },
-  { name: "email", label: "Email", type: "email", xs: 12 },
-  { name: "postCode", label: "Post Code", type: "text", xs: 12 },
-  { name: "password", label: "Password", type: "password", xs: 12 },
-];
-
-const SIGN_IN_FORM_FIELDS = [
-  { name: "email", label: "Email", type: "email", xs: 12 },
-  { name: "password", label: "Password", type: "password", xs: 12 },
-];
+import { AuthEnum, FormField } from "../Authentication.component";
 
 type FormWrapperProps = {
   handleFormFieldChange: (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => void;
-  authType: string;
+  formFields: Array<FormField>;
+  authType: AuthEnum;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  title: string;
 };
 
 const StyledBox = styled(Box)`
@@ -54,21 +43,8 @@ const StyledButton = styled(Button)`
 `;
 
 const FormWrapper = (props: FormWrapperProps) => {
-  const { handleFormFieldChange, authType } = props;
-  const [showVerification, setShowVerification] = useState(false);
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (authType === "sign-up") {
-      setShowVerification(true);
-    }
-  };
-
-  useEffect(() => {
-    if (authType === "sign-in") {
-      setShowVerification(false);
-    }
-  }, [authType]);
+  const { handleFormFieldChange, authType, formFields, handleSubmit, title } =
+    props;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -77,42 +53,35 @@ const FormWrapper = (props: FormWrapperProps) => {
           <LockOutlinedIcon />
         </StyledAvatarWrapper>
         <Typography component="h1" variant="h5">
-          {authType === "sign-up" ? "Sign Up" : "Sign In"}
+          {authType === AuthEnum.SIGN_UP ? "Sign Up" : "Sign In"}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          {!showVerification && (
-            <>
-              <SignUpFormFields
-                handleFormFieldChange={handleFormFieldChange}
-                formFields={
-                  authType === "sign-up"
-                    ? SIGN_UP_FORM_FIELDS
-                    : SIGN_IN_FORM_FIELDS
-                }
-              />
-              <StyledButton
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 2 }}
-              >
-                {authType === "sign-up" ? "Sign Up" : "Sign In"}
-              </StyledButton>
+          <SignUpFormFields
+            handleFormFieldChange={handleFormFieldChange}
+            formFields={formFields}
+          />
+          <StyledButton
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 2 }}
+          >
+            {title}
+          </StyledButton>
 
-              <Grid container justifyContent="flex-end">
-                <Grid item>
-                  <StyledLink
-                    to={authType === "sign-up" ? "/sign-in" : "/sign-up"}
-                  >
-                    {authType === "sign-up"
-                      ? "Already have an account? Sign In"
-                      : "Don't have an account yet? Sign Up"}
-                  </StyledLink>
-                </Grid>
-              </Grid>
-            </>
-          )}
-          {showVerification && <Verification />}
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              {authType === AuthEnum.SIGN_UP ? (
+                <StyledLink to="/sign-in">
+                  Already have an account? Sign In
+                </StyledLink>
+              ) : (
+                <StyledLink to="/sign-up">
+                  Don't have an account yet? Sign Up
+                </StyledLink>
+              )}
+            </Grid>
+          </Grid>
         </Box>
       </StyledBox>
     </Container>

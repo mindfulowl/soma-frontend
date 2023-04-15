@@ -1,12 +1,5 @@
 import { Grid, TextField } from "@mui/material";
-
-type FormField = {
-  name: string;
-  label: string;
-  type: string;
-  sm?: number;
-  xs?: number;
-};
+import { FormField } from "../Authentication.component";
 
 type UserFormFieldsProps = {
   formFields: Array<FormField>;

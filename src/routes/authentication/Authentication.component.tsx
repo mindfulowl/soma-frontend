@@ -1,14 +1,42 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import FormWrapper from "./components/FormWrapper.component";
 import { Container } from "../../shared/ components/Container";
-import { useLocation } from "react-router-dom";
-import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
+
+export enum AuthEnum {
+  SIGN_IN = "sign-in",
+  SIGN_UP = "sign-up",
+}
+
+export type FormField = {
+  name: string;
+  label: string;
+  type: string;
+  sm?: number;
+  xs?: number;
+};
+
+const SIGN_UP_FORM_FIELDS = [
+  { name: "firstName", label: "First Name", type: "text", sm: 6, xs: 12 },
+  { name: "lastName", label: "Last Name", type: "text", sm: 6, xs: 12 },
+  { name: "email", label: "Email", type: "email", xs: 12 },
+  { name: "postCode", label: "Post Code", type: "text", xs: 12 },
+  { name: "password", label: "Password", type: "password", xs: 12 },
+];
+
+const SIGN_IN_FORM_FIELDS = [
+  { name: "email", label: "Email", type: "email", xs: 12 },
+  { name: "password", label: "Password", type: "password", xs: 12 },
+];
 
 const Authentication = () => {
   const [formFields, setFormFields] = useState({});
   const location = useLocation();
+  const navigate = useNavigate();
 
-  let authType = location.pathname.includes("sign-in") ? "sign-in" : "sign-up";
+  let authType: AuthEnum = location.pathname.includes("sign-in")
+    ? AuthEnum.SIGN_IN
+    : AuthEnum.SIGN_UP;
 
   const handleFormFieldChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -17,23 +45,35 @@ const Authentication = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const getTest = async () => {
-    const res = await axios.get(
-      "http://ec2-13-40-183-104.eu-west-2.compute.amazonaws.com/products"
-    );
-    console.log("r", res);
+  const handleSubmitSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    navigate("/verification");
   };
 
-  useEffect(() => {
-    getTest();
-  }, []);
+  const handleSubmitSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(formFields);
+  };
 
   return (
     <Container>
-      <FormWrapper
-        handleFormFieldChange={handleFormFieldChange}
-        authType={authType}
-      />
+      {authType === AuthEnum.SIGN_IN ? (
+        <FormWrapper
+          handleFormFieldChange={handleFormFieldChange}
+          formFields={SIGN_IN_FORM_FIELDS}
+          handleSubmit={(e) => handleSubmitSignIn(e)}
+          title="Sign In"
+          authType={AuthEnum.SIGN_IN}
+        />
+      ) : (
+        <FormWrapper
+          handleFormFieldChange={handleFormFieldChange}
+          formFields={SIGN_UP_FORM_FIELDS}
+          handleSubmit={(e) => handleSubmitSignUp(e)}
+          title="Sign Up"
+          authType={AuthEnum.SIGN_UP}
+        />
+      )}
     </Container>
   );
 };
