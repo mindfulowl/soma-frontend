@@ -9,7 +9,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import SignUpFormFields from "./AuthFormFields";
+import AuthFormFields from "./AuthFormFields";
 import { AuthEnum, FormField } from "../Authentication.component";
 
 type FormWrapperProps = {
@@ -56,7 +56,7 @@ const FormWrapper = (props: FormWrapperProps) => {
           {authType === AuthEnum.SIGN_UP ? "Sign Up" : "Sign In"}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          <SignUpFormFields
+          <AuthFormFields
             handleFormFieldChange={handleFormFieldChange}
             formFields={formFields}
           />

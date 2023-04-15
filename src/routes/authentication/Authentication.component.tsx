@@ -1,7 +1,7 @@
 import { useState } from "react";
 import FormWrapper from "./components/FormWrapper.component";
-import { Container } from "../../shared/ components/Container";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Container } from "../../shared/ components/Container";
 
 export enum AuthEnum {
   SIGN_IN = "sign-in",
@@ -69,7 +69,7 @@ const Authentication = () => {
         <FormWrapper
           handleFormFieldChange={handleFormFieldChange}
           formFields={SIGN_UP_FORM_FIELDS}
-          handleSubmit={(e) => handleSubmitSignUp(e)}
+          handleSubmit={handleSubmitSignUp}
           title="Sign Up"
           authType={AuthEnum.SIGN_UP}
         />
