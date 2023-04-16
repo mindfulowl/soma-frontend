@@ -111,7 +111,7 @@ const Authentication = () => {
         }
         if (data) {
           setSnackbarConfig({
-            message: "Account succesfulyy verified!",
+            message: "Account successfully verified!",
             open: true,
             type: "success",
           });
