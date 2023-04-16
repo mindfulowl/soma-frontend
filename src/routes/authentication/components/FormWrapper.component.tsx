@@ -53,7 +53,7 @@ const FormWrapper = (props: FormWrapperProps) => {
           <LockOutlinedIcon />
         </StyledAvatarWrapper>
         <Typography component="h1" variant="h5">
-          {authType === AuthEnum.SIGN_UP ? "Sign Up" : "Sign In"}
+          {title}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <AuthFormFields
