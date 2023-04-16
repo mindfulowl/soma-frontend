@@ -5,7 +5,7 @@ import MuiAlert, { AlertProps } from "@mui/material/Alert";
 export type SnackBarConfig = {
   message?: string;
   open?: boolean;
-  type?: "success" | "error" | "warning";
+  type?: "success" | "error" | "warning" | "info";
 };
 
 type CustomSnackbarProps = {

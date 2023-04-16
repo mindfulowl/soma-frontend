@@ -1,4 +1,4 @@
-export const handleSnackbarErrorMessage = (message: string): string => {
+export const handleSnackbarErrorMessage = (message: string) => {
   if (message.includes("Password not long enough")) {
     return "Your password must be 8 characters or more.";
   }
@@ -10,6 +10,12 @@ export const handleSnackbarErrorMessage = (message: string): string => {
   }
   if (message.includes("Invalid verification code provided")) {
     return "Incorrect code submitted, please try again.";
+  }
+  if (message.includes("User is not confirmed.")) {
+    return "Account has not been verified.";
+  }
+  if (message.includes("Incorrect username or password.")) {
+    return message;
   }
   return "An error occured, please try again later.";
 };

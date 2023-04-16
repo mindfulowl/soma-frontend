@@ -22,6 +22,7 @@ type FormWrapperProps = {
   title: string;
   buttonText: string;
   defaultValues?: AuthFormFieldsValues;
+  handleResendVerificationCode?: () => void;
 };
 
 const StyledBox = styled(Box)`
@@ -53,6 +54,7 @@ const FormWrapper = (props: FormWrapperProps) => {
     title,
     buttonText,
     defaultValues,
+    handleResendVerificationCode,
   } = props;
 
   return (
@@ -78,7 +80,18 @@ const FormWrapper = (props: FormWrapperProps) => {
           >
             {buttonText}
           </StyledButton>
-
+          {authType === AuthEnum.VERIFICATION && (
+            <StyledButton
+              type="button"
+              fullWidth
+              variant="outlined"
+              onClick={() =>
+                handleResendVerificationCode && handleResendVerificationCode()
+              }
+            >
+              Resend code to Email
+            </StyledButton>
+          )}
           <Grid container justifyContent="flex-end">
             <Grid item>
               {authType === AuthEnum.SIGN_UP ? (

@@ -1,7 +1,11 @@
 import { useState } from "react";
 import FormWrapper from "./components/FormWrapper.component";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CognitoUser, CognitoUserPool } from "amazon-cognito-identity-js";
+import {
+  AuthenticationDetails,
+  CognitoUser,
+  CognitoUserPool,
+} from "amazon-cognito-identity-js";
 import { Container } from "../../shared/ components/Container";
 import LoadingProgress from "../../shared/ components/LoadingProgress";
 import CustomSnackbar, {
@@ -91,13 +95,12 @@ const Authentication = () => {
   const handleSubmitVerification = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formFields.verificationCode) return;
-
+    setLoading(true);
     user.confirmRegistration(
       formFields.verificationCode,
       true,
       (error, data) => {
         if (error) {
-          console.log(error);
           setSnackbarConfig({
             message: handleSnackbarErrorMessage(error.message),
             open: true,
@@ -122,7 +125,47 @@ const Authentication = () => {
 
   const handleSubmitSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    user.authenticateUser();
+    setLoading(true);
+    const authDetails = new AuthenticationDetails({
+      Username: formFields.email,
+      Password: formFields.password,
+    });
+
+    user.authenticateUser(authDetails, {
+      onFailure(error) {
+        setSnackbarConfig({
+          message: handleSnackbarErrorMessage(error.message),
+          open: true,
+          type: "error",
+        });
+      },
+      onSuccess(data) {
+        console.log(data);
+        navigate("/welcome");
+      },
+    });
+    setLoading(false);
+  };
+
+  const handleResendVerificationCode = () => {
+    setLoading(true);
+    user.resendConfirmationCode((error, data) => {
+      if (error) {
+        setSnackbarConfig({
+          message: error.message,
+          open: true,
+          type: "error",
+        });
+      }
+      if (data) {
+        setSnackbarConfig({
+          message: "Verification code has been resent to your email!",
+          open: true,
+          type: "info",
+        });
+      }
+    });
+    setLoading(false);
   };
 
   if (loading) {
@@ -135,7 +178,7 @@ const Authentication = () => {
         <FormWrapper
           handleFormFieldChange={handleFormFieldChange}
           formFields={SIGN_IN_FORM_FIELDS}
-          handleSubmit={(e) => handleSubmitSignIn(e)}
+          handleSubmit={handleSubmitSignIn}
           title="Sign In"
           authType={AuthEnum.SIGN_IN}
           defaultValues={formFields}
@@ -154,6 +197,7 @@ const Authentication = () => {
       ) : (
         <FormWrapper
           handleFormFieldChange={handleFormFieldChange}
+          handleResendVerificationCode={handleResendVerificationCode}
           formFields={VERIFICATION_FORM_FIELDS}
           handleSubmit={handleSubmitVerification}
           title="Verification"
