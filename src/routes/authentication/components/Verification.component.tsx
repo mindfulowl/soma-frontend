@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Avatar,
   Box,
@@ -8,6 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+
+type VerificationProps = {
+  email: string;
+};
 
 const StyledAvatarWrapper = styled(Avatar)`
   background-color: var(--color-deep-purple);
@@ -21,7 +26,16 @@ const StyledBox = styled(Box)`
   align-items: center;
 `;
 
-const Verification = () => {
+const Verification = (props: VerificationProps) => {
+  const { email } = props;
+  const [verificationCode, setVerificationCode] = useState<string>();
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    setVerificationCode(e.target.value);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };

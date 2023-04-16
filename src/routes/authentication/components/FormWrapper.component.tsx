@@ -10,7 +10,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import AuthFormFields from "./AuthFormFields";
-import { AuthEnum, FormField } from "../Authentication.component";
+import { FormField, AuthEnum, AuthFormFieldsValues } from "../types/types.auth";
 
 type FormWrapperProps = {
   handleFormFieldChange: (
@@ -20,6 +20,8 @@ type FormWrapperProps = {
   authType: AuthEnum;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   title: string;
+  buttonText: string;
+  defaultValues?: AuthFormFieldsValues;
 };
 
 const StyledBox = styled(Box)`
@@ -43,8 +45,15 @@ const StyledButton = styled(Button)`
 `;
 
 const FormWrapper = (props: FormWrapperProps) => {
-  const { handleFormFieldChange, authType, formFields, handleSubmit, title } =
-    props;
+  const {
+    handleFormFieldChange,
+    authType,
+    formFields,
+    handleSubmit,
+    title,
+    buttonText,
+    defaultValues,
+  } = props;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,6 +68,7 @@ const FormWrapper = (props: FormWrapperProps) => {
           <AuthFormFields
             handleFormFieldChange={handleFormFieldChange}
             formFields={formFields}
+            defaultValues={defaultValues}
           />
           <StyledButton
             type="submit"
@@ -66,7 +76,7 @@ const FormWrapper = (props: FormWrapperProps) => {
             variant="contained"
             sx={{ mt: 2 }}
           >
-            {title}
+            {buttonText}
           </StyledButton>
 
           <Grid container justifyContent="flex-end">
@@ -75,10 +85,12 @@ const FormWrapper = (props: FormWrapperProps) => {
                 <StyledLink to="/sign-in">
                   Already have an account? Sign In
                 </StyledLink>
-              ) : (
+              ) : authType === AuthEnum.SIGN_IN ? (
                 <StyledLink to="/sign-up">
                   Don't have an account yet? Sign Up
                 </StyledLink>
+              ) : (
+                <></>
               )}
             </Grid>
           </Grid>
