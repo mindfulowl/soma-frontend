@@ -12,6 +12,7 @@ const Colors = {
   successGreen: "#13A935",
   yellow: "#ffc01e",
   deepPurple: "#9C27B0",
+  goldFont: "#D4AF37",
 };
 
 export const colorsCSSVars = css`
@@ -26,6 +27,7 @@ export const colorsCSSVars = css`
   --color-success-green: ${Colors.successGreen};
   --color-yellow: ${Colors.yellow};
   --color-deep-purple: ${Colors.deepPurple};
+  --color-gold-font: ${Colors.goldFont};
 `;
 
 export default Colors;

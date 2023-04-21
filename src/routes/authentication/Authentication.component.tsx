@@ -1,5 +1,7 @@
-import { useState } from "react";
-import FormWrapper from "./components/FormWrapper.component";
+import { useContext, useState } from "react";
+import FormWrapper from "./components/AuthFormWrapper.component";
+import axios from "axios";
+import { Auth } from "aws-amplify";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   AuthenticationDetails,
@@ -20,6 +22,7 @@ import {
   SIGN_UP_FORM_FIELDS,
   VERIFICATION_FORM_FIELDS,
 } from "./types/types.auth";
+import { UserContext } from "../../shared/contexts/UserContext";
 
 const initialFormfields = {
   firstName: "",
@@ -30,16 +33,19 @@ const initialFormfields = {
   verificationCode: "",
 };
 
+const userPool = new CognitoUserPool(UserPoolData);
+
 const Authentication = () => {
   const [formFields, setFormFields] =
     useState<AuthFormFieldsValues>(initialFormfields);
   const [loading, setLoading] = useState(false);
   const [snackbarConfig, setSnackbarConfig] = useState<SnackBarConfig>();
+  const [userNotConfirmed, setUserNotConfirmed] = useState(false);
+
+  const { setCurrentUser } = useContext(UserContext);
 
   const location = useLocation();
   const navigate = useNavigate();
-
-  const userPool = new CognitoUserPool(UserPoolData);
 
   const user = new CognitoUser({
     Username: formFields.email,
@@ -63,6 +69,33 @@ const Authentication = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
+  const createUser = async (cogId: string, token: string) => {
+    const userInput = {
+      firstName: formFields.firstName,
+      lastName: formFields.lastName,
+      email: formFields.email,
+      postcode: formFields.postCode,
+      cognitoId: cogId,
+    };
+    try {
+      await axios.post(
+        "http://ec2-13-40-183-104.eu-west-2.compute.amazonaws.com/users",
+        userInput,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+    } catch (error) {
+      setSnackbarConfig({
+        message: handleSnackbarErrorMessage("default"),
+        open: true,
+        type: "error",
+      });
+    }
+  };
+
   const handleSubmitSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -73,7 +106,6 @@ const Authentication = () => {
       [],
       (error, data) => {
         if (error) {
-          console.log(error);
           setSnackbarConfig({
             message: handleSnackbarErrorMessage(error.message),
             open: true,
@@ -82,21 +114,57 @@ const Authentication = () => {
           setLoading(false);
           return;
         }
-
         navigate("/verification");
-        // axios.post formFields to DB here + remove log
-        console.log(data);
         setLoading(false);
         return;
       }
     );
   };
 
-  const handleSubmitVerification = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formFields.verificationCode) return;
     setLoading(true);
-    user.confirmRegistration(
+    const authDetails = new AuthenticationDetails({
+      Username: formFields.email,
+      Password: formFields.password,
+    });
+
+    await user.authenticateUser(authDetails, {
+      onFailure(error) {
+        if (error.message && error.message.includes("not confirmed")) {
+          setUserNotConfirmed(true);
+        }
+        setSnackbarConfig({
+          message: handleSnackbarErrorMessage(error.message),
+          open: true,
+          type: "error",
+        });
+      },
+      onSuccess(data: any) {
+        setCurrentUser({
+          email: formFields.email,
+          token: data.idToken.jwtToken,
+        });
+        navigate("/welcome");
+      },
+    });
+  };
+
+  const handleSubmitVerification = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+
+    const authDetails = new AuthenticationDetails({
+      Username: formFields.email,
+      Password: formFields.password,
+    });
+
+    if (!formFields.verificationCode) return;
+
+    setLoading(true);
+
+    await user.confirmRegistration(
       formFields.verificationCode,
       true,
       (error, data) => {
@@ -115,36 +183,30 @@ const Authentication = () => {
             open: true,
             type: "success",
           });
-          setLoading(false);
-          navigate("/sign-in");
-          return;
+          user.authenticateUser(authDetails, {
+            onFailure(error) {
+              setSnackbarConfig({
+                message: handleSnackbarErrorMessage(error.message),
+                open: true,
+                type: "error",
+              });
+            },
+            onSuccess() {
+              Auth.currentAuthenticatedUser().then((res) => {
+                createUser(
+                  res.attributes.sub,
+                  res.signInUserSession.idToken.jwtToken
+                );
+              });
+            },
+          });
         }
+
+        setLoading(false);
+        navigate("/welcome");
+        return;
       }
     );
-  };
-
-  const handleSubmitSignIn = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    const authDetails = new AuthenticationDetails({
-      Username: formFields.email,
-      Password: formFields.password,
-    });
-
-    user.authenticateUser(authDetails, {
-      onFailure(error) {
-        setSnackbarConfig({
-          message: handleSnackbarErrorMessage(error.message),
-          open: true,
-          type: "error",
-        });
-      },
-      onSuccess(data) {
-        console.log(data);
-        navigate("/welcome");
-      },
-    });
-    setLoading(false);
   };
 
   const handleResendVerificationCode = () => {
@@ -175,15 +237,19 @@ const Authentication = () => {
   return (
     <Container>
       {authType === AuthEnum.SIGN_IN ? (
-        <FormWrapper
-          handleFormFieldChange={handleFormFieldChange}
-          formFields={SIGN_IN_FORM_FIELDS}
-          handleSubmit={handleSubmitSignIn}
-          title="Sign In"
-          authType={AuthEnum.SIGN_IN}
-          defaultValues={formFields}
-          buttonText="Sign In"
-        />
+        <>
+          <FormWrapper
+            handleFormFieldChange={handleFormFieldChange}
+            formFields={SIGN_IN_FORM_FIELDS}
+            handleSubmit={handleSubmitSignIn}
+            title="Sign In"
+            authType={AuthEnum.SIGN_IN}
+            defaultValues={formFields}
+            buttonText="Sign In"
+            userNotConfirmed={userNotConfirmed}
+            handleResendVerificationCode={handleResendVerificationCode}
+          />
+        </>
       ) : authType === AuthEnum.SIGN_UP ? (
         <FormWrapper
           handleFormFieldChange={handleFormFieldChange}
