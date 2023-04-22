@@ -1,4 +1,4 @@
-import { SnackBarConfig } from "../../../shared/ components/Snackbar";
+import { SnackBarConfig } from "../../../shared/components/Snackbar";
 
 export const handleSnackbarErrorMessage = (message: string) => {
   if (message.includes("Password not long enough")) {

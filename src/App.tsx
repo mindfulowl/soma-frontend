@@ -2,7 +2,8 @@ import { Route, Routes } from "react-router-dom";
 import SignUp from "./routes/authentication/Authentication.component";
 import PractitonerSignUp from "./routes/practitoner/practitonerSignUp/PractitonerSignUp";
 import WelcomePage from "./routes/welcome/WelcomePage";
-import Navbar from "./shared/ components/Navbar";
+import Navbar from "./shared/components/Navbar";
+import NotFoundPage from "./shared/components/NotFoundPage";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         ))}
         <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/practitoner-sign-up" element={<PractitonerSignUp />} />
+        <Route path="/*" element={<NotFoundPage />} />
       </Routes>
     </>
   );
