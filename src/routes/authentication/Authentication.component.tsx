@@ -13,7 +13,7 @@ import LoadingProgress from "../../shared/ components/LoadingProgress";
 import CustomSnackbar, {
   SnackBarConfig,
 } from "../../shared/ components/Snackbar";
-import { handleSnackbarErrorMessage } from "./utils/auth.utils";
+import { showErrorSnackbar } from "./utils/auth.utils";
 import {
   AuthFormFieldsValues,
   UserPoolData,
@@ -21,6 +21,7 @@ import {
   SIGN_IN_FORM_FIELDS,
   SIGN_UP_FORM_FIELDS,
   VERIFICATION_FORM_FIELDS,
+  User,
 } from "./types/types.auth";
 import { UserContext } from "../../shared/contexts/UserContext";
 
@@ -70,7 +71,7 @@ const Authentication = () => {
   };
 
   const createUser = async (cogId: string, token: string) => {
-    const userInput = {
+    const userInput: User = {
       firstName: formFields.firstName,
       lastName: formFields.lastName,
       email: formFields.email,
@@ -79,7 +80,7 @@ const Authentication = () => {
     };
     try {
       await axios.post(
-        "http://ec2-13-40-183-104.eu-west-2.compute.amazonaws.com/users",
+        `${process.env.REACT_APP_API_BASE_URL}/users`,
         userInput,
         {
           headers: {
@@ -88,11 +89,7 @@ const Authentication = () => {
         }
       );
     } catch (error) {
-      setSnackbarConfig({
-        message: handleSnackbarErrorMessage("default"),
-        open: true,
-        type: "error",
-      });
+      setSnackbarConfig(showErrorSnackbar(error.message));
     }
   };
 
@@ -106,11 +103,7 @@ const Authentication = () => {
       [],
       (error, data) => {
         if (error) {
-          setSnackbarConfig({
-            message: handleSnackbarErrorMessage(error.message),
-            open: true,
-            type: "error",
-          });
+          setSnackbarConfig(showErrorSnackbar(error.message));
           setLoading(false);
           return;
         }
@@ -134,17 +127,14 @@ const Authentication = () => {
         if (error.message && error.message.includes("not confirmed")) {
           setUserNotConfirmed(true);
         }
-        setSnackbarConfig({
-          message: handleSnackbarErrorMessage(error.message),
-          open: true,
-          type: "error",
-        });
+        setLoading(false);
       },
       onSuccess(data: any) {
         setCurrentUser({
           email: formFields.email,
-          token: data.idToken.jwtToken,
+          idToken: data.idToken.jwtToken,
         });
+        setLoading(false);
         navigate("/welcome");
       },
     });
@@ -169,11 +159,7 @@ const Authentication = () => {
       true,
       (error, data) => {
         if (error) {
-          setSnackbarConfig({
-            message: handleSnackbarErrorMessage(error.message),
-            open: true,
-            type: "error",
-          });
+          setSnackbarConfig(showErrorSnackbar(error.message));
           setLoading(false);
           return;
         }
@@ -185,18 +171,19 @@ const Authentication = () => {
           });
           user.authenticateUser(authDetails, {
             onFailure(error) {
-              setSnackbarConfig({
-                message: handleSnackbarErrorMessage(error.message),
-                open: true,
-                type: "error",
-              });
+              setSnackbarConfig(showErrorSnackbar(error.message));
             },
             onSuccess() {
               Auth.currentAuthenticatedUser().then((res) => {
                 createUser(
                   res.attributes.sub,
                   res.signInUserSession.idToken.jwtToken
-                );
+                ).then(() => {
+                  setCurrentUser({
+                    email: formFields.email,
+                    idToken: res.signInUserSession.idToken.jwtToken,
+                  });
+                });
               });
             },
           });
@@ -213,11 +200,7 @@ const Authentication = () => {
     setLoading(true);
     user.resendConfirmationCode((error, data) => {
       if (error) {
-        setSnackbarConfig({
-          message: error.message,
-          open: true,
-          type: "error",
-        });
+        setSnackbarConfig(showErrorSnackbar(error.message));
       }
       if (data) {
         setSnackbarConfig({
@@ -237,19 +220,17 @@ const Authentication = () => {
   return (
     <Container>
       {authType === AuthEnum.SIGN_IN ? (
-        <>
-          <FormWrapper
-            handleFormFieldChange={handleFormFieldChange}
-            formFields={SIGN_IN_FORM_FIELDS}
-            handleSubmit={handleSubmitSignIn}
-            title="Sign In"
-            authType={AuthEnum.SIGN_IN}
-            defaultValues={formFields}
-            buttonText="Sign In"
-            userNotConfirmed={userNotConfirmed}
-            handleResendVerificationCode={handleResendVerificationCode}
-          />
-        </>
+        <FormWrapper
+          handleFormFieldChange={handleFormFieldChange}
+          formFields={SIGN_IN_FORM_FIELDS}
+          handleSubmit={handleSubmitSignIn}
+          title="Sign In"
+          authType={AuthEnum.SIGN_IN}
+          defaultValues={formFields}
+          buttonText="Sign In"
+          userNotConfirmed={userNotConfirmed}
+          handleResendVerificationCode={handleResendVerificationCode}
+        />
       ) : authType === AuthEnum.SIGN_UP ? (
         <FormWrapper
           handleFormFieldChange={handleFormFieldChange}
@@ -271,7 +252,6 @@ const Authentication = () => {
           buttonText="Verify"
         />
       )}
-
       <CustomSnackbar config={snackbarConfig} setOpen={handleSnackBarClose} />
     </Container>
   );

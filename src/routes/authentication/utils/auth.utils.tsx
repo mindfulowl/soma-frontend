@@ -1,3 +1,5 @@
+import { SnackBarConfig } from "../../../shared/ components/Snackbar";
+
 export const handleSnackbarErrorMessage = (message: string) => {
   if (message.includes("Password not long enough")) {
     return "Your password must be 8 characters or more.";
@@ -18,4 +20,12 @@ export const handleSnackbarErrorMessage = (message: string) => {
     return message;
   }
   return "An error occured, please try again later.";
+};
+
+export const showErrorSnackbar = (message: string): SnackBarConfig => {
+  return {
+    open: true,
+    type: "error",
+    message: handleSnackbarErrorMessage(message),
+  };
 };

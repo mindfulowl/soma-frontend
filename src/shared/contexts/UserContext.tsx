@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { Amplify, Auth } from "aws-amplify";
 import axios from "axios";
+import { User } from "../../routes/authentication/types/types.auth";
 
 export const amplifyConfig = Amplify.configure({
   aws_cognito_region: process.env.REACT_APP_AWS_REGION,
@@ -15,18 +16,9 @@ export const amplifyConfig = Amplify.configure({
   aws_mandatory_sign_in: "enable",
 });
 
-type CurrentUser = {
-  email: string;
-  sub?: string;
-  firstName?: string;
-  lastName?: string;
-  postCode?: string;
-  token?: string;
-};
-
 interface IUserContext {
-  currentUser: CurrentUser | null;
-  setCurrentUser: Dispatch<SetStateAction<CurrentUser | null>>;
+  currentUser: User | null;
+  setCurrentUser: Dispatch<SetStateAction<User | null>>;
 }
 
 export const UserContext = createContext<IUserContext>({
@@ -35,14 +27,11 @@ export const UserContext = createContext<IUserContext>({
 });
 
 export const UserProvider = (props: React.PropsWithChildren<{}>) => {
-  const [currentUser, setCurrentUser] = useState<CurrentUser | null>({
-    email: "",
-    sub: "",
-  });
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   const getUserDatabaseInfo = async (cogId: string, token: string) => {
     const user = await axios.get(
-      `http://ec2-13-40-183-104.eu-west-2.compute.amazonaws.com/users/${cogId}`,
+      `${process.env.REACT_APP_API_BASE_URL}/users/${cogId}`,
       {
         headers: {
           Authorization: token,
@@ -52,7 +41,7 @@ export const UserProvider = (props: React.PropsWithChildren<{}>) => {
     return user.data;
   };
 
-  const getCurrentUser = async () => {
+  const refreshUserDetailsForCurrentUser = async () => {
     try {
       const loggedInUser = await Auth.currentAuthenticatedUser();
 
@@ -63,11 +52,11 @@ export const UserProvider = (props: React.PropsWithChildren<{}>) => {
 
       setCurrentUser({
         email: loggedInUser.attributes.email,
-        sub: loggedInUser.attributes.sub,
-        token: loggedInUser.signInUserSession.idToken?.jwtToken,
+        cognitoId: loggedInUser.attributes.sub,
+        idToken: loggedInUser.signInUserSession.idToken?.jwtToken,
         firstName: userDbInfo.firstName,
         lastName: userDbInfo.lastName,
-        postCode: userDbInfo.postcode,
+        postcode: userDbInfo.postcode,
       });
     } catch (error) {
       console.log("error", error);
@@ -76,7 +65,7 @@ export const UserProvider = (props: React.PropsWithChildren<{}>) => {
   const value = { currentUser, setCurrentUser };
 
   useEffect(() => {
-    getCurrentUser();
+    refreshUserDetailsForCurrentUser();
   }, [currentUser?.email]);
 
   return (

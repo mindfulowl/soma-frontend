@@ -37,13 +37,15 @@ const NavLink = styled(Link)`
 const Navbar = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
 
-  const user = new CognitoUser({
-    Username: currentUser?.email || "",
-    Pool: new CognitoUserPool(UserPoolData),
-  });
+  const user =
+    currentUser &&
+    new CognitoUser({
+      Username: currentUser?.email || "",
+      Pool: new CognitoUserPool(UserPoolData),
+    });
 
   const signOut = () => {
-    user.signOut();
+    user?.signOut();
     setCurrentUser(null);
   };
 
