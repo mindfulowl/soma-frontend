@@ -7,7 +7,7 @@ import {
   Button,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import AuthFormFields from "./AuthFormFields";
 import { FormField, AuthEnum, AuthFormFieldsValues } from "../types/types.auth";
@@ -23,6 +23,7 @@ type FormWrapperProps = {
   buttonText: string;
   defaultValues?: AuthFormFieldsValues;
   handleResendVerificationCode?: () => void;
+  userNotConfirmed?: boolean;
 };
 
 const StyledBox = styled(Box)`
@@ -55,8 +56,10 @@ const FormWrapper = (props: FormWrapperProps) => {
     buttonText,
     defaultValues,
     handleResendVerificationCode,
+    userNotConfirmed,
   } = props;
 
+  const navigate = useNavigate();
   return (
     <Container component="main" maxWidth="xs">
       <StyledBox>
@@ -80,18 +83,21 @@ const FormWrapper = (props: FormWrapperProps) => {
           >
             {buttonText}
           </StyledButton>
-          {authType === AuthEnum.VERIFICATION && (
-            <StyledButton
-              type="button"
-              fullWidth
-              variant="outlined"
-              onClick={() =>
-                handleResendVerificationCode && handleResendVerificationCode()
-              }
-            >
-              Resend code to Email
-            </StyledButton>
-          )}
+          {authType === AuthEnum.VERIFICATION ||
+            (userNotConfirmed && (
+              <StyledButton
+                type="button"
+                fullWidth
+                variant="outlined"
+                onClick={() => {
+                  handleResendVerificationCode &&
+                    handleResendVerificationCode();
+                  navigate("/verification");
+                }}
+              >
+                Resend code to Email
+              </StyledButton>
+            ))}
           <Grid container justifyContent="flex-end">
             <Grid item>
               {authType === AuthEnum.SIGN_UP ? (

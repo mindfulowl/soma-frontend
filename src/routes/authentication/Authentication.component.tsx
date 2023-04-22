@@ -1,5 +1,7 @@
-import { useState } from "react";
-import FormWrapper from "./components/FormWrapper.component";
+import { useContext, useState } from "react";
+import FormWrapper from "./components/AuthFormWrapper.component";
+import axios from "axios";
+import { Auth } from "aws-amplify";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   AuthenticationDetails,
@@ -11,7 +13,7 @@ import LoadingProgress from "../../shared/ components/LoadingProgress";
 import CustomSnackbar, {
   SnackBarConfig,
 } from "../../shared/ components/Snackbar";
-import { handleSnackbarErrorMessage } from "./utils/auth.utils";
+import { showErrorSnackbar } from "./utils/auth.utils";
 import {
   AuthFormFieldsValues,
   UserPoolData,
@@ -19,7 +21,9 @@ import {
   SIGN_IN_FORM_FIELDS,
   SIGN_UP_FORM_FIELDS,
   VERIFICATION_FORM_FIELDS,
+  User,
 } from "./types/types.auth";
+import { UserContext } from "../../shared/contexts/UserContext";
 
 const initialFormfields = {
   firstName: "",
@@ -30,16 +34,19 @@ const initialFormfields = {
   verificationCode: "",
 };
 
+const userPool = new CognitoUserPool(UserPoolData);
+
 const Authentication = () => {
   const [formFields, setFormFields] =
     useState<AuthFormFieldsValues>(initialFormfields);
   const [loading, setLoading] = useState(false);
   const [snackbarConfig, setSnackbarConfig] = useState<SnackBarConfig>();
+  const [userNotConfirmed, setUserNotConfirmed] = useState(false);
+
+  const { setCurrentUser } = useContext(UserContext);
 
   const location = useLocation();
   const navigate = useNavigate();
-
-  const userPool = new CognitoUserPool(UserPoolData);
 
   const user = new CognitoUser({
     Username: formFields.email,
@@ -63,6 +70,29 @@ const Authentication = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
+  const createUser = async (cogId: string, token: string) => {
+    const userInput: User = {
+      firstName: formFields.firstName,
+      lastName: formFields.lastName,
+      email: formFields.email,
+      postcode: formFields.postCode,
+      cognitoId: cogId,
+    };
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/users`,
+        userInput,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+    } catch (error) {
+      setSnackbarConfig(showErrorSnackbar(error.message));
+    }
+  };
+
   const handleSubmitSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -73,39 +103,63 @@ const Authentication = () => {
       [],
       (error, data) => {
         if (error) {
-          console.log(error);
-          setSnackbarConfig({
-            message: handleSnackbarErrorMessage(error.message),
-            open: true,
-            type: "error",
-          });
+          setSnackbarConfig(showErrorSnackbar(error.message));
           setLoading(false);
           return;
         }
-
         navigate("/verification");
-        // axios.post formFields to DB here + remove log
-        console.log(data);
         setLoading(false);
         return;
       }
     );
   };
 
-  const handleSubmitVerification = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formFields.verificationCode) return;
     setLoading(true);
-    user.confirmRegistration(
+    const authDetails = new AuthenticationDetails({
+      Username: formFields.email,
+      Password: formFields.password,
+    });
+
+    await user.authenticateUser(authDetails, {
+      onFailure(error) {
+        if (error.message && error.message.includes("not confirmed")) {
+          setUserNotConfirmed(true);
+        }
+        setLoading(false);
+      },
+      onSuccess(data: any) {
+        setCurrentUser({
+          email: formFields.email,
+          idToken: data.idToken.jwtToken,
+        });
+        setLoading(false);
+        navigate("/welcome");
+      },
+    });
+  };
+
+  const handleSubmitVerification = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+
+    const authDetails = new AuthenticationDetails({
+      Username: formFields.email,
+      Password: formFields.password,
+    });
+
+    if (!formFields.verificationCode) return;
+
+    setLoading(true);
+
+    await user.confirmRegistration(
       formFields.verificationCode,
       true,
       (error, data) => {
         if (error) {
-          setSnackbarConfig({
-            message: handleSnackbarErrorMessage(error.message),
-            open: true,
-            type: "error",
-          });
+          setSnackbarConfig(showErrorSnackbar(error.message));
           setLoading(false);
           return;
         }
@@ -115,47 +169,38 @@ const Authentication = () => {
             open: true,
             type: "success",
           });
-          setLoading(false);
-          navigate("/sign-in");
-          return;
+          user.authenticateUser(authDetails, {
+            onFailure(error) {
+              setSnackbarConfig(showErrorSnackbar(error.message));
+            },
+            onSuccess() {
+              Auth.currentAuthenticatedUser().then((res) => {
+                createUser(
+                  res.attributes.sub,
+                  res.signInUserSession.idToken.jwtToken
+                ).then(() => {
+                  setCurrentUser({
+                    email: formFields.email,
+                    idToken: res.signInUserSession.idToken.jwtToken,
+                  });
+                });
+              });
+            },
+          });
         }
+
+        setLoading(false);
+        navigate("/welcome");
+        return;
       }
     );
-  };
-
-  const handleSubmitSignIn = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    const authDetails = new AuthenticationDetails({
-      Username: formFields.email,
-      Password: formFields.password,
-    });
-
-    user.authenticateUser(authDetails, {
-      onFailure(error) {
-        setSnackbarConfig({
-          message: handleSnackbarErrorMessage(error.message),
-          open: true,
-          type: "error",
-        });
-      },
-      onSuccess(data) {
-        console.log(data);
-        navigate("/welcome");
-      },
-    });
-    setLoading(false);
   };
 
   const handleResendVerificationCode = () => {
     setLoading(true);
     user.resendConfirmationCode((error, data) => {
       if (error) {
-        setSnackbarConfig({
-          message: error.message,
-          open: true,
-          type: "error",
-        });
+        setSnackbarConfig(showErrorSnackbar(error.message));
       }
       if (data) {
         setSnackbarConfig({
@@ -183,6 +228,8 @@ const Authentication = () => {
           authType={AuthEnum.SIGN_IN}
           defaultValues={formFields}
           buttonText="Sign In"
+          userNotConfirmed={userNotConfirmed}
+          handleResendVerificationCode={handleResendVerificationCode}
         />
       ) : authType === AuthEnum.SIGN_UP ? (
         <FormWrapper
@@ -205,7 +252,6 @@ const Authentication = () => {
           buttonText="Verify"
         />
       )}
-
       <CustomSnackbar config={snackbarConfig} setOpen={handleSnackBarClose} />
     </Container>
   );

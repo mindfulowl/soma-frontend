@@ -21,6 +21,16 @@ export type FormField = {
   xs?: number;
 };
 
+export type User = {
+  id?: string;
+  email: string;
+  postcode?: string;
+  firstName?: string;
+  lastName?: string;
+  cognitoId?: string;
+  idToken?: string;
+};
+
 export const UserPoolData = {
   UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID as string,
   ClientId: process.env.REACT_APP_COGNITO_CLIENT_ID as string,
