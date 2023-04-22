@@ -66,7 +66,7 @@ const FormWrapper = (props: FormWrapperProps) => {
         <StyledAvatarWrapper>
           <LockOutlinedIcon />
         </StyledAvatarWrapper>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h4">
           {title}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
