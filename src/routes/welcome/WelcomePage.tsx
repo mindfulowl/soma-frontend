@@ -1,16 +1,23 @@
 import { useContext } from "react";
 import styled from "styled-components";
-import { Container } from "../../shared/ components/Container";
 import { UserContext } from "../../shared/contexts/UserContext";
-import { H2 } from "../../shared/styles";
+import { screenMdMin } from "../../shared/styles";
+import NavCard from "./components/NavCard";
+import { NAV_CARD_DATA } from "./types/welcome.types";
 
 const ImageContainer = styled.img`
   max-height: 80vh;
   width: 100%;
 `;
 
-const Subtitle = styled(H2)`
-  color: var(--color-gold-font);
+const NavCardWrapper = styled.div`
+  flex-direction: column;
+  @media ${screenMdMin} {
+    flex-direction: row;
+    padding-bottom: var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+  }
 `;
 
 const WelcomePage = () => {
@@ -21,9 +28,12 @@ const WelcomePage = () => {
       <ImageContainer
         src={require("../../assets/images/mindfulOwlImage.jpg")}
       />
-      <Container>
-        <Subtitle>Our Membership</Subtitle>
-      </Container>
+
+      <NavCardWrapper>
+        {NAV_CARD_DATA.map((navCardData) => {
+          return <NavCard key={navCardData.title} navCardData={navCardData} />;
+        })}
+      </NavCardWrapper>
     </>
   );
 };

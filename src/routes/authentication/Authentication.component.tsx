@@ -8,11 +8,11 @@ import {
   CognitoUser,
   CognitoUserPool,
 } from "amazon-cognito-identity-js";
-import { Container } from "../../shared/ components/Container";
-import LoadingProgress from "../../shared/ components/LoadingProgress";
+import { Container } from "../../shared/components/Container";
+import LoadingProgress from "../../shared/components/LoadingProgress";
 import CustomSnackbar, {
   SnackBarConfig,
-} from "../../shared/ components/Snackbar";
+} from "../../shared/components/Snackbar";
 import { showErrorSnackbar } from "./utils/auth.utils";
 import {
   AuthFormFieldsValues,
