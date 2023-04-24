@@ -1,16 +1,13 @@
-import {
-  Box,
-  Avatar,
-  Container,
-  Typography,
-  Grid,
-  Button,
-} from "@mui/material";
+import { Box, Container, Typography, Grid, Button } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import AuthFormFields from "./AuthFormFields";
 import { FormField, AuthEnum, AuthFormFieldsValues } from "../types/types.auth";
+import {
+  StyledAvatarWrapper,
+  StyledFormContainer,
+} from "../../../shared/styles/formStyles/FormStyles";
 
 type FormWrapperProps = {
   handleFormFieldChange: (
@@ -25,18 +22,6 @@ type FormWrapperProps = {
   handleResendVerificationCode?: () => void;
   userNotConfirmed?: boolean;
 };
-
-const StyledBox = styled(Box)`
-  margin-top: var(--spacing-xs);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const StyledAvatarWrapper = styled(Avatar)`
-  background-color: var(--color-deep-purple);
-  margin-bottom: var(--spacing-sm);
-`;
 
 const StyledLink = styled(Link)`
   color: var(--color-black);
@@ -62,7 +47,7 @@ const FormWrapper = (props: FormWrapperProps) => {
   const navigate = useNavigate();
   return (
     <Container component="main" maxWidth="xs">
-      <StyledBox>
+      <StyledFormContainer>
         <StyledAvatarWrapper>
           <LockOutlinedIcon />
         </StyledAvatarWrapper>
@@ -114,7 +99,7 @@ const FormWrapper = (props: FormWrapperProps) => {
             </Grid>
           </Grid>
         </Box>
-      </StyledBox>
+      </StyledFormContainer>
     </Container>
   );
 };

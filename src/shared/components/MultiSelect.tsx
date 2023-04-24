@@ -1,30 +1,37 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import styled from "styled-components";
+import { MuiStyledOptions } from "@mui/system";
 
-type MultiSelectOption = {
+export type MultiSelectOption = {
   name: string;
 };
 
 type MultiSelectProps = {
   options: Array<MultiSelectOption>;
   label: string;
+  currentValue: Array<MultiSelectOption> | null;
+  handleChange: (newValue: Array<MultiSelectOption>) => void;
 };
 
-const StyledAutoComplete = styled(TextField)`
-  width: 350px;
-`;
-
 const MultiSelect = (props: MultiSelectProps) => {
-  const { options, label } = props;
+  const { options, label, handleChange, currentValue } = props;
+
+  console.log(currentValue);
+
   return (
     <Autocomplete
       multiple
+      fullWidth
+      onChange={(e, v: Array<MultiSelectOption>) => {
+        console.log(v);
+        handleChange(v);
+      }}
       options={options}
       getOptionLabel={(option: MultiSelectOption) => option.name}
-      defaultValue={[options[0]]}
       filterSelectedOptions
-      renderInput={(params) => <StyledAutoComplete {...params} label={label} />}
+      renderInput={(params) => (
+        <TextField required={currentValue === null} {...params} label={label} />
+      )}
     />
   );
 };
