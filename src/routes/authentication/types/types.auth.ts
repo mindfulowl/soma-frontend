@@ -2,6 +2,7 @@ export enum AuthEnum {
   SIGN_IN = "sign-in",
   SIGN_UP = "sign-up",
   VERIFICATION = "verification",
+  COMPLETE_REGISTRATION = "complete-registration",
 }
 
 export type AuthFormFieldsValues = {
@@ -12,6 +13,14 @@ export type AuthFormFieldsValues = {
   lastName: string;
   verificationCode?: string;
 };
+
+export type CompleteRegistrationFormFieldsValues = {
+  firstName: string;
+  lastName: string;
+  postCode: string;
+}
+
+export type FormFieldsValues = AuthFormFieldsValues | CompleteRegistrationFormFieldsValues
 
 export type FormField = {
   name: string;
@@ -29,7 +38,13 @@ export type User = {
   lastName?: string;
   cognitoId?: string;
   idToken?: string;
+  hasCompletedRegistration?: boolean;
 };
+
+export type IdTokenData = {
+  email: string;
+  'cognito:username': string;
+}
 
 export const UserPoolData = {
   UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID as string,
@@ -56,4 +71,10 @@ export const VERIFICATION_FORM_FIELDS: Array<FormField> = [
 export const SIGN_IN_FORM_FIELDS: Array<FormField> = [
   { name: "email", label: "Email", type: "email", xs: 12 },
   { name: "password", label: "Password", type: "password", xs: 12 },
+];
+
+export const COMPLETE_REGISTRATION_FORM_FIELDS: Array<FormField> = [
+  { name: "firstName", label: "First Name", type: "text", sm: 6, xs: 12 },
+  { name: "lastName", label: "Last Name", type: "text", sm: 6, xs: 12 },
+  { name: "postCode", label: "Post Code", type: "text", xs: 12 },
 ];
