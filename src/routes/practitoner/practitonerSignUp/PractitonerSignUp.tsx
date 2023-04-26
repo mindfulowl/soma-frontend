@@ -66,8 +66,6 @@ const PractitonerSignUp = () => {
     setAddress(value);
   };
 
-  // <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-LN7kt1pQYLVvnKEecf-wjaAvUDqyrC8&libraries=places"></script>
-
   const handleFormFieldChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
