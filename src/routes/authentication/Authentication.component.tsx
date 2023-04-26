@@ -24,6 +24,7 @@ import {
   User,
 } from "./types/types.auth";
 import { UserContext } from "../../shared/contexts/UserContext";
+import GoogleSignIn from "./components/GoogleSignIn";
 
 const initialFormfields = {
   firstName: "",
@@ -133,6 +134,7 @@ const Authentication = () => {
         setCurrentUser({
           email: formFields.email,
           idToken: data.idToken.jwtToken,
+          cognitoId: data.idToken.payload.sub,
         });
         setLoading(false);
         navigate("/welcome");
@@ -180,6 +182,7 @@ const Authentication = () => {
                   res.signInUserSession.idToken.jwtToken
                 ).then(() => {
                   setCurrentUser({
+                    cognitoId: res.attributes.sub,
                     email: formFields.email,
                     idToken: res.signInUserSession.idToken.jwtToken,
                   });
@@ -220,17 +223,20 @@ const Authentication = () => {
   return (
     <Container>
       {authType === AuthEnum.SIGN_IN ? (
-        <FormWrapper
-          handleFormFieldChange={handleFormFieldChange}
-          formFields={SIGN_IN_FORM_FIELDS}
-          handleSubmit={handleSubmitSignIn}
-          title="Sign In"
-          authType={AuthEnum.SIGN_IN}
-          defaultValues={formFields}
-          buttonText="Sign In"
-          userNotConfirmed={userNotConfirmed}
-          handleResendVerificationCode={handleResendVerificationCode}
-        />
+        <>
+          <FormWrapper
+            handleFormFieldChange={handleFormFieldChange}
+            formFields={SIGN_IN_FORM_FIELDS}
+            handleSubmit={handleSubmitSignIn}
+            title="Sign In"
+            authType={AuthEnum.SIGN_IN}
+            defaultValues={formFields}
+            buttonText="Sign In"
+            userNotConfirmed={userNotConfirmed}
+            handleResendVerificationCode={handleResendVerificationCode}
+          />
+          <GoogleSignIn />
+        </>
       ) : authType === AuthEnum.SIGN_UP ? (
         <FormWrapper
           handleFormFieldChange={handleFormFieldChange}

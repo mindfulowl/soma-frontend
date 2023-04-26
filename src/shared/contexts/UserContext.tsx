@@ -7,13 +7,21 @@ import React, {
 } from "react";
 import { Amplify, Auth } from "aws-amplify";
 import axios from "axios";
-import { User } from "../../routes/authentication/types/types.auth";
+import { IdTokenData, User } from "../../routes/authentication/types/types.auth";
+import jwt_decode from "jwt-decode";
 
 export const amplifyConfig = Amplify.configure({
   aws_cognito_region: process.env.REACT_APP_AWS_REGION,
   aws_user_pools_id: process.env.REACT_APP_COGNITO_USER_POOL_ID,
   aws_user_pools_web_client_id: process.env.REACT_APP_COGNITO_CLIENT_ID,
   aws_mandatory_sign_in: "enable",
+  oauth: {
+    domain: process.env.REACT_APP_COGNITO_DOMAIN,
+    scope: ["email", "openid", "profile"],
+    redirectSignIn: `${process.env.REACT_APP_FE_BASE_URL}/welcome`,
+    redirectSignOut: `${process.env.REACT_APP_FE_BASE_URL}/sign-in`,
+    responseType: "code",
+  },
 });
 
 interface IUserContext {
@@ -41,32 +49,36 @@ export const UserProvider = (props: React.PropsWithChildren<{}>) => {
     return user.data;
   };
 
-  const refreshUserDetailsForCurrentUser = async () => {
-    try {
-      const loggedInUser = await Auth.currentAuthenticatedUser();
-
-      const userDbInfo = await getUserDatabaseInfo(
-        loggedInUser.attributes.sub,
-        loggedInUser.signInUserSession.idToken.jwtToken
-      );
-
-      setCurrentUser({
-        email: loggedInUser.attributes.email,
-        cognitoId: loggedInUser.attributes.sub,
-        idToken: loggedInUser.signInUserSession.idToken?.jwtToken,
-        firstName: userDbInfo.firstName,
-        lastName: userDbInfo.lastName,
-        postcode: userDbInfo.postcode,
-      });
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-  const value = { currentUser, setCurrentUser };
-
   useEffect(() => {
+    const refreshUserDetailsForCurrentUser = async () => {
+      try {
+        const loggedInUser = await Auth.currentAuthenticatedUser();
+        const idToken = loggedInUser.signInUserSession.idToken?.jwtToken
+        const tokenData = jwt_decode(idToken) as IdTokenData
+
+        const userDbInfo = await getUserDatabaseInfo(
+          loggedInUser.username,
+          loggedInUser.signInUserSession.idToken.jwtToken
+        )
+
+        setCurrentUser({
+          email: tokenData.email,
+          cognitoId: loggedInUser.username,
+          idToken: idToken,
+          firstName: userDbInfo?.firstName,
+          lastName: userDbInfo?.lastName,
+          postcode: userDbInfo?.postcode,
+          hasCompletedRegistration: !!userDbInfo,
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
     refreshUserDetailsForCurrentUser();
-  }, [currentUser?.email]);
+  }, []);
+
+  const value = { currentUser, setCurrentUser };
 
   return (
     <UserContext.Provider value={value}>{props.children}</UserContext.Provider>

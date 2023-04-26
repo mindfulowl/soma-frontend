@@ -1,12 +1,12 @@
 import { Grid, TextField } from "@mui/material";
-import { FormField, AuthFormFieldsValues } from "../types/types.auth";
+import { FormField, FormFieldsValues } from "../types/types.auth";
 
 type UserFormFieldsProps = {
   formFields: Array<FormField>;
   handleFormFieldChange: (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => void;
-  defaultValues?: AuthFormFieldsValues;
+  defaultValues?: FormFieldsValues;
 };
 
 const AuthFormFields = (props: UserFormFieldsProps) => {
@@ -28,7 +28,7 @@ const AuthFormFields = (props: UserFormFieldsProps) => {
               fullWidth
               value={
                 defaultValues &&
-                defaultValues[field.name as keyof AuthFormFieldsValues]
+                defaultValues[field.name as keyof FormFieldsValues]
               }
               type={field.type}
               label={field.label}

@@ -3,13 +3,13 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import AuthFormFields from "./AuthFormFields";
-import { FormField, AuthEnum, AuthFormFieldsValues } from "../types/types.auth";
 import {
   StyledAvatarWrapper,
   StyledFormContainer,
   StyledFormButton,
 } from "../../../shared/styles/formStyles/FormStyles";
 import { H2 } from "../../../shared/styles";
+import { FormField, AuthEnum, FormFieldsValues } from "../types/types.auth";
 
 type FormWrapperProps = {
   handleFormFieldChange: (
@@ -20,7 +20,7 @@ type FormWrapperProps = {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   title: string;
   buttonText: string;
-  defaultValues?: AuthFormFieldsValues;
+  defaultValues?: FormFieldsValues;
   handleResendVerificationCode?: () => void;
   userNotConfirmed?: boolean;
 };
