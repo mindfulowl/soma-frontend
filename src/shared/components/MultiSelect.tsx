@@ -1,6 +1,5 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import { MuiStyledOptions } from "@mui/system";
 
 export type MultiSelectOption = {
   name: string;
@@ -15,8 +14,6 @@ type MultiSelectProps = {
 
 const MultiSelect = (props: MultiSelectProps) => {
   const { options, label, handleChange, currentValue } = props;
-
-  console.log(currentValue);
 
   return (
     <Autocomplete

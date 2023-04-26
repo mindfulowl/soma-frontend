@@ -1,5 +1,5 @@
-import { Typography, Box, Grid, Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { Typography, Box, Grid, TextField } from "@mui/material";
+import { useContext, useRef, useState } from "react";
 import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
 import styled from "styled-components";
 import MultiSelect, {
@@ -12,15 +12,19 @@ import {
   PRACTITONER_HEALTH_CONCERNS_OPTIONS,
   PRACTITONER_SIGN_UP_TEXTFIELDS,
 } from "../types/practitoner.types";
-import AddressAutocomplete from "mui-address-autocomplete";
-import Autocomplete from "react-google-autocomplete";
+
 import Select from "../../../shared/components/Select";
-import ReactGoogleMapLoader from "react-google-maps-loader";
 import { StyledLink } from "../../../shared/components/Link";
 import {
   StyledAvatarWrapper,
   StyledFormContainer,
+  StyledFormButton,
 } from "../../../shared/styles/formStyles/FormStyles";
+import { H2, H4, P } from "../../../shared/styles";
+import { StandaloneSearchBox } from "@react-google-maps/api";
+import { UserContext } from "../../../shared/contexts/UserContext";
+
+const GOOGLE_LIBS = ["places"];
 
 const ButtonContainer = styled.div`
   text-align: center;
@@ -30,13 +34,12 @@ const FormWrapper = styled(Box)`
   width: 50%;
 `;
 
-const StyledButton = styled(Button)`
-  margin-bottom: var(--spacing-md);
-`;
-
-const StyledSubtitleText = styled(Typography)`
+const StyledSubtitleText = styled(P)`
   text-align: center;
   padding: var(--spacing-md);
+`;
+const StyledInput = styled.input`
+  width: 300px;
 `;
 
 const defaultFormFields = {
@@ -48,9 +51,22 @@ const defaultFormFields = {
 };
 
 const PractitonerSignUp = () => {
+  const inputRef = useRef();
   const [formFields, setFormFields] = useState<Practitoner>(defaultFormFields);
   const [practitonerHealthConcerns, setPractitonerHealthConcerns] =
     useState<Array<MultiSelectOption> | null>(null);
+
+  const [address, setAddress] = useState("");
+
+  const handleChange = (value: any) => {
+    setAddress(value);
+  };
+
+  const handleSelect = (value: any) => {
+    setAddress(value);
+  };
+
+  // <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-LN7kt1pQYLVvnKEecf-wjaAvUDqyrC8&libraries=places"></script>
 
   const handleFormFieldChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -59,14 +75,24 @@ const PractitonerSignUp = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault();
-    const practitonerInput = {
+    const practitonerInput: Practitoner = {
       ...formFields,
-      healthConcerns: practitonerHealthConcerns,
+      healthConcerns: practitonerHealthConcerns || [],
     };
     console.log(practitonerInput);
   };
+
+  const handlePlaceChanged = () => {
+    //@ts-ignore
+    const [place] = inputRef?.current.getPlaces();
+    if (place) console.log(place);
+  };
+
+  const { currentUser } = useContext(UserContext);
+
+  console.log(currentUser);
 
   return (
     <StyledFormContainer>
@@ -74,16 +100,14 @@ const PractitonerSignUp = () => {
         <LocalPharmacyIcon />
       </StyledAvatarWrapper>
 
-      <Typography component="h1" variant="h4" gutterBottom>
-        Practitoner Sign Up
-      </Typography>
-      <StyledSubtitleText variant="body1">
+      <H2>Practitoner Sign Up</H2>
+      <StyledSubtitleText>
         Upon signing up, users will be able to search for your profile on our
         <StyledLink to="/search-practitoners">Practitoners Page</StyledLink>
       </StyledSubtitleText>
       <FormWrapper
         component="form"
-        onSubmit={(e: any) => handleSubmit(e)}
+        onSubmit={(e: React.FormEvent<HTMLDivElement>) => handleSubmit(e)}
         sx={{ mt: 3 }}
       >
         <Grid container spacing={2}>
@@ -141,30 +165,28 @@ const PractitonerSignUp = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            {/* <Grid item sm={6}>
-                <Autocomplete
-                  style={{ width: "90%" }}
-                  apiKey="AIzaSyDHBu3VTeDK82DVgZNa3GilRGSTBMlQzWE"
-                  id="map"
-                  onPlaceSelected={(place: any) => {
-                    console.log(place);
-                  }}
-                  options={{
-                    types: ["(places)"],
-                    componentRestrictions: { country: "ru" },
-                  }}
-                  defaultValue="Amsterdam"
-                />
-              </Grid> */}
+            {" "}
+            <StandaloneSearchBox
+              /* @ts-ignore */
+              onLoad={(ref) => (inputRef.current = ref)}
+              onPlacesChanged={handlePlaceChanged}
+            >
+              <TextField
+                fullWidth
+                type="search"
+                placeholder="Search Address"
+              ></TextField>
+            </StandaloneSearchBox>
           </Grid>
         </Grid>
         <ButtonContainer>
-          <StyledButton type="submit" variant="outlined" sx={{ mt: 2 }}>
+          <StyledFormButton type="submit" variant="outlined" sx={{ mt: 2 }}>
             Register as a Practitoner
-          </StyledButton>
+          </StyledFormButton>
         </ButtonContainer>
       </FormWrapper>
     </StyledFormContainer>
   );
 };
+
 export default PractitonerSignUp;

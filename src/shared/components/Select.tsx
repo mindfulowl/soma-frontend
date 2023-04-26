@@ -1,5 +1,4 @@
 import { MenuItem, TextField, ListItemText } from "@mui/material";
-import styled from "styled-components";
 
 type SelectOption = {
   name: string;
@@ -16,12 +15,10 @@ type SelectProps = {
   ) => void;
 };
 
-const StyledSelect = styled(TextField)``;
-
 const Select = (props: SelectProps) => {
   const { options, label, onChange, name, currentValue, required } = props;
   return (
-    <StyledSelect
+    <TextField
       label={label}
       select
       variant="outlined"
@@ -40,7 +37,7 @@ const Select = (props: SelectProps) => {
           </MenuItem>
         );
       })}
-    </StyledSelect>
+    </TextField>
   );
 };
 

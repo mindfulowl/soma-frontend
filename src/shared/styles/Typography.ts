@@ -6,7 +6,6 @@ type TypographyProps = {
 };
 
 const getTypographyCSS = (tagName: string) => css`
-  font-family: "Gilmer";
   font-size: ${`var(--font-size-${tagName})`};
   line-height: ${`var(--line-height-${tagName})`};
   margin: 0 0 0 0;
@@ -24,17 +23,18 @@ const smallCSS = getTypographyCSS("small");
 
 export const H1 = styled.h1<TypographyProps>`
   font-weight: 600;
+  font-family: "Lato";
   ${h1CSS}
 `;
 
 export const H2 = styled.h2<TypographyProps>`
   font-weight: 600;
-  font-family: "Gilmer";
+  font-family: "Lato";
   ${h2CSS}
 `;
 
 export const H3 = styled.h3<TypographyProps>`
-  font-family: "Gilmer";
+  font-family: "Lato";
   font-weight: 600;
   ${h3CSS}
 `;
@@ -42,26 +42,26 @@ export const H3 = styled.h3<TypographyProps>`
 export const H4 = styled.h4<TypographyProps>`
   font-weight: ${(props) => (props.bold ? "600" : "normal")};
   font-weight: 600;
-  font-family: "Gilmer-Medium";
+  font-family: "Lato";
   ${h4CSS}
 `;
 
 export const H5 = styled.h5<TypographyProps>`
   font-weight: ${(props) => (props.bold ? "600" : "normal")};
-  font-family: "Gilmer";
+  font-family: "Lato";
   ${h5CSS}
 `;
 
 export const P = styled.p<TypographyProps>`
   font-weight: ${(props) => (props.bold ? "600" : "normal")};
-  font-family: ${(props) => (props.bold ? "Gilmer-Medium" : "Gilmer")};
+  font-family: "Roboto";
   ${pCSS}
   margin: 0 0 0 0;
 `;
 
 export const Small = styled.small<TypographyProps>`
   font-weight: ${(props) => (props.bold ? "600" : "normal")};
-  font-family: "Gilmer";
+  font-family: "Roboto";
   ${smallCSS}
   margin: 0;
 `;

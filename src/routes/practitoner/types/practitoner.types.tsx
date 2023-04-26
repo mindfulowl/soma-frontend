@@ -1,10 +1,12 @@
+import { MultiSelectOption } from "../../../shared/components/MultiSelect";
+
 export type Practitoner = {
   consultationType: string;
   email: string;
   phoneNumber: string;
   discipline: string;
   profile: string;
-  healthConcerns?: Array<string>;
+  healthConcerns?: Array<MultiSelectOption>;
 };
 
 export const PRACTITONER_SIGN_UP_TEXTFIELDS = [

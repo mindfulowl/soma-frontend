@@ -1,4 +1,4 @@
-import { Box, Container, Typography, Grid, Button } from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -7,7 +7,9 @@ import { FormField, AuthEnum, AuthFormFieldsValues } from "../types/types.auth";
 import {
   StyledAvatarWrapper,
   StyledFormContainer,
+  StyledFormButton,
 } from "../../../shared/styles/formStyles/FormStyles";
+import { H2 } from "../../../shared/styles";
 
 type FormWrapperProps = {
   handleFormFieldChange: (
@@ -25,10 +27,6 @@ type FormWrapperProps = {
 
 const StyledLink = styled(Link)`
   color: var(--color-black);
-`;
-
-const StyledButton = styled(Button)`
-  margin-bottom: var(--spacing-md);
 `;
 
 const FormWrapper = (props: FormWrapperProps) => {
@@ -51,26 +49,24 @@ const FormWrapper = (props: FormWrapperProps) => {
         <StyledAvatarWrapper>
           <LockOutlinedIcon />
         </StyledAvatarWrapper>
-        <Typography component="h1" variant="h4">
-          {title}
-        </Typography>
+        <H2>{title}</H2>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <AuthFormFields
             handleFormFieldChange={handleFormFieldChange}
             formFields={formFields}
             defaultValues={defaultValues}
           />
-          <StyledButton
+          <StyledFormButton
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 2 }}
           >
             {buttonText}
-          </StyledButton>
+          </StyledFormButton>
           {authType === AuthEnum.VERIFICATION ||
             (userNotConfirmed && (
-              <StyledButton
+              <StyledFormButton
                 type="button"
                 fullWidth
                 variant="outlined"
@@ -81,7 +77,7 @@ const FormWrapper = (props: FormWrapperProps) => {
                 }}
               >
                 Resend code to Email
-              </StyledButton>
+              </StyledFormButton>
             ))}
           <Grid container justifyContent="flex-end">
             <Grid item>

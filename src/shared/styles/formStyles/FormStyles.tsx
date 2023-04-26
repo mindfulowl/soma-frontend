@@ -1,4 +1,4 @@
-import { Avatar, Box } from "@mui/material";
+import { Avatar, Box, Button } from "@mui/material";
 import styled from "styled-components";
 
 export const StyledAvatarWrapper = styled(Avatar)`
@@ -13,4 +13,8 @@ export const StyledFormContainer = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+export const StyledFormButton = styled(Button)`
+  margin-bottom: var(--spacing-md);
 `;
