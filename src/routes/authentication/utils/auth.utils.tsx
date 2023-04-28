@@ -1,5 +1,7 @@
 import { SnackBarConfig } from "../../../shared/components/Snackbar";
 
+// TODO put possible errors into enum
+
 export const handleSnackbarErrorMessage = (message: string) => {
   if (message.includes("Password not long enough")) {
     return "Your password must be 8 characters or more.";

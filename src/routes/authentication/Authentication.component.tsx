@@ -25,6 +25,7 @@ import {
 } from "./types/types.auth";
 import { UserContext } from "../../shared/contexts/UserContext";
 import GoogleSignIn from "./components/GoogleSignIn";
+import { isEmailRegistered } from "./utils/isEmailRegistered";
 
 const initialFormfields = {
   firstName: "",
@@ -77,7 +78,6 @@ const Authentication = () => {
       lastName: formFields.lastName,
       email: formFields.email,
       postcode: formFields.postCode,
-      cognitoId: cogId,
     };
     try {
       await axios.post(
@@ -97,6 +97,13 @@ const Authentication = () => {
   const handleSubmitSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
+    if(await isEmailRegistered(formFields.email)) {
+      setSnackbarConfig(showErrorSnackbar("An account with the given email already exists"));
+      setLoading(false);
+      return;
+    }
+    
     await userPool.signUp(
       formFields.email,
       formFields.password,
@@ -127,6 +134,8 @@ const Authentication = () => {
       onFailure(error) {
         if (error.message && error.message.includes("not confirmed")) {
           setUserNotConfirmed(true);
+        } else {
+          setSnackbarConfig(showErrorSnackbar(error.message));
         }
         setLoading(false);
       },
@@ -134,7 +143,6 @@ const Authentication = () => {
         setCurrentUser({
           email: formFields.email,
           idToken: data.idToken.jwtToken,
-          cognitoId: data.idToken.payload.sub,
         });
         setLoading(false);
         navigate("/welcome");
@@ -182,7 +190,6 @@ const Authentication = () => {
                   res.signInUserSession.idToken.jwtToken
                 ).then(() => {
                   setCurrentUser({
-                    cognitoId: res.attributes.sub,
                     email: formFields.email,
                     idToken: res.signInUserSession.idToken.jwtToken,
                   });
