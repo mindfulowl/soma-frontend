@@ -36,7 +36,6 @@ export type User = {
   postcode?: string;
   firstName?: string;
   lastName?: string;
-  cognitoId?: string;
   idToken?: string;
   hasCompletedRegistration?: boolean;
 };

@@ -37,9 +37,9 @@ export const UserContext = createContext<IUserContext>({
 export const UserProvider = (props: React.PropsWithChildren<{}>) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-  const getUserDatabaseInfo = async (cogId: string, token: string) => {
+  const getUserDatabaseInfo = async (email: string, token: string) => {
     const user = await axios.get(
-      `${process.env.REACT_APP_API_BASE_URL}/users/${cogId}`,
+      `${process.env.REACT_APP_API_BASE_URL}/users/${email}`,
       {
         headers: {
           Authorization: token,
@@ -57,13 +57,12 @@ export const UserProvider = (props: React.PropsWithChildren<{}>) => {
         const tokenData = jwt_decode(idToken) as IdTokenData
 
         const userDbInfo = await getUserDatabaseInfo(
-          loggedInUser.username,
+          tokenData.email,
           loggedInUser.signInUserSession.idToken.jwtToken
         )
 
         setCurrentUser({
           email: tokenData.email,
-          cognitoId: loggedInUser.username,
           idToken: idToken,
           firstName: userDbInfo?.firstName,
           lastName: userDbInfo?.lastName,
@@ -76,7 +75,7 @@ export const UserProvider = (props: React.PropsWithChildren<{}>) => {
     };
 
     refreshUserDetailsForCurrentUser();
-  }, []);
+  }, [currentUser?.email, currentUser?.hasCompletedRegistration]);
 
   const value = { currentUser, setCurrentUser };
 
