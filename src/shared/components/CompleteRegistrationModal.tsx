@@ -1,10 +1,11 @@
-import { Box, Modal, styled } from "@mui/material";
-import { AuthEnum, CompleteRegistrationFormFieldsValues, COMPLETE_REGISTRATION_FORM_FIELDS, User } from "../../routes/authentication/types/types.auth";
+import { Box, Button, Modal, styled } from "@mui/material";
+import { AuthEnum, CompleteRegistrationFormFieldsValues, COMPLETE_REGISTRATION_FORM_FIELDS, User, UserPoolData } from "../../routes/authentication/types/types.auth";
 import FormWrapper from "../../routes/authentication/components/AuthFormWrapper.component";
 import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import axios from "axios";
 import { showErrorSnackbar } from "../../routes/authentication/utils/auth.utils";
+import { CognitoUser, CognitoUserPool } from "amazon-cognito-identity-js";
 
 const StyledModal = styled(Modal)`
   margin: auto;
@@ -17,6 +18,11 @@ const ModalContentWrapper = styled(Box)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  text-align: center;
+`;
+
+const SignOutButton = styled(Button)`
+  color: var(--color-grey-dark);
 `;
 
 type CompleteRegistrationModalProps = {
@@ -25,6 +31,13 @@ type CompleteRegistrationModalProps = {
 
 const CompleteRegistrationModal = (props: CompleteRegistrationModalProps) => {
     const { currentUser, setCurrentUser } = useContext(UserContext);
+
+    const user =
+      currentUser &&
+      new CognitoUser({
+        Username: currentUser?.email || "",
+        Pool: new CognitoUserPool(UserPoolData),
+      });
     const initialFormFields = {
         firstName: currentUser?.firstName || "",
         lastName: currentUser?.lastName || "",
@@ -52,7 +65,6 @@ const CompleteRegistrationModal = (props: CompleteRegistrationModalProps) => {
           lastName: formFields.lastName,
           postcode: formFields.postCode,
           email: currentUser.email,
-          cognitoId: currentUser.cognitoId,
         };
         try {
           await axios.post(
@@ -70,6 +82,11 @@ const CompleteRegistrationModal = (props: CompleteRegistrationModalProps) => {
         }
       };
 
+      const signOut = () => {
+        user?.signOut();
+        setCurrentUser(null);
+      };
+
     return (
         <StyledModal
             open={props.open}
@@ -85,6 +102,7 @@ const CompleteRegistrationModal = (props: CompleteRegistrationModalProps) => {
                 defaultValues={formFields}
                 buttonText="Submit"
             />
+            <SignOutButton onClick={signOut}>Sign out</SignOutButton>
           </ModalContentWrapper>
         </StyledModal>
     )
