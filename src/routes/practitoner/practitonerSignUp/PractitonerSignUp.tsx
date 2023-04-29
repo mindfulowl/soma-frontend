@@ -1,5 +1,6 @@
-import { Typography, Box, Grid, TextField } from "@mui/material";
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
+import { Box, Grid, TextField } from "@mui/material";
+import axios from "axios";
 import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
 import styled from "styled-components";
 import MultiSelect, {
@@ -20,11 +21,14 @@ import {
   StyledFormContainer,
   StyledFormButton,
 } from "../../../shared/styles/formStyles/FormStyles";
-import { H2, H4, P } from "../../../shared/styles";
-import { StandaloneSearchBox } from "@react-google-maps/api";
+import { H2, P } from "../../../shared/styles";
+import AddressAutoComplete from "../components/AddressAutoComplete";
+import ImageUpload from "../../../shared/components/ImageUpload";
+import CustomSnackbar, {
+  SnackBarConfig,
+} from "../../../shared/components/Snackbar";
+import { showErrorSnackbar } from "../../authentication/utils/auth.utils";
 import { UserContext } from "../../../shared/contexts/UserContext";
-
-const GOOGLE_LIBS = ["places"];
 
 const ButtonContainer = styled.div`
   text-align: center;
@@ -38,9 +42,6 @@ const StyledSubtitleText = styled(P)`
   text-align: center;
   padding: var(--spacing-md);
 `;
-const StyledInput = styled.input`
-  width: 300px;
-`;
 
 const defaultFormFields = {
   consultationType: "",
@@ -51,19 +52,43 @@ const defaultFormFields = {
 };
 
 const PractitonerSignUp = () => {
-  const inputRef = useRef();
   const [formFields, setFormFields] = useState<Practitoner>(defaultFormFields);
+  const [address, setAddress] = useState("");
+  const [fileData, setFileData] = useState<File | null>(null);
+  const [snackbarConfig, setSnackbarConfig] = useState<SnackBarConfig>();
   const [practitonerHealthConcerns, setPractitonerHealthConcerns] =
     useState<Array<MultiSelectOption> | null>(null);
 
-  const [address, setAddress] = useState("");
+  const { currentUser } = useContext(UserContext);
 
-  const handleChange = (value: any) => {
-    setAddress(value);
+  const handleSnackBarClose = () => {
+    setSnackbarConfig({ ...snackbarConfig, open: false });
   };
 
-  const handleSelect = (value: any) => {
-    setAddress(value);
+  const setFile = (file: File) => {
+    setFileData(file);
+  };
+
+  const resetFile = () => {
+    setFileData(null);
+  };
+
+  const s3ImageUpload = async () => {
+    try {
+      if (fileData) {
+        await axios.put(
+          `https://wpbfcj8sze.execute-api.eu-west-2.amazonaws.com/prod/soma-ui-images/${formFields.email}`,
+          fileData,
+          {
+            headers: {
+              Authorization: `${currentUser?.idToken}`,
+            },
+          }
+        );
+      }
+    } catch (error) {
+      setSnackbarConfig(showErrorSnackbar(error.message));
+    }
   };
 
   const handleFormFieldChange = (
@@ -75,22 +100,13 @@ const PractitonerSignUp = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault();
+    s3ImageUpload();
     const practitonerInput: Practitoner = {
       ...formFields,
       healthConcerns: practitonerHealthConcerns || [],
     };
     console.log(practitonerInput);
   };
-
-  const handlePlaceChanged = () => {
-    //@ts-ignore
-    const [place] = inputRef?.current.getPlaces();
-    if (place) console.log(place);
-  };
-
-  const { currentUser } = useContext(UserContext);
-
-  console.log(currentUser);
 
   return (
     <StyledFormContainer>
@@ -163,18 +179,17 @@ const PractitonerSignUp = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            {" "}
-            <StandaloneSearchBox
-              /* @ts-ignore */
-              onLoad={(ref) => (inputRef.current = ref)}
-              onPlacesChanged={handlePlaceChanged}
-            >
-              <TextField
-                fullWidth
-                type="search"
-                placeholder="Search Address"
-              ></TextField>
-            </StandaloneSearchBox>
+            <AddressAutoComplete
+              setAddress={setAddress}
+              addressValue={address}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <ImageUpload
+              onFileChange={setFile}
+              state={fileData !== null ? "uploaded" : "upload"}
+              onReset={resetFile}
+            />
           </Grid>
         </Grid>
         <ButtonContainer>
@@ -183,6 +198,7 @@ const PractitonerSignUp = () => {
           </StyledFormButton>
         </ButtonContainer>
       </FormWrapper>
+      <CustomSnackbar config={snackbarConfig} setOpen={handleSnackBarClose} />
     </StyledFormContainer>
   );
 };

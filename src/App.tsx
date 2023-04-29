@@ -13,7 +13,7 @@ const App = () => {
   return (
     <>
       <Navbar />
-      <CompleteRegistrationModal 
+      <CompleteRegistrationModal
         open={currentUser?.hasCompletedRegistration === false}
       />
       <Routes>
