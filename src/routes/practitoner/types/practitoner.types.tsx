@@ -25,6 +25,13 @@ export const PRACTITONER_SIGN_UP_TEXTFIELDS = [
     xs: 12,
   },
   {
+    name: "university",
+    label: "University",
+    type: "text",
+    sm: 6,
+    xs: 12,
+  },
+  {
     name: "websiteUrl",
     label: "Website Url",
     type: "url",

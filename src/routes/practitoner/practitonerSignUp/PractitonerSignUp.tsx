@@ -77,7 +77,7 @@ const PractitonerSignUp = () => {
     try {
       if (fileData) {
         await axios.put(
-          `https://wpbfcj8sze.execute-api.eu-west-2.amazonaws.com/prod/soma-ui-images/${formFields.email}`,
+          `https://wpbfcj8sze.execute-api.eu-west-2.amazonaws.com/prod/soma-ui-images/${formFields.email}.jpeg`,
           fileData,
           {
             headers: {
@@ -140,14 +140,6 @@ const PractitonerSignUp = () => {
             );
           })}
           <Grid item xs={12} sm={6}>
-            <MultiSelect
-              options={PRACTITONER_HEALTH_CONCERNS_OPTIONS}
-              currentValue={practitonerHealthConcerns || null}
-              handleChange={setPractitonerHealthConcerns}
-              label="Offered Health Concerns"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
             <Select
               options={PRACTITONER_CONSULATION_TYPE_OPTIONS}
               currentValue={formFields.consultationType}
@@ -165,6 +157,14 @@ const PractitonerSignUp = () => {
               name="discipline"
               label="Discipline"
               required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <MultiSelect
+              options={PRACTITONER_HEALTH_CONCERNS_OPTIONS}
+              currentValue={practitonerHealthConcerns || null}
+              handleChange={setPractitonerHealthConcerns}
+              label="Offered Health Concerns"
             />
           </Grid>
           <Grid item xs={12}>
