@@ -1,6 +1,6 @@
 import { MultiSelectOption } from "../../../shared/components/MultiSelect";
 
-export type Practitoner = {
+export type practitioner = {
   consultationType: string;
   email: string;
   phoneNumber: string;
@@ -9,7 +9,7 @@ export type Practitoner = {
   healthConcerns?: Array<MultiSelectOption>;
 };
 
-export const PRACTITONER_SIGN_UP_TEXTFIELDS = [
+export const practitioner_SIGN_UP_TEXTFIELDS = [
   {
     name: "email",
     label: "Email",
@@ -40,7 +40,7 @@ export const PRACTITONER_SIGN_UP_TEXTFIELDS = [
   },
 ];
 
-export const PRACTITONER_HEALTH_CONCERNS_OPTIONS = [
+export const practitioner_HEALTH_CONCERNS_OPTIONS = [
   {
     name: "Autoimmunity",
   },
@@ -76,7 +76,7 @@ export const PRACTITONER_HEALTH_CONCERNS_OPTIONS = [
   },
 ];
 
-export const PRACTITONER_DISCIPLINE_OPTIONS = [
+export const practitioner_DISCIPLINE_OPTIONS = [
   {
     name: "Nutritionist",
   },
@@ -103,7 +103,7 @@ export const PRACTITONER_DISCIPLINE_OPTIONS = [
   },
 ];
 
-export const PRACTITONER_CONSULATION_TYPE_OPTIONS = [
+export const practitioner_CONSULATION_TYPE_OPTIONS = [
   {
     name: "Online",
   },

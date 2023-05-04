@@ -20,7 +20,6 @@ const MultiSelect = (props: MultiSelectProps) => {
       multiple
       fullWidth
       onChange={(e, v: Array<MultiSelectOption>) => {
-        console.log(v);
         handleChange(v);
       }}
       options={options}

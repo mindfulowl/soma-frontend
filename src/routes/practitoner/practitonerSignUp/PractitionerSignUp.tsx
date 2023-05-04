@@ -7,12 +7,12 @@ import MultiSelect, {
   MultiSelectOption,
 } from "../../../shared/components/MultiSelect";
 import {
-  Practitoner,
-  PRACTITONER_CONSULATION_TYPE_OPTIONS,
-  PRACTITONER_DISCIPLINE_OPTIONS,
-  PRACTITONER_HEALTH_CONCERNS_OPTIONS,
-  PRACTITONER_SIGN_UP_TEXTFIELDS,
-} from "../types/practitoner.types";
+  practitioner,
+  practitioner_CONSULATION_TYPE_OPTIONS,
+  practitioner_DISCIPLINE_OPTIONS,
+  practitioner_HEALTH_CONCERNS_OPTIONS,
+  practitioner_SIGN_UP_TEXTFIELDS,
+} from "../types/practitioner.types";
 
 import Select from "../../../shared/components/Select";
 import { StyledLink } from "../../../shared/components/Link";
@@ -23,7 +23,9 @@ import {
 } from "../../../shared/styles/formStyles/FormStyles";
 import { H2, P } from "../../../shared/styles";
 import AddressAutoComplete from "../components/AddressAutoComplete";
-import ImageUpload from "../../../shared/components/ImageUpload";
+import ImageUpload, {
+  UploadEnum,
+} from "../../../shared/components/ImageUpload";
 import CustomSnackbar, {
   SnackBarConfig,
 } from "../../../shared/components/Snackbar";
@@ -51,12 +53,12 @@ const defaultFormFields = {
   profile: "",
 };
 
-const PractitonerSignUp = () => {
-  const [formFields, setFormFields] = useState<Practitoner>(defaultFormFields);
+const PractitionerSignUp = () => {
+  const [formFields, setFormFields] = useState<practitioner>(defaultFormFields);
   const [address, setAddress] = useState("");
   const [fileData, setFileData] = useState<File | null>(null);
   const [snackbarConfig, setSnackbarConfig] = useState<SnackBarConfig>();
-  const [practitonerHealthConcerns, setPractitonerHealthConcerns] =
+  const [practitionerHealthConcerns, setpractitionerHealthConcerns] =
     useState<Array<MultiSelectOption> | null>(null);
 
   const { currentUser } = useContext(UserContext);
@@ -77,7 +79,7 @@ const PractitonerSignUp = () => {
     try {
       if (fileData) {
         await axios.put(
-          `https://wpbfcj8sze.execute-api.eu-west-2.amazonaws.com/prod/soma-ui-images/${formFields.email}.jpeg`,
+          `${process.env.REACT_APP_IMAGE_UPLOAD}/${formFields.email}.jpeg`,
           fileData,
           {
             headers: {
@@ -101,11 +103,11 @@ const PractitonerSignUp = () => {
   const handleSubmit = (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault();
     s3ImageUpload();
-    const practitonerInput: Practitoner = {
+    const practitionerInput: practitioner = {
       ...formFields,
-      healthConcerns: practitonerHealthConcerns || [],
+      healthConcerns: practitionerHealthConcerns || [],
     };
-    console.log(practitonerInput);
+    console.log(practitionerInput);
   };
 
   return (
@@ -114,10 +116,10 @@ const PractitonerSignUp = () => {
         <LocalPharmacyIcon />
       </StyledAvatarWrapper>
 
-      <H2>Practitoner Sign Up</H2>
+      <H2>Practitioner Sign Up</H2>
       <StyledSubtitleText>
         Upon signing up, users will be able to search for your profile on our
-        <StyledLink to="/search-practitoners">Practitoners Page</StyledLink>
+        <StyledLink to="/search-practitioners">practitioners Page</StyledLink>
       </StyledSubtitleText>
       <FormWrapper
         component="form"
@@ -125,7 +127,7 @@ const PractitonerSignUp = () => {
         sx={{ mt: 3 }}
       >
         <Grid container spacing={2}>
-          {PRACTITONER_SIGN_UP_TEXTFIELDS.map((field) => {
+          {practitioner_SIGN_UP_TEXTFIELDS.map((field) => {
             return (
               <Grid item xs={field.xs} sm={field.sm} key={field.name}>
                 <TextField
@@ -141,7 +143,7 @@ const PractitonerSignUp = () => {
           })}
           <Grid item xs={12} sm={6}>
             <Select
-              options={PRACTITONER_CONSULATION_TYPE_OPTIONS}
+              options={practitioner_CONSULATION_TYPE_OPTIONS}
               currentValue={formFields.consultationType}
               onChange={handleFormFieldChange}
               name="consultationType"
@@ -151,7 +153,7 @@ const PractitonerSignUp = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Select
-              options={PRACTITONER_DISCIPLINE_OPTIONS}
+              options={practitioner_DISCIPLINE_OPTIONS}
               onChange={handleFormFieldChange}
               currentValue={formFields.discipline}
               name="discipline"
@@ -161,9 +163,9 @@ const PractitonerSignUp = () => {
           </Grid>
           <Grid item xs={12}>
             <MultiSelect
-              options={PRACTITONER_HEALTH_CONCERNS_OPTIONS}
-              currentValue={practitonerHealthConcerns || null}
-              handleChange={setPractitonerHealthConcerns}
+              options={practitioner_HEALTH_CONCERNS_OPTIONS}
+              currentValue={practitionerHealthConcerns || null}
+              handleChange={setpractitionerHealthConcerns}
               label="Offered Health Concerns"
             />
           </Grid>
@@ -187,14 +189,16 @@ const PractitonerSignUp = () => {
           <Grid item xs={12}>
             <ImageUpload
               onFileChange={setFile}
-              state={fileData !== null ? "uploaded" : "upload"}
+              state={
+                fileData !== null ? UploadEnum.UPLOADED : UploadEnum.UPLOAD
+              }
               onReset={resetFile}
             />
           </Grid>
         </Grid>
         <ButtonContainer>
           <StyledFormButton type="submit" variant="outlined" sx={{ mt: 2 }}>
-            Register as a Practitoner
+            Register as a practitioner
           </StyledFormButton>
         </ButtonContainer>
       </FormWrapper>
@@ -203,4 +207,4 @@ const PractitonerSignUp = () => {
   );
 };
 
-export default PractitonerSignUp;
+export default PractitionerSignUp;

@@ -2,14 +2,19 @@ import { Close, Upload } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-type UploadState = "upload" | "uploading" | "uploaded";
+
+export enum UploadEnum {
+  UPLOAD = "upload",
+  UPLOADING = "uploading",
+  UPLOADED = "uploaded",
+}
 
 type ImageUploadProps = {
   onFileChange: (argo: File) => void;
   onReset: () => void;
   uploadText?: string;
   disabled?: boolean;
-  state: UploadState;
+  state: UploadEnum;
   fileDownloadName?: string;
 };
 
@@ -62,7 +67,7 @@ const ImageUpload = (props: ImageUploadProps) => {
   const fileInput = useRef() as React.MutableRefObject<HTMLInputElement>;
 
   useEffect(() => {
-    if (state === "upload") {
+    if (state === UploadEnum.UPLOAD) {
       setFileName("");
     }
   }, [state, setFileName]);
@@ -74,9 +79,9 @@ const ImageUpload = (props: ImageUploadProps) => {
       return;
     }
 
-    if (state === "upload") {
+    if (state === UploadEnum.UPLOAD) {
       fileInput.current.click();
-    } else if (state === "uploaded") {
+    } else if (state === UploadEnum.UPLOADED) {
       onReset();
     }
   };
@@ -94,9 +99,9 @@ const ImageUpload = (props: ImageUploadProps) => {
   };
 
   const renderStateIcon = () => {
-    if (state === "uploading") {
+    if (state === UploadEnum.UPLOADING) {
       return <CircularProgress />;
-    } else if (state === "uploaded") {
+    } else if (state === UploadEnum.UPLOADED) {
       return <Close />;
     } else {
       return <Upload />;
@@ -106,7 +111,7 @@ const ImageUpload = (props: ImageUploadProps) => {
   return (
     <>
       <DefaultFileUploadButton
-        disabled={state === "uploading" || disabled}
+        disabled={state === UploadEnum.UPLOADING || disabled}
         onClick={handleUploadClick}
         type="button"
       >
