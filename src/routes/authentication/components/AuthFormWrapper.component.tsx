@@ -1,15 +1,14 @@
-import {
-  Box,
-  Avatar,
-  Container,
-  Typography,
-  Grid,
-  Button,
-} from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import AuthFormFields from "./AuthFormFields";
+import {
+  StyledAvatarWrapper,
+  StyledFormContainer,
+  StyledFormButton,
+} from "../../../shared/styles/formStyles/FormStyles";
+import { H2 } from "../../../shared/styles";
 import { FormField, AuthEnum, FormFieldsValues } from "../types/types.auth";
 
 type FormWrapperProps = {
@@ -26,24 +25,8 @@ type FormWrapperProps = {
   userNotConfirmed?: boolean;
 };
 
-const StyledBox = styled(Box)`
-  margin-top: var(--spacing-xs);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const StyledAvatarWrapper = styled(Avatar)`
-  background-color: var(--color-deep-purple);
-  margin-bottom: var(--spacing-sm);
-`;
-
 const StyledLink = styled(Link)`
   color: var(--color-black);
-`;
-
-const StyledButton = styled(Button)`
-  margin-bottom: var(--spacing-md);
 `;
 
 const FormWrapper = (props: FormWrapperProps) => {
@@ -62,30 +45,28 @@ const FormWrapper = (props: FormWrapperProps) => {
   const navigate = useNavigate();
   return (
     <Container component="main" maxWidth="xs">
-      <StyledBox>
+      <StyledFormContainer>
         <StyledAvatarWrapper>
           <LockOutlinedIcon />
         </StyledAvatarWrapper>
-        <Typography component="h1" variant="h5">
-          {title}
-        </Typography>
+        <H2>{title}</H2>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <AuthFormFields
             handleFormFieldChange={handleFormFieldChange}
             formFields={formFields}
             defaultValues={defaultValues}
           />
-          <StyledButton
+          <StyledFormButton
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 2 }}
           >
             {buttonText}
-          </StyledButton>
+          </StyledFormButton>
           {authType === AuthEnum.VERIFICATION ||
             (userNotConfirmed && (
-              <StyledButton
+              <StyledFormButton
                 type="button"
                 fullWidth
                 variant="outlined"
@@ -96,7 +77,7 @@ const FormWrapper = (props: FormWrapperProps) => {
                 }}
               >
                 Resend code to Email
-              </StyledButton>
+              </StyledFormButton>
             ))}
           <Grid container justifyContent="flex-end">
             <Grid item>
@@ -114,7 +95,7 @@ const FormWrapper = (props: FormWrapperProps) => {
             </Grid>
           </Grid>
         </Box>
-      </StyledBox>
+      </StyledFormContainer>
     </Container>
   );
 };

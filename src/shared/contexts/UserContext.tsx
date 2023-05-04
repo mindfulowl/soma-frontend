@@ -7,7 +7,10 @@ import React, {
 } from "react";
 import { Amplify, Auth } from "aws-amplify";
 import axios from "axios";
-import { IdTokenData, User } from "../../routes/authentication/types/types.auth";
+import {
+  IdTokenData,
+  User,
+} from "../../routes/authentication/types/types.auth";
 import jwt_decode from "jwt-decode";
 
 export const amplifyConfig = Amplify.configure({
@@ -53,13 +56,13 @@ export const UserProvider = (props: React.PropsWithChildren<{}>) => {
     const refreshUserDetailsForCurrentUser = async () => {
       try {
         const loggedInUser = await Auth.currentAuthenticatedUser();
-        const idToken = loggedInUser.signInUserSession.idToken?.jwtToken
-        const tokenData = jwt_decode(idToken) as IdTokenData
+        const idToken = loggedInUser.signInUserSession.idToken?.jwtToken;
+        const tokenData = jwt_decode(idToken) as IdTokenData;
 
         const userDbInfo = await getUserDatabaseInfo(
           tokenData.email,
           loggedInUser.signInUserSession.idToken.jwtToken
-        )
+        );
 
         setCurrentUser({
           email: tokenData.email,

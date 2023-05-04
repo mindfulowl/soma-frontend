@@ -6,8 +6,9 @@ type StyledLinkProps = {
 };
 
 export const StyledLink = styled(Link)<StyledLinkProps>`
-  padding: 0 var(--spacing-sm);
+  padding: 0 var(--spacing-xs);
   text-decoration: none;
+  font-weight: 550;
   color: var(--color-gold-font);
   margin-top: ${({ marginTop }) => marginTop && `auto`};
 `;

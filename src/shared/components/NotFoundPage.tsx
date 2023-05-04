@@ -1,7 +1,8 @@
-import { Container, Typography, Box, Button } from "@mui/material";
+import { Container, Box, Button } from "@mui/material";
 import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { H3 } from "../styles";
 
 const StyledBox = styled(Box)`
   margin-top: var(--spacing-xs);
@@ -34,10 +35,10 @@ const NotFoundPage = () => {
       <StyledBox>
         <StyledIcon />
 
-        <Typography component="h1" variant="h5">
+        <H3>
           We couldn't find the page you were looking for. Navigate to home by
           using the below button!
-        </Typography>
+        </H3>
 
         <StyledButton
           type="button"

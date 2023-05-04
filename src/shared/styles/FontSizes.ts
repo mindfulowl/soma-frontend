@@ -34,6 +34,7 @@ const FontSizes = {
   fontSizeSmallMd: "0.75rem", // 12px
   fontSizeSmallLg: "0.75rem", // 12px
   lineHeightSmall: `1.5`,
+  iconLargeSize: "3.2rem",
 };
 
 export const fontSizeCSSVars = css`
@@ -100,6 +101,10 @@ export const fontSizeCSSVars = css`
   --font-size-small-sm: ${FontSizes.fontSizeSmallSm};
   --font-size-small-md: ${FontSizes.fontSizeSmallMd};
   --font-size-small-lg: ${FontSizes.fontSizeSmallLg};
+
+  // ICON SIZES
+
+  --icon-size-large: ${FontSizes.iconLargeSize};
 
   @media ${screenSmMin} {
     --font-size-ultra: ${FontSizes.fontSizeUltraMd};
