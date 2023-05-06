@@ -48,12 +48,18 @@ const Navbar = () => {
       </StyledLink>
 
       <NavLinks>
-        <StyledLink to="/events">Events</StyledLink>
-        <StyledLink to="/news">News</StyledLink>
+        <StyledLink to="/events" marginRight>
+          Events
+        </StyledLink>
+        <StyledLink to="/news" marginRight>
+          News
+        </StyledLink>
         {!currentUser ? (
-          <StyledLink to="/sign-in">Sign In</StyledLink>
+          <StyledLink to="/sign-in" marginRight>
+            Sign In
+          </StyledLink>
         ) : (
-          <StyledLink to="/sign-in" onClick={() => signOut()}>
+          <StyledLink to="/sign-in" marginRight onClick={() => signOut()}>
             Sign Out
           </StyledLink>
         )}
