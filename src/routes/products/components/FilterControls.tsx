@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { TextField } from "@mui/material";
+import { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import MultiSelect, {
   MultiSelectOption,
@@ -6,6 +7,12 @@ import MultiSelect, {
 
 type FilterControlsProps = {
   filterName: string;
+  filterQueryStringName: string;
+  constructApiFilterString?: (
+    filterName: string,
+    values: Array<MultiSelectOption> | null,
+    productNameFilter?: string
+  ) => void;
 };
 
 const Wrapper = styled.div`
@@ -13,20 +20,44 @@ const Wrapper = styled.div`
 `;
 
 const FilterControls = (props: FilterControlsProps) => {
-  const { filterName } = props;
+  const { filterName, constructApiFilterString, filterQueryStringName } = props;
 
-  const [practitionerHealthConcerns, setpractitionerHealthConcerns] =
+  const [selectedFilterValues, setSelectedFilterValues] =
     useState<Array<MultiSelectOption> | null>(null);
+
+  const [productNameFilter, setProductNameFilter] = useState<string>();
+
+  useEffect(() => {
+    if (!selectedFilterValues) return;
+    constructApiFilterString &&
+      constructApiFilterString(filterQueryStringName, selectedFilterValues);
+  }, [selectedFilterValues]);
+
+  useEffect(() => {
+    constructApiFilterString &&
+      constructApiFilterString("name", null, productNameFilter);
+  }, [productNameFilter]);
 
   return (
     <Wrapper>
-      <MultiSelect
-        options={top100Films}
-        required={false}
-        currentValue={null}
-        handleChange={setpractitionerHealthConcerns}
-        label={filterName}
-      />
+      {filterName !== "Product Name" ? (
+        <MultiSelect
+          options={top100Films}
+          required={false}
+          currentValue={null}
+          handleChange={setSelectedFilterValues}
+          label={filterName}
+        />
+      ) : (
+        <TextField
+          fullWidth
+          type="search"
+          label={filterName}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setProductNameFilter(e.target.value)
+          }
+        />
+      )}
     </Wrapper>
   );
 };

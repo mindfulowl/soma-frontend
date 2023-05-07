@@ -107,7 +107,6 @@ const PractitionerSignUp = () => {
       ...formFields,
       healthConcerns: practitionerHealthConcerns || [],
     };
-    console.log(practitionerInput);
   };
 
   return (

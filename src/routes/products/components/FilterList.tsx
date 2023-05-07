@@ -1,7 +1,25 @@
 import { Button } from "@mui/material";
 import styled from "styled-components";
+import { MultiSelectOption } from "../../../shared/components/MultiSelect";
 import { screenMdMin } from "../../../shared/styles";
 import FilterControls from "./FilterControls";
+
+// Get all apiKeys
+
+export const FILTER_BUTTON_DATA = [
+  { name: "Product Name", apiKey: "name" },
+  { name: "Brand" },
+  { name: "Active Ingredients", apiKey: "activeIngredients[]" },
+  { name: "Inactive Ingredients" },
+  { name: "Allergns" },
+  { name: "Product Form" },
+  { name: "Dietary Requirements", apiKey: "dietaryRequirements[]" },
+  { name: "Adults" },
+  { name: "Kids Friendly" },
+  { name: "Pregnancy Friendly" },
+  { name: "Brand Recommendation" },
+  { name: "Country" },
+];
 
 type StyledByttonFilterProps = {
   active: boolean | undefined;
@@ -11,6 +29,11 @@ type FilterListProps = {
   setSelectedFilters: (selectedFilter: string) => void;
   selectedFilters: Array<string> | null;
   clearFilters: () => void;
+  constructApiFilterString?: (
+    filterName: string,
+    values: Array<MultiSelectOption> | null,
+    productNameFilter?: string
+  ) => void;
 };
 
 const DividerLine = styled.div`
@@ -30,9 +53,7 @@ const FilterWrapper = styled.div`
   }
 `;
 
-export const StyledButtonFilter = styled(Button)<StyledByttonFilterProps>`
-  background-color: ${({ active }) =>
-    active ? "var(--color-grey)" : "var(--color-white)"};
+const StyledButtonFilter = styled(Button)<StyledByttonFilterProps>`
   color: var(--color-black);
   border: 2px solid var(--color-grey-light);
   border-radius: 20px;
@@ -42,25 +63,20 @@ export const StyledButtonFilter = styled(Button)<StyledByttonFilterProps>`
   :hover {
     border: 2px solid var(--color-grey-light);
   }
+
+  @media ${screenMdMin} {
+    background-color: ${({ active }) =>
+      active ? "var(--color-grey)" : "var(--color-white)"};
+  }
 `;
 
-export const FILTER_BUTTON_DATA = [
-  { name: "Product Name" },
-  { name: "Brand" },
-  { name: "Active Ingredients" },
-  { name: "Inactive Ingredients" },
-  { name: "Allergns" },
-  { name: "Product Form" },
-  { name: "Dietary Requirements" },
-  { name: "Adults" },
-  { name: "Kids Friendly" },
-  { name: "Pregnancy Friendly" },
-  { name: "Brand Recommendation" },
-  { name: "Country" },
-];
-
 const FilterList = (props: FilterListProps) => {
-  const { selectedFilters, setSelectedFilters, clearFilters } = props;
+  const {
+    selectedFilters,
+    setSelectedFilters,
+    clearFilters,
+    constructApiFilterString,
+  } = props;
 
   return (
     <FilterWrapper>
@@ -84,7 +100,11 @@ const FilterList = (props: FilterListProps) => {
               {filter.name}
             </StyledButtonFilter>
             {selectedFilters?.includes(filter.name) && (
-              <FilterControls filterName={filter.name} />
+              <FilterControls
+                filterName={filter.name}
+                filterQueryStringName={filter.apiKey || ""}
+                constructApiFilterString={constructApiFilterString}
+              />
             )}
           </>
         );

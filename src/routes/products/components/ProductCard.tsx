@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import styled from "styled-components";
 import { StyledLink } from "../../../shared/components/Link";
 import useWindowResize, {
+  Dimensions,
   WindowSizeEnum,
 } from "../../../shared/hooks/useWindowResize";
 import { Breakpoints, H4, H5, P, screenMdMin } from "../../../shared/styles";
@@ -85,7 +86,7 @@ const ProductCard = (props: ProductCardProps) => {
       : WindowSizeEnum.SMALL
   );
 
-  const setSize = useCallback((dimensions: any) => {
+  const setSize = useCallback((dimensions: Dimensions) => {
     if (dimensions.width > Breakpoints.md) {
       setScreenSize(WindowSizeEnum.LARGE);
     } else {

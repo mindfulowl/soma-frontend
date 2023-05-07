@@ -1,5 +1,5 @@
 import { SwipeableDrawer } from "@mui/material";
-import { useEffect } from "react";
+import { MultiSelectOption } from "../../../shared/components/MultiSelect";
 import FilterList from "./FilterList";
 
 export enum AnchorPositionEnum {
@@ -16,6 +16,11 @@ type MobileFilterListProps = {
   setIsOpen: () => void;
   anchorPosition: AnchorPositionEnum;
   clearFilters: () => void;
+  constructApiFilterString?: (
+    filterName: string,
+    values: Array<MultiSelectOption> | null,
+    productNameFilter?: string
+  ) => void;
 };
 
 const MobileFilterList = (props: MobileFilterListProps) => {
@@ -26,6 +31,7 @@ const MobileFilterList = (props: MobileFilterListProps) => {
     anchorPosition,
     setIsOpen,
     clearFilters,
+    constructApiFilterString,
   } = props;
 
   return (
@@ -39,6 +45,7 @@ const MobileFilterList = (props: MobileFilterListProps) => {
         setSelectedFilters={setSelectedFilters}
         selectedFilters={selectedFilters}
         clearFilters={clearFilters}
+        constructApiFilterString={constructApiFilterString}
       />
     </SwipeableDrawer>
   );

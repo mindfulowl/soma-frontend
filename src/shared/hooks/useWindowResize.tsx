@@ -5,8 +5,13 @@ export enum WindowSizeEnum {
   LARGE = "large",
 }
 
+export type Dimensions = {
+  height: number;
+  width: number;
+};
+
 export default function useWindowResize(
-  handleDimensionChange: (dimensions: any) => void
+  handleDimensionChange: (dimensions: Dimensions) => void
 ) {
   useEffect(() => {
     function handleResize() {
