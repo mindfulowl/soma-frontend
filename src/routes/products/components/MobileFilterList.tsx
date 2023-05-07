@@ -16,7 +16,7 @@ type MobileFilterListProps = {
   setIsOpen: () => void;
   anchorPosition: AnchorPositionEnum;
   clearFilters: () => void;
-  constructApiFilterString?: (
+  constructApiFilterString: (
     filterName: string,
     values: Array<MultiSelectOption> | null,
     productNameFilter?: string

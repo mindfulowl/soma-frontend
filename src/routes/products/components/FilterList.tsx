@@ -29,7 +29,7 @@ type FilterListProps = {
   setSelectedFilters: (selectedFilter: string) => void;
   selectedFilters: Array<string> | null;
   clearFilters: () => void;
-  constructApiFilterString?: (
+  constructApiFilterString: (
     filterName: string,
     values: Array<MultiSelectOption> | null,
     productNameFilter?: string
