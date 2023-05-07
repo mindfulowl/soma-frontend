@@ -7,6 +7,7 @@ import CompleteRegistrationModal from "./shared/components/CompleteRegistrationM
 import { useContext } from "react";
 import { UserContext } from "./shared/contexts/UserContext";
 import PractitionerSignUp from "./routes/practitoner/practitonerSignUp/PractitionerSignUp";
+import NewsPage from "./routes/news/NewsPage";
 
 const App = () => {
   const { currentUser } = useContext(UserContext);
@@ -22,6 +23,7 @@ const App = () => {
         ))}
         <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/practitioner-sign-up" element={<PractitionerSignUp />} />
+        <Route path="/news" element={<NewsPage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
     </>
