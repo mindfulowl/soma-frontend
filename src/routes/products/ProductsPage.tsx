@@ -111,12 +111,7 @@ const ProductsPage = () => {
 
   useWindowResize(setSize);
 
-  // Note for testing purposes the below function will only work on the following filters atm: activeIngredients, dietaryRequirements
-  // Its set up to reconstruct the API url with applied params, I admit its not the cleanest code in the world
-
-  // If API accepts null for query params (ie activeIngredients=[]) we could probably simplfy this code
-
-  const constructApiFilterString = (
+  const constructApiFilters = (
     filterName: string,
     filterValues: Array<MultiSelectOption> | null,
     productNameFilterValue?: string
@@ -124,17 +119,18 @@ const ProductsPage = () => {
     if (filterName === "name") {
       setProductFilterApiParams({
         ...productFilterApiParams,
-        [filterName + "="]: productNameFilterValue,
+        [filterName]: productNameFilterValue,
       });
       return;
     }
+
     const values =
       filterValues &&
       filterValues.map((filterValue: MultiSelectOption) => filterValue.name);
 
     setProductFilterApiParams({
       ...productFilterApiParams,
-      [filterName + "="]: values,
+      [filterName]: values,
     });
   };
 
@@ -142,15 +138,9 @@ const ProductsPage = () => {
     const removeNullValues = removeNullProperties({
       ...productFilterApiParams,
     });
-
-    const apiString = Object.entries(removeNullValues)
-      .join("&")
-      .replace(",", "");
-    // axios.post(apiString)
-
-    // Below is to view API string for test purposes
-    console.log("https:ourApi/products?" + apiString);
-  }, [constructApiFilterString]);
+    // Test Purposes
+    console.log(removeNullValues);
+  }, [constructApiFilters]);
 
   return (
     <PageWrapper>
@@ -159,7 +149,7 @@ const ProductsPage = () => {
           setSelectedFilters={updateFilters}
           selectedFilters={selectedFilters}
           clearFilters={clearFilters}
-          constructApiFilterString={constructApiFilterString}
+          constructApiFilters={constructApiFilters}
         />
       ) : (
         <>
@@ -171,7 +161,7 @@ const ProductsPage = () => {
             anchorPosition={AnchorPositionEnum.OPEN_LEFT}
             setIsOpen={toggleMobileFilters}
             clearFilters={clearFilters}
-            constructApiFilterString={constructApiFilterString}
+            constructApiFilters={constructApiFilters}
           />
         </>
       )}

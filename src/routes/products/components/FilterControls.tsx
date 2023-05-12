@@ -8,7 +8,7 @@ import MultiSelect, {
 type FilterControlsProps = {
   filterName: string;
   filterQueryStringName: string;
-  constructApiFilterString: (
+  constructApiFilters: (
     filterName: string,
     values: Array<MultiSelectOption> | null,
     productNameFilter?: string
@@ -20,7 +20,7 @@ const Wrapper = styled.div`
 `;
 
 const FilterControls = (props: FilterControlsProps) => {
-  const { filterName, constructApiFilterString, filterQueryStringName } = props;
+  const { filterName, constructApiFilters, filterQueryStringName } = props;
 
   const [selectedFilterValues, setSelectedFilterValues] =
     useState<Array<MultiSelectOption> | null>(null);
@@ -29,11 +29,11 @@ const FilterControls = (props: FilterControlsProps) => {
 
   useEffect(() => {
     if (!selectedFilterValues) return;
-    constructApiFilterString(filterQueryStringName, selectedFilterValues);
+    constructApiFilters(filterQueryStringName, selectedFilterValues);
   }, [selectedFilterValues]);
 
   useEffect(() => {
-    constructApiFilterString("name", null, productNameFilter);
+    constructApiFilters("name", null, productNameFilter);
   }, [productNameFilter]);
 
   return (

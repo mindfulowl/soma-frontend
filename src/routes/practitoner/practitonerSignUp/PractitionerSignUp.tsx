@@ -103,10 +103,6 @@ const PractitionerSignUp = () => {
   const handleSubmit = (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault();
     s3ImageUpload();
-    const practitionerInput: practitioner = {
-      ...formFields,
-      healthConcerns: practitionerHealthConcerns || [],
-    };
   };
 
   return (
@@ -117,7 +113,7 @@ const PractitionerSignUp = () => {
 
       <H2>Practitioner Sign Up</H2>
       <StyledSubtitleText>
-        Upon signing up, users will be able to search for your profile on our{" "}
+        Upon signing up, users will be able to search for your profile on our
         <StyledLink to="/search-practitioners"> Practitioners Page</StyledLink>
       </StyledSubtitleText>
       <FormWrapper

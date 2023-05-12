@@ -16,7 +16,7 @@ type MobileFilterListProps = {
   setIsOpen: () => void;
   anchorPosition: AnchorPositionEnum;
   clearFilters: () => void;
-  constructApiFilterString: (
+  constructApiFilters: (
     filterName: string,
     values: Array<MultiSelectOption> | null,
     productNameFilter?: string
@@ -31,7 +31,7 @@ const MobileFilterList = (props: MobileFilterListProps) => {
     anchorPosition,
     setIsOpen,
     clearFilters,
-    constructApiFilterString,
+    constructApiFilters,
   } = props;
 
   return (
@@ -45,7 +45,7 @@ const MobileFilterList = (props: MobileFilterListProps) => {
         setSelectedFilters={setSelectedFilters}
         selectedFilters={selectedFilters}
         clearFilters={clearFilters}
-        constructApiFilterString={constructApiFilterString}
+        constructApiFilters={constructApiFilters}
       />
     </SwipeableDrawer>
   );

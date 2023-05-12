@@ -4,24 +4,22 @@ import { MultiSelectOption } from "../../../shared/components/MultiSelect";
 import { screenMdMin } from "../../../shared/styles";
 import FilterControls from "./FilterControls";
 
-// Get all apiKeys
-
 export const FILTER_BUTTON_DATA = [
   { name: "Product Name", apiKey: "name" },
-  { name: "Brand" },
-  { name: "Active Ingredients", apiKey: "activeIngredients[]" },
-  { name: "Inactive Ingredients" },
-  { name: "Allergns" },
-  { name: "Product Form" },
-  { name: "Dietary Requirements", apiKey: "dietaryRequirements[]" },
-  { name: "Adults" },
-  { name: "Kids Friendly" },
-  { name: "Pregnancy Friendly" },
-  { name: "Brand Recommendation" },
-  { name: "Country" },
+  { name: "Brand", apiKey: "brand" },
+  { name: "Active Ingredients", apiKey: "activeIngredients" },
+  { name: "Inactive Ingredients", apiKey: "inactiveIngredients" },
+  { name: "Allergns", apiKey: "allergns" },
+  { name: "Product Form", apiKey: "productForm" },
+  { name: "Dietary Requirements", apiKey: "dietaryRequirements" },
+  { name: "Adults", apiKey: "adults" },
+  { name: "Kids Friendly", apiKey: "kidsFriendly" },
+  { name: "Pregnancy Friendly", apiKey: "pregnancyFriendly" },
+  { name: "Brand Recommendation", apiKey: "brandRecommendation" },
+  { name: "Country", apiKey: "country" },
 ];
 
-type StyledByttonFilterProps = {
+type StyledButtonFilterProps = {
   active: boolean | undefined;
 };
 
@@ -29,7 +27,7 @@ type FilterListProps = {
   setSelectedFilters: (selectedFilter: string) => void;
   selectedFilters: Array<string> | null;
   clearFilters: () => void;
-  constructApiFilterString: (
+  constructApiFilters: (
     filterName: string,
     values: Array<MultiSelectOption> | null,
     productNameFilter?: string
@@ -53,7 +51,7 @@ const FilterWrapper = styled.div`
   }
 `;
 
-const StyledButtonFilter = styled(Button)<StyledByttonFilterProps>`
+const StyledButtonFilter = styled(Button)<StyledButtonFilterProps>`
   color: var(--color-black);
   border: 2px solid var(--color-grey-light);
   border-radius: 20px;
@@ -75,7 +73,7 @@ const FilterList = (props: FilterListProps) => {
     selectedFilters,
     setSelectedFilters,
     clearFilters,
-    constructApiFilterString,
+    constructApiFilters,
   } = props;
 
   return (
@@ -103,7 +101,7 @@ const FilterList = (props: FilterListProps) => {
               <FilterControls
                 filterName={filter.name}
                 filterQueryStringName={filter.apiKey || ""}
-                constructApiFilterString={constructApiFilterString}
+                constructApiFilters={constructApiFilters}
               />
             )}
           </>
