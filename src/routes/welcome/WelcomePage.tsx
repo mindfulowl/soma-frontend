@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import styled from "styled-components";
-import { UserContext } from "../../shared/contexts/UserContext";
 import { screenMdMin } from "../../shared/styles";
 import NavCard from "./components/NavCard";
 import { NAV_CARD_DATA } from "./types/welcome.types";
@@ -21,8 +19,6 @@ const NavCardWrapper = styled.div`
 `;
 
 const WelcomePage = () => {
-  const { currentUser } = useContext(UserContext);
-  console.log(currentUser);
   return (
     <>
       <ImageContainer

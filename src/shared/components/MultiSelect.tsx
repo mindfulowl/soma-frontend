@@ -10,10 +10,11 @@ type MultiSelectProps = {
   label: string;
   currentValue: Array<MultiSelectOption> | null;
   handleChange: (newValue: Array<MultiSelectOption>) => void;
+  required: boolean;
 };
 
 const MultiSelect = (props: MultiSelectProps) => {
-  const { options, label, handleChange, currentValue } = props;
+  const { options, label, handleChange, required } = props;
 
   return (
     <Autocomplete
@@ -26,7 +27,12 @@ const MultiSelect = (props: MultiSelectProps) => {
       getOptionLabel={(option: MultiSelectOption) => option.name}
       filterSelectedOptions
       renderInput={(params) => (
-        <TextField required={currentValue === null} {...params} label={label} />
+        <TextField
+          required={required}
+          {...params}
+          variant="outlined"
+          label={label}
+        />
       )}
     />
   );

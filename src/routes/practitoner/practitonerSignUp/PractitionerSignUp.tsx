@@ -103,11 +103,6 @@ const PractitionerSignUp = () => {
   const handleSubmit = (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault();
     s3ImageUpload();
-    const practitionerInput: practitioner = {
-      ...formFields,
-      healthConcerns: practitionerHealthConcerns || [],
-    };
-    console.log(practitionerInput);
   };
 
   return (
@@ -119,7 +114,7 @@ const PractitionerSignUp = () => {
       <H2>Practitioner Sign Up</H2>
       <StyledSubtitleText>
         Upon signing up, users will be able to search for your profile on our
-        <StyledLink to="/search-practitioners">practitioners Page</StyledLink>
+        <StyledLink to="/search-practitioners"> Practitioners Page</StyledLink>
       </StyledSubtitleText>
       <FormWrapper
         component="form"
@@ -163,6 +158,7 @@ const PractitionerSignUp = () => {
           </Grid>
           <Grid item xs={12}>
             <MultiSelect
+              required
               options={practitioner_HEALTH_CONCERNS_OPTIONS}
               currentValue={practitionerHealthConcerns || null}
               handleChange={setpractitionerHealthConcerns}

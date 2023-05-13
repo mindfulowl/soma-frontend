@@ -56,7 +56,6 @@ export const P = styled.p<TypographyProps>`
   font-weight: ${(props) => (props.bold ? "600" : "normal")};
   font-family: "Roboto";
   ${pCSS}
-  margin: 0 0 0 0;
 `;
 
 export const Small = styled.small<TypographyProps>`
