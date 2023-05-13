@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { UserContext } from "./shared/contexts/UserContext";
 import PractitionerSignUp from "./routes/practitoner/practitonerSignUp/PractitionerSignUp";
 import NewsPage from "./routes/news/NewsPage";
+import ProductsPage from "./routes/products/ProductsPage";
 
 const App = () => {
   const { currentUser } = useContext(UserContext);
@@ -18,12 +19,13 @@ const App = () => {
         open={currentUser?.hasCompletedRegistration === false}
       />
       <Routes>
+        <Route path="/welcome" element={<WelcomePage />} />
         {["/sign-in", "/sign-up", "/verification"].map((path, index) => (
           <Route path={path} element={<SignUp />} key={index} />
         ))}
-        <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/practitioner-sign-up" element={<PractitionerSignUp />} />
         <Route path="/news" element={<NewsPage />} />
+        <Route path="/products" element={<ProductsPage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
     </>
