@@ -1,23 +1,13 @@
 import { Button } from "@mui/material";
 import styled from "styled-components";
-import { MultiSelectOption } from "../../../shared/components/MultiSelect";
-import { screenMdMin } from "../../../shared/styles";
+import { MultiSelectOption } from "./MultiSelect";
+import { screenMdMin } from "../styles";
 import FilterControls from "./FilterControls";
 
-export const FILTER_BUTTON_DATA = [
-  { name: "Product Name", apiKey: "name" },
-  { name: "Brand", apiKey: "brand" },
-  { name: "Active Ingredients", apiKey: "activeIngredients" },
-  { name: "Inactive Ingredients", apiKey: "inactiveIngredients" },
-  { name: "Allergns", apiKey: "allergns" },
-  { name: "Product Form", apiKey: "productForm" },
-  { name: "Dietary Requirements", apiKey: "dietaryRequirements" },
-  { name: "Adults", apiKey: "adults" },
-  { name: "Kids Friendly", apiKey: "kidsFriendly" },
-  { name: "Pregnancy Friendly", apiKey: "pregnancyFriendly" },
-  { name: "Brand Recommendation", apiKey: "brandRecommendation" },
-  { name: "Country", apiKey: "country" },
-];
+export type FilterButtonData = {
+  name: string;
+  apiKey: string;
+};
 
 type StyledButtonFilterProps = {
   active: boolean | undefined;
@@ -27,6 +17,7 @@ type FilterListProps = {
   setSelectedFilters: (selectedFilter: string) => void;
   selectedFilters: Array<string> | null;
   clearFilters: () => void;
+  filterButtons: Array<FilterButtonData>;
   constructApiFilters: (
     filterName: string,
     values: Array<MultiSelectOption> | null,
@@ -74,6 +65,7 @@ const FilterList = (props: FilterListProps) => {
     setSelectedFilters,
     clearFilters,
     constructApiFilters,
+    filterButtons,
   } = props;
 
   return (
@@ -86,7 +78,7 @@ const FilterList = (props: FilterListProps) => {
         Clear Filters
       </StyledButtonFilter>
       <DividerLine />
-      {FILTER_BUTTON_DATA.map((filter) => {
+      {filterButtons.map((filter: FilterButtonData) => {
         return (
           <>
             <StyledButtonFilter

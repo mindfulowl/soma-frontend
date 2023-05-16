@@ -71,7 +71,9 @@ const NewsCard = (props: NewsCardProps) => {
         <StyledText>
           Date Published: {dayjs(data.pubDate).format("DD/MM/YYYY")}
         </StyledText>
-        <StyledLink to={data.web_url}>Link to Article</StyledLink>
+        <StyledLink to={data.web_url} target={"_blank"}>
+          Link to Article
+        </StyledLink>
       </div>
       <ImageWrapper
         src={
