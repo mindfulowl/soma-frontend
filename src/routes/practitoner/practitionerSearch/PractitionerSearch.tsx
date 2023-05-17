@@ -22,25 +22,28 @@ export const FILTER_PRACTITIONER_BUTTON_DATA = [
 
 export const FAKE_PRACTITIONER_DATA = [
   {
-    name: "Testing",
+    name: "Joshua Da Costa",
     discipline: "Chemist",
+    distance: "0.5 from E5",
     profile:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    healthConcerns: ["Herblore", "Agility", "Woodcutting"],
+    healthConcerns: ["Gut Health", "Immunity", "Dietary"],
   },
   {
-    name: "Testing",
-    discipline: "Chemist",
+    name: "Daniel Holmes",
+    discipline: "Doctor",
+    distance: "0.5 from E5",
     profile:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    healthConcerns: ["Herblore", "Agility", "Woodcutting"],
+    healthConcerns: ["Gut Health", "Immunity", "Dietary"],
   },
   {
-    name: "Testing",
+    name: "Francais Drake",
     discipline: "Chemist",
+    distance: "0.5 from E5",
     profile:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    healthConcerns: ["Herblore", "Agility", "Woodcutting"],
+    healthConcerns: ["Gut Health", "Immunity", "Dietary"],
   },
 ];
 

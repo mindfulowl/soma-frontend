@@ -1,6 +1,9 @@
-import { Chip } from "@mui/material";
+import { Chip, IconButton } from "@mui/material";
 import styled from "styled-components";
-import { H4, P } from "../../../shared/styles";
+import PersonIcon from "@mui/icons-material/Person";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { H3, H4, P } from "../../../shared/styles";
 import {
   CardWrapper,
   InnerCardWrapper,
@@ -10,6 +13,7 @@ export type Practitioner = {
   name: string;
   profile: string;
   discipline: string;
+  distance: string;
   healthConcerns: Array<string>;
 };
 
@@ -17,8 +21,19 @@ type PractitionerCardProps = {
   practitionerData: Practitioner;
 };
 
-const StyledHeader = styled(H4)`
-  margin-bottom: var(--spacing-md);
+const StyledHeader = styled(H3)`
+  margin-top: var(--spacing-sm);
+`;
+
+const HeaderWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const LocationWrapper = styled.div`
+  margin-top: var(--spacing-sm);
+  align-items: center;
+  display: flex;
 `;
 
 const ChipWrapper = styled.div`
@@ -29,9 +44,36 @@ const ChipWrapper = styled.div`
 `;
 
 const StyledImageContainer = styled.img`
+  border: 3px solid var(--color-grey);
   border-radius: 100px;
   width: 30%;
   height: 100%;
+`;
+
+const StyledText = styled(H4)`
+  color: var(--color-gold-font);
+  margin-bottom: var(--spacing-sm);
+`;
+
+const StyledIconBackdrop = styled.span`
+  background-color: var(--color-grey);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+`;
+
+const StyledPersonIcon = styled(PersonIcon)`
+  font-size: 35px;
+  margin-top: var(--spacing-xs);
+`;
+
+const StyledPhoneIcon = styled(LocalPhoneIcon)`
+  font-size: 35px;
+  margin-top: var(--spacing-xs);
+`;
+
+const StyledLocationIcon = styled(LocationOnIcon)`
+  font-size: 35px;
 `;
 
 const PractitionerCard = (props: PractitionerCardProps) => {
@@ -41,8 +83,25 @@ const PractitionerCard = (props: PractitionerCardProps) => {
       <StyledImageContainer
         src={require("../../../assets/images/healthNewsImage.jpeg")}
       />
+
       <InnerCardWrapper>
-        <StyledHeader>{practitionerData.name}</StyledHeader>
+        <HeaderWrapper>
+          <StyledHeader>{practitionerData.name}</StyledHeader>
+          <div>
+            <IconButton color="primary" size="large">
+              <StyledIconBackdrop>
+                <StyledPhoneIcon />
+              </StyledIconBackdrop>
+            </IconButton>
+            <IconButton color="primary" size="large">
+              <StyledIconBackdrop>
+                <StyledPersonIcon />
+              </StyledIconBackdrop>
+            </IconButton>
+          </div>
+        </HeaderWrapper>
+
+        <StyledText bold>{practitionerData.discipline}</StyledText>
         <ChipWrapper>
           {practitionerData.healthConcerns.map((healthConcern) => {
             return <Chip label={healthConcern} />;
@@ -50,6 +109,10 @@ const PractitionerCard = (props: PractitionerCardProps) => {
         </ChipWrapper>
 
         <P>{practitionerData.profile}</P>
+        <LocationWrapper>
+          <StyledLocationIcon />
+          <P>{practitionerData.distance}</P>
+        </LocationWrapper>
       </InnerCardWrapper>
     </CardWrapper>
   );
