@@ -2,6 +2,7 @@ import styled from "styled-components";
 import dayjs from "dayjs";
 import { H4, P, screenMdMin } from "../../../shared/styles";
 import { StyledLink } from "../../../shared/components/Link";
+import { NewsOptionsEnum } from "../NewsPage";
 
 type Headline = {
   main: string;
@@ -77,9 +78,9 @@ const NewsCard = (props: NewsCardProps) => {
       </div>
       <ImageWrapper
         src={
-          articleType === "Nutrition"
+          articleType === NewsOptionsEnum.NUTRITION
             ? require("../../../assets/images/nutritionNewsImage.jpeg")
-            : articleType === "Health"
+            : articleType === NewsOptionsEnum.HEALTH
             ? require("../../../assets/images/healthNewsImage.jpeg")
             : require("../../../assets/images/pharamcuticalsNewsImage.jpeg")
         }

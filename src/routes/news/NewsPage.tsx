@@ -6,6 +6,12 @@ import Select from "../../shared/components/Select";
 import { H2, screenMdMin } from "../../shared/styles";
 import NewsCard, { NewsArticle } from "./components/NewsCard";
 
+export enum NewsOptionsEnum {
+  NUTRITION = "Nutrition",
+  HEALTH = "Health",
+  PHARMACEUTICALS = "Pharmaceuticals",
+}
+
 const NEWS_SELECT_OPTIONS = [
   {
     name: "Nutrition",
@@ -46,13 +52,15 @@ const StyledHeader = styled(H2)`
 `;
 
 const SelectWrapper = styled.div`
-  width: 200px;
+  width: 12.5rem;
 `;
 
 const NewsPage = () => {
-  const [newsArticles, setNewsArticles] = useState([]);
+  const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(false);
-  const [articleType, setArticleType] = useState("Nutrition");
+  const [articleType, setArticleType] = useState<string>(
+    NewsOptionsEnum.HEALTH
+  );
 
   const getNewsArticles = async () => {
     setLoading(true);
@@ -95,7 +103,7 @@ const NewsPage = () => {
       </HeaderWrapper>
 
       <ArticlesWrapper>
-        {newsArticles?.map((article: NewsArticle) => {
+        {newsArticles.map((article) => {
           return <NewsCard data={article} articleType={articleType} />;
         })}
       </ArticlesWrapper>
