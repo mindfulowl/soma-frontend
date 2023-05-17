@@ -1,9 +1,7 @@
 import { TextField } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
-import MultiSelect, {
-  MultiSelectOption,
-} from "../../../shared/components/MultiSelect";
+import MultiSelect, { MultiSelectOption } from "./MultiSelect";
 
 type FilterControlsProps = {
   filterName: string;

@@ -6,6 +6,10 @@ import useWindowResize, {
   WindowSizeEnum,
 } from "../../../shared/hooks/useWindowResize";
 import { Breakpoints, H4, H5, P, screenMdMin } from "../../../shared/styles";
+import {
+  CardWrapper,
+  InnerCardWrapper,
+} from "../../../shared/styles/cardStyles/CardStyles";
 
 export type Product = {
   name: string;
@@ -17,25 +21,6 @@ export type Product = {
 type ProductCardProps = {
   productData: Product;
 };
-
-const CardWrapper = styled.div`
-  background-color: var(--color-white);
-  border-radius: var(--border-radius);
-  margin-bottom: var(--spacing-md);
-  padding: var(--spacing-md);
-  @media ${screenMdMin} {
-    display: flex;
-    align-items: center;
-    height: 200px;
-  }
-`;
-
-const InnerCardWrapper = styled.div`
-  flex-direction: column;
-  @media ${screenMdMin} {
-    margin-left: var(--spacing-md);
-  }
-`;
 
 const ImageWrapper = styled.img`
   border-radius: var(--border-radius);

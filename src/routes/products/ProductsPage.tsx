@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import MenuIcon from "@mui/icons-material/Menu";
-import FilterList from "./components/FilterList";
+import FilterList from "../../shared/components/FilterList";
 import MobileFilterList, {
   AnchorPositionEnum,
-} from "./components/MobileFilterList";
+} from "../../shared/components/MobileFilterList";
 import ProductCard, { Product } from "./components/ProductCard";
 import useWindowResize, {
   Dimensions,
@@ -13,6 +13,21 @@ import useWindowResize, {
 import { Breakpoints } from "../../shared/styles";
 import { removeNullProperties } from "./product.utils";
 import { MultiSelectOption } from "../../shared/components/MultiSelect";
+
+export const FILTER_BUTTON_DATA = [
+  { name: "Product Name", apiKey: "name" },
+  { name: "Brand", apiKey: "brand" },
+  { name: "Active Ingredients", apiKey: "activeIngredients" },
+  { name: "Inactive Ingredients", apiKey: "inactiveIngredients" },
+  { name: "Allergns", apiKey: "allergns" },
+  { name: "Product Form", apiKey: "productForm" },
+  { name: "Dietary Requirements", apiKey: "dietaryRequirements" },
+  { name: "Adults", apiKey: "adults" },
+  { name: "Kids Friendly", apiKey: "kidsFriendly" },
+  { name: "Pregnancy Friendly", apiKey: "pregnancyFriendly" },
+  { name: "Brand Recommendation", apiKey: "brandRecommendation" },
+  { name: "Country", apiKey: "country" },
+];
 
 const FAKE_PRODUCT_DATA: Array<Product> = [
   {
@@ -101,6 +116,7 @@ const ProductsPage = () => {
   const toggleMobileFilters = () => {
     setIsMobileDrawOpen(!isMobileDrawOpen);
   };
+
   const setSize = useCallback((dimensions: Dimensions) => {
     if (dimensions.width > Breakpoints.md) {
       setScreenSize(WindowSizeEnum.LARGE);
@@ -150,6 +166,7 @@ const ProductsPage = () => {
           selectedFilters={selectedFilters}
           clearFilters={clearFilters}
           constructApiFilters={constructApiFilters}
+          filterButtons={FILTER_BUTTON_DATA}
         />
       ) : (
         <>
@@ -162,6 +179,7 @@ const ProductsPage = () => {
             setIsOpen={toggleMobileFilters}
             clearFilters={clearFilters}
             constructApiFilters={constructApiFilters}
+            filterButtons={FILTER_BUTTON_DATA}
           />
         </>
       )}
