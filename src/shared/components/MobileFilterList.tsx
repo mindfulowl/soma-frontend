@@ -12,6 +12,7 @@ export enum AnchorPositionEnum {
 
 type MobileFilterListProps = {
   setSelectedFilters: (selectedFilter: string) => void;
+  filterOptions?: any;
   selectedFilters: Array<string> | null;
   isOpen: boolean;
   setIsOpen: () => void;
@@ -35,6 +36,7 @@ const MobileFilterList = (props: MobileFilterListProps) => {
     clearFilters,
     constructApiFilters,
     filterButtons,
+    filterOptions,
   } = props;
 
   return (
@@ -45,6 +47,7 @@ const MobileFilterList = (props: MobileFilterListProps) => {
       onOpen={setIsOpen}
     >
       <FilterList
+        filterOptions={filterOptions}
         setSelectedFilters={setSelectedFilters}
         selectedFilters={selectedFilters}
         clearFilters={clearFilters}

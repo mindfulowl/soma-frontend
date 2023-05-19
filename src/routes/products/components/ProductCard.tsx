@@ -14,8 +14,9 @@ import {
 export type Product = {
   name: string;
   activeIngredients: Array<string>;
-  inActiveIngredients: Array<string>;
-  imageUrl: string;
+  inactiveIngredients: Array<string>;
+  url: string;
+  image: string;
 };
 
 type ProductCardProps = {
@@ -65,6 +66,8 @@ const StyledText = styled(P)`
 
 const ProductCard = (props: ProductCardProps) => {
   const { productData } = props;
+
+  console.log("sf", productData);
   const [screenSize, setScreenSize] = useState<WindowSizeEnum>(
     window.innerWidth > Breakpoints.md
       ? WindowSizeEnum.LARGE
@@ -79,31 +82,38 @@ const ProductCard = (props: ProductCardProps) => {
     }
   }, []);
 
+  const productImage = require("../../../assets/images/productImage.webp");
+
   useWindowResize(setSize);
   return (
     <CardWrapper>
       {screenSize === WindowSizeEnum.LARGE && (
-        <ImageWrapper src={productData.imageUrl} />
+        <ImageWrapper
+          src={productData.image ? productData.image : productImage}
+        />
       )}
       <InnerCardWrapper>
         <StyledHeader>{productData.name}</StyledHeader>
         <StyledTextWrapper>
           <StyledSubtitle bold>Active Ingredients:</StyledSubtitle> &nbsp;
           <StyledText>
-            {" "}
-            {productData.activeIngredients.map((name) => name).join(", ")}
+            {productData.activeIngredients.length > 0 &&
+              productData.activeIngredients.map((name) => name).join(", ")}
           </StyledText>
         </StyledTextWrapper>
         <StyledTextWrapper>
           <StyledSubtitle bold> Inactive Ingredients: </StyledSubtitle> &nbsp;
           <StyledText>
-            {productData.inActiveIngredients.map((name) => name).join(", ")}
+            {productData.inactiveIngredients.length > 0 &&
+              productData.inactiveIngredients.map((name) => name).join(", ")}
           </StyledText>
         </StyledTextWrapper>
         <StyledLink to="/">Buy Product</StyledLink>
       </InnerCardWrapper>
       {screenSize === WindowSizeEnum.SMALL && (
-        <ImageWrapper src={productData.imageUrl} />
+        <ImageWrapper
+          src={productData.image ? productData.image : productImage}
+        />
       )}
     </CardWrapper>
   );

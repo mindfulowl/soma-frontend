@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { MultiSelectOption } from "./MultiSelect";
 import { screenMdMin } from "../styles";
 import FilterControls from "./FilterControls";
+import LoadingProgress from "./LoadingProgress";
 
 export type FilterButtonData = {
   name: string;
@@ -14,6 +15,7 @@ type StyledButtonFilterProps = {
 };
 
 type FilterListProps = {
+  filterOptions?: any;
   setSelectedFilters: (selectedFilter: string) => void;
   selectedFilters: Array<string> | null;
   clearFilters: () => void;
@@ -66,7 +68,12 @@ const FilterList = (props: FilterListProps) => {
     clearFilters,
     constructApiFilters,
     filterButtons,
+    filterOptions,
   } = props;
+
+  if (!filterOptions) {
+    return <LoadingProgress />;
+  }
 
   return (
     <FilterWrapper>
@@ -78,7 +85,7 @@ const FilterList = (props: FilterListProps) => {
         Clear Filters
       </StyledButtonFilter>
       <DividerLine />
-      {filterButtons.map((filter: FilterButtonData) => {
+      {filterButtons?.map((filter: FilterButtonData) => {
         return (
           <>
             <StyledButtonFilter
@@ -91,8 +98,9 @@ const FilterList = (props: FilterListProps) => {
             </StyledButtonFilter>
             {selectedFilters?.includes(filter.name) && (
               <FilterControls
+                filterOptions={filterOptions}
                 filterName={filter.name}
-                filterQueryStringName={filter.apiKey || ""}
+                filterApiKey={filter.apiKey || ""}
                 constructApiFilters={constructApiFilters}
               />
             )}

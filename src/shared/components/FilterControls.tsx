@@ -1,11 +1,13 @@
 import { TextField } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
+import LoadingProgress from "./LoadingProgress";
 import MultiSelect, { MultiSelectOption } from "./MultiSelect";
 
 type FilterControlsProps = {
   filterName: string;
-  filterQueryStringName: string;
+  filterApiKey: string;
+  filterOptions: any;
   constructApiFilters: (
     filterName: string,
     values: Array<MultiSelectOption> | null,
@@ -18,7 +20,8 @@ const Wrapper = styled.div`
 `;
 
 const FilterControls = (props: FilterControlsProps) => {
-  const { filterName, constructApiFilters, filterQueryStringName } = props;
+  const { filterOptions, filterName, constructApiFilters, filterApiKey } =
+    props;
 
   const [selectedFilterValues, setSelectedFilterValues] =
     useState<Array<MultiSelectOption> | null>(null);
@@ -27,18 +30,24 @@ const FilterControls = (props: FilterControlsProps) => {
 
   useEffect(() => {
     if (!selectedFilterValues) return;
-    constructApiFilters(filterQueryStringName, selectedFilterValues);
+    constructApiFilters(filterApiKey, selectedFilterValues);
   }, [selectedFilterValues]);
 
   useEffect(() => {
     constructApiFilters("name", null, productNameFilter);
   }, [productNameFilter]);
 
+  // const filterNames = filterOptions[filterApiKey]?.map((filter: string) => {
+  //   return { name: filter };
+  // });
+
+  // console.log("sd", filterNames);
+
   return (
     <Wrapper>
       {filterName !== "Product Name" ? (
         <MultiSelect
-          options={top100Films}
+          options={filterOptions[filterApiKey]}
           required={false}
           currentValue={null}
           handleChange={setSelectedFilterValues}
