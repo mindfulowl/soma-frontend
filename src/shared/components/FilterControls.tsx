@@ -1,7 +1,6 @@
 import { TextField } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
-import LoadingProgress from "./LoadingProgress";
 import MultiSelect, { MultiSelectOption } from "./MultiSelect";
 
 type FilterControlsProps = {
@@ -31,17 +30,13 @@ const FilterControls = (props: FilterControlsProps) => {
   useEffect(() => {
     if (!selectedFilterValues) return;
     constructApiFilters(filterApiKey, selectedFilterValues);
-  }, [selectedFilterValues]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFilterValues, filterApiKey]);
 
   useEffect(() => {
     constructApiFilters("name", null, productNameFilter);
-  }, [productNameFilter]);
-
-  // const filterNames = filterOptions[filterApiKey]?.map((filter: string) => {
-  //   return { name: filter };
-  // });
-
-  // console.log("sd", filterNames);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productNameFilter, filterApiKey]);
 
   return (
     <Wrapper>
@@ -68,13 +63,3 @@ const FilterControls = (props: FilterControlsProps) => {
 };
 
 export default FilterControls;
-
-const top100Films = [
-  { name: "Vitamin C" },
-  { name: "Herblore" },
-  { name: "Snapdragon" },
-  { name: "Oak Leaf" },
-  { name: "Acorns" },
-  { name: "Lactobacillius" },
-  { name: "Salivarius" },
-];

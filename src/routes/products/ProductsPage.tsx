@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import MenuIcon from "@mui/icons-material/Menu";
 import FilterList from "../../shared/components/FilterList";
@@ -13,9 +14,9 @@ import useWindowResize, {
 import { Breakpoints } from "../../shared/styles";
 import { removeNullProperties } from "./product.utils";
 import { MultiSelectOption } from "../../shared/components/MultiSelect";
-import axios from "axios";
 import { UserContext } from "../../shared/contexts/UserContext";
 import LoadingProgress from "../../shared/components/LoadingProgress";
+import NotFoundCard from "../../shared/components/NotFoundCard";
 
 export const FILTER_BUTTON_DATA = [
   { name: "Product Name", apiKey: "name" },
@@ -29,7 +30,6 @@ export const FILTER_BUTTON_DATA = [
   { name: "Dietary Requirements", apiKey: "dietaryRequirements" },
   { name: "Kids Friendly", apiKey: "kids" },
   { name: "Pregnancy Friendly", apiKey: "pregnancyFriendlyFlags" },
-  // { name: "Brand Recommendation", apiKey: "brandRecommendation" },
   { name: "Country", apiKey: "countries" },
 ];
 
@@ -108,8 +108,6 @@ const ProductsPage = () => {
   };
 
   const getProducts = async () => {
-    if (!currentUser) return;
-
     const input = removeNullProperties({
       ...productFilterApiParams,
     });
@@ -123,7 +121,6 @@ const ProductsPage = () => {
         },
       }
     );
-
     setProducts(newProductList.data);
   };
 
@@ -144,9 +141,9 @@ const ProductsPage = () => {
     );
 
     const filters = filterListOptions.reduce(
-      (obj, item: any) => ({
+      (obj, filter: any) => ({
         ...obj,
-        [item.filterName]: item.value,
+        [filter.filterName]: filter.value,
       }),
       {}
     );
@@ -156,13 +153,14 @@ const ProductsPage = () => {
 
   useEffect(() => {
     getProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productFilterApiParams]);
 
   useEffect(() => {
     getFilterOptions();
   }, []);
 
-  if (!filterOptions) {
+  if (!filterOptions || !currentUser) {
     return <LoadingProgress />;
   }
 
@@ -194,9 +192,13 @@ const ProductsPage = () => {
         </>
       )}
       <ProductsWrapper>
-        {products?.map((product) => {
-          return <ProductCard productData={product} key={product.name} />;
-        })}
+        {products.length > 0 ? (
+          products.map((product, i) => (
+            <ProductCard key={i} productData={product} />
+          ))
+        ) : (
+          <NotFoundCard />
+        )}
       </ProductsWrapper>
     </PageWrapper>
   );

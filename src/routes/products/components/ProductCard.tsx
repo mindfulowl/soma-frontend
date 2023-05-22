@@ -31,8 +31,8 @@ const ImageWrapper = styled.img`
   margin-top: var(--spacing-md);
   @media ${screenMdMin} {
     margin-top: 0;
-    max-height: 100%;
-    max-width: 100%;
+    max-height: 70%;
+    max-width: 50%;
   }
 `;
 
@@ -60,14 +60,14 @@ const StyledTextWrapper = styled.div`
 const StyledText = styled(P)`
   font-size: var(--font-size-mobile);
   @media ${screenMdMin} {
-    font-size: var(--font-size-p);
+    margin-left: var(--spacing-sm);
+    font-size: var(--font-size-small);
   }
 `;
 
 const ProductCard = (props: ProductCardProps) => {
   const { productData } = props;
 
-  console.log("sf", productData);
   const [screenSize, setScreenSize] = useState<WindowSizeEnum>(
     window.innerWidth > Breakpoints.md
       ? WindowSizeEnum.LARGE
@@ -85,6 +85,7 @@ const ProductCard = (props: ProductCardProps) => {
   const productImage = require("../../../assets/images/productImage.webp");
 
   useWindowResize(setSize);
+
   return (
     <CardWrapper>
       {screenSize === WindowSizeEnum.LARGE && (

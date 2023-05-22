@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import styled from "styled-components";
 import MobileFilterList, {
@@ -10,7 +10,6 @@ import useWindowResize, {
   WindowSizeEnum,
 } from "../../../shared/hooks/useWindowResize";
 import { Breakpoints } from "../../../shared/styles";
-import { removeNullProperties } from "../../products/product.utils";
 import PractitionerCard from "../components/PractitionerCard";
 import FilterList from "../../../shared/components/FilterList";
 
@@ -107,14 +106,6 @@ const ProductsPage = () => {
       [filterName]: values,
     });
   };
-
-  useEffect(() => {
-    const removeNullValues = removeNullProperties({
-      ...productFilterApiParams,
-    });
-    // Test Purposes
-    console.log(removeNullValues);
-  }, [constructApiFilters]);
 
   return (
     <PageWrapper>

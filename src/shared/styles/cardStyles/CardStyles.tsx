@@ -9,7 +9,7 @@ export const CardWrapper = styled.div`
   @media ${screenMdMin} {
     display: flex;
     align-items: center;
-    height: 200px;
+    height: 300px;
   }
 `;
 

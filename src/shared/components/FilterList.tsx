@@ -4,6 +4,7 @@ import { MultiSelectOption } from "./MultiSelect";
 import { screenMdMin } from "../styles";
 import FilterControls from "./FilterControls";
 import LoadingProgress from "./LoadingProgress";
+import React from "react";
 
 export type FilterButtonData = {
   name: string;
@@ -87,7 +88,7 @@ const FilterList = (props: FilterListProps) => {
       <DividerLine />
       {filterButtons?.map((filter: FilterButtonData) => {
         return (
-          <>
+          <React.Fragment key={filter.apiKey}>
             <StyledButtonFilter
               key={filter.name}
               active={selectedFilters?.includes(filter.name) ? true : undefined}
@@ -104,7 +105,7 @@ const FilterList = (props: FilterListProps) => {
                 constructApiFilters={constructApiFilters}
               />
             )}
-          </>
+          </React.Fragment>
         );
       })}
     </FilterWrapper>
