@@ -157,7 +157,7 @@ const ProductsPage = () => {
   useEffect(() => {
     getProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productFilterApiParams]);
+  }, [productFilterApiParams, currentUser?.idToken]);
 
   useEffect(() => {
     getFilterOptions();

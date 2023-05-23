@@ -13,6 +13,7 @@ import PractitionerSearch from "./routes/practitoner/practitionerSearch/Practiti
 
 const App = () => {
   const { currentUser } = useContext(UserContext);
+
   return (
     <>
       <Navbar />
