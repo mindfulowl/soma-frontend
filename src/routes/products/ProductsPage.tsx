@@ -142,9 +142,9 @@ const ProductsPage = () => {
     );
 
     const filters: FilterOptions = filterListOptions.reduce(
-      (obj, filter: any) => ({
+      (obj, filter) => ({
         ...obj,
-        [filter.filterName]: filter.value,
+        [filter.filterName.toString()]: filter.value,
       }),
       {}
     );
