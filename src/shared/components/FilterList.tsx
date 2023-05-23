@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import styled from "styled-components";
 import { MultiSelectOption } from "./MultiSelect";
 import { screenMdMin } from "../styles";
-import FilterControls from "./FilterControls";
+import FilterControls, { FilterOptions } from "./FilterControls";
 import LoadingProgress from "./LoadingProgress";
 import React from "react";
 
@@ -16,7 +16,7 @@ type StyledButtonFilterProps = {
 };
 
 type FilterListProps = {
-  filterOptions?: any;
+  filterOptions?: FilterOptions;
   setSelectedFilters: (selectedFilter: string) => void;
   selectedFilters: Array<string> | null;
   clearFilters: () => void;

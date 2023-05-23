@@ -3,10 +3,24 @@ import { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import MultiSelect, { MultiSelectOption } from "./MultiSelect";
 
+export type FilterOptions = {
+  activeIngredients?: Array<MultiSelectOption>;
+  allergens?: Array<MultiSelectOption>;
+  brands?: Array<MultiSelectOption>;
+  capsuleIngredients?: Array<MultiSelectOption>;
+  countries?: Array<MultiSelectOption>;
+  kids?: Array<MultiSelectOption>;
+  pregnancyFriendlyFlags?: Array<MultiSelectOption>;
+  dietaryRequirements?: Array<MultiSelectOption>;
+  healthConcerns?: Array<MultiSelectOption>;
+  inactiveIngredients?: Array<MultiSelectOption>;
+  productForms?: Array<MultiSelectOption>;
+};
+
 type FilterControlsProps = {
   filterName: string;
   filterApiKey: string;
-  filterOptions: any;
+  filterOptions: FilterOptions;
   constructApiFilters: (
     filterName: string,
     values: Array<MultiSelectOption> | null,
@@ -42,7 +56,7 @@ const FilterControls = (props: FilterControlsProps) => {
     <Wrapper>
       {filterName !== "Product Name" ? (
         <MultiSelect
-          options={filterOptions[filterApiKey]}
+          options={filterOptions[filterApiKey as keyof FilterOptions]}
           required={false}
           currentValue={null}
           handleChange={setSelectedFilterValues}

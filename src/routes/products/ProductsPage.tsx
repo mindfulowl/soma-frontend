@@ -17,6 +17,7 @@ import { MultiSelectOption } from "../../shared/components/MultiSelect";
 import { UserContext } from "../../shared/contexts/UserContext";
 import LoadingProgress from "../../shared/components/LoadingProgress";
 import NotFoundCard from "../../shared/components/NotFoundCard";
+import { FilterOptions } from "../../shared/components/FilterControls";
 
 export const FILTER_BUTTON_DATA = [
   { name: "Product Name", apiKey: "name" },
@@ -52,7 +53,7 @@ const ProductsPage = () => {
   const [productFilterApiParams, setProductFilterApiParams] = useState({});
   const [products, setProducts] = useState<Array<Product>>([]);
   const [isMobileDrawOpen, setIsMobileDrawOpen] = useState(false);
-  const [filterOptions, setFilterOptions] = useState({});
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>();
   const [screenSize, setScreenSize] = useState<WindowSizeEnum>(
     window.innerWidth > Breakpoints.md
       ? WindowSizeEnum.LARGE
@@ -140,13 +141,15 @@ const ProductsPage = () => {
       }
     );
 
-    const filters = filterListOptions.reduce(
+    const filters: FilterOptions = filterListOptions.reduce(
       (obj, filter: any) => ({
         ...obj,
         [filter.filterName]: filter.value,
       }),
       {}
     );
+
+    console.log(filters);
 
     setFilterOptions(filters);
   };

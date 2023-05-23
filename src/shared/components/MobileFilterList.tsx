@@ -1,7 +1,7 @@
 import { SwipeableDrawer } from "@mui/material";
 import { MultiSelectOption } from "./MultiSelect";
 import FilterList, { FilterButtonData } from "./FilterList";
-import { FILTER_BUTTON_DATA } from "../../routes/products/ProductsPage";
+import { FilterOptions } from "./FilterControls";
 
 export enum AnchorPositionEnum {
   OPEN_TOP = "top",
@@ -12,7 +12,7 @@ export enum AnchorPositionEnum {
 
 type MobileFilterListProps = {
   setSelectedFilters: (selectedFilter: string) => void;
-  filterOptions?: any;
+  filterOptions?: FilterOptions;
   selectedFilters: Array<string> | null;
   isOpen: boolean;
   setIsOpen: () => void;

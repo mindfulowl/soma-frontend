@@ -6,7 +6,7 @@ export type MultiSelectOption = {
 };
 
 type MultiSelectProps = {
-  options: Array<MultiSelectOption>;
+  options?: Array<MultiSelectOption>;
   label: string;
   currentValue: Array<MultiSelectOption> | null;
   handleChange: (newValue: Array<MultiSelectOption>) => void;
@@ -23,7 +23,7 @@ const MultiSelect = (props: MultiSelectProps) => {
       onChange={(e, v: Array<MultiSelectOption>) => {
         handleChange(v);
       }}
-      options={options}
+      options={options || []}
       getOptionLabel={(option: MultiSelectOption) => option.name}
       filterSelectedOptions
       renderInput={(params) => (
