@@ -71,6 +71,8 @@ export const UserProvider = (props: React.PropsWithChildren<{}>) => {
           lastName: userDbInfo?.lastName,
           postcode: userDbInfo?.postcode,
           hasCompletedRegistration: !!userDbInfo,
+          // Update Below once API is complete
+          isMember: !!userDbInfo,
         });
       } catch (error) {
         console.log("error", error);

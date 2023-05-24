@@ -18,9 +18,11 @@ export type CompleteRegistrationFormFieldsValues = {
   firstName: string;
   lastName: string;
   postCode: string;
-}
+};
 
-export type FormFieldsValues = AuthFormFieldsValues | CompleteRegistrationFormFieldsValues
+export type FormFieldsValues =
+  | AuthFormFieldsValues
+  | CompleteRegistrationFormFieldsValues;
 
 export type FormField = {
   name: string;
@@ -38,12 +40,13 @@ export type User = {
   lastName?: string;
   idToken?: string;
   hasCompletedRegistration?: boolean;
+  isMember?: boolean;
 };
 
 export type IdTokenData = {
   email: string;
-  'cognito:username': string;
-}
+  "cognito:username": string;
+};
 
 export const UserPoolData = {
   UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID as string,

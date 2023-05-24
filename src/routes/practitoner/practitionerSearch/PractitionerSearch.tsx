@@ -12,12 +12,21 @@ import useWindowResize, {
 import { Breakpoints } from "../../../shared/styles";
 import PractitionerCard from "../components/PractitionerCard";
 import FilterList from "../../../shared/components/FilterList";
+import { FilterOptions } from "../../../shared/components/FilterControls";
 
 export const FILTER_PRACTITIONER_BUTTON_DATA = [
   { name: "Consultation Type", apiKey: "consultationType" },
   { name: "Discipline", apiKey: "discipline" },
   { name: "Health Concerns", apiKey: "healthConcerns" },
 ];
+
+const PRACTITIONER_FILTER_OPTIONS: FilterOptions = {
+  healthConcerns: [
+    { name: "Snapdragon" },
+    { name: "Ranrarr" },
+    { name: "Torstol" },
+  ],
+};
 
 export const FAKE_PRACTITIONER_DATA = [
   {
@@ -116,6 +125,7 @@ const ProductsPage = () => {
           clearFilters={clearFilters}
           constructApiFilters={constructApiFilters}
           filterButtons={FILTER_PRACTITIONER_BUTTON_DATA}
+          filterOptions={PRACTITIONER_FILTER_OPTIONS}
         />
       ) : (
         <>

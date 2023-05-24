@@ -1,3 +1,4 @@
+import { Chip } from "@mui/material";
 import { useState, useCallback } from "react";
 import styled from "styled-components";
 import { StyledLink } from "../../../shared/components/Link";
@@ -15,6 +16,7 @@ export type Product = {
   name: string;
   activeIngredients: Array<string>;
   inactiveIngredients: Array<string>;
+  healthConcerns: Array<string>;
   url: string;
   image: string;
 };
@@ -25,14 +27,14 @@ type ProductCardProps = {
 
 const ImageWrapper = styled.img`
   border-radius: var(--border-radius);
-  max-height: 75%;
-  max-width: 100%;
   font-size: var(--font-size-small);
   margin-top: var(--spacing-md);
+  height: 30%;
+  width: 100%;
   @media ${screenMdMin} {
     margin-top: 0;
-    max-height: 70%;
-    max-width: 50%;
+    height: 85%;
+    max-width: 45%;
   }
 `;
 
@@ -44,24 +46,36 @@ const StyledHeader = styled(H4)`
   }
 `;
 
+const HealthConcernWrapper = styled.div`
+  justify-content: space-between;
+`;
+
 const StyledSubtitle = styled(H5)`
-  font-size: var(--font-size-mobile);
+  font-size: var(--font-size-small);
   @media ${screenMdMin} {
-    font-size: var(--font-size-p);
+    font-size: var(--font-size-mobile);
+    max-width: 75px;
   }
 `;
 
 const StyledTextWrapper = styled.div`
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
   display: flex;
-  font-size: var(--font-size-small);
+`;
+
+const StyledChip = styled(Chip)`
+  margin-bottom: var(--spacing-sm);
+  @media ${screenMdMin} {
+    margin-top: var(--spacing-sm);
+    margin-bottom: 0;
+  }
 `;
 
 const StyledText = styled(P)`
-  font-size: var(--font-size-mobile);
+  font-size: var(--font-size-small);
   @media ${screenMdMin} {
-    margin-left: var(--spacing-sm);
-    font-size: var(--font-size-small);
+    display: flex;
+    margin-left: var(--spacing-md);
   }
 `;
 
@@ -103,13 +117,30 @@ const ProductCard = (props: ProductCardProps) => {
           </StyledText>
         </StyledTextWrapper>
         <StyledTextWrapper>
-          <StyledSubtitle bold> Inactive Ingredients: </StyledSubtitle> &nbsp;
+          <StyledSubtitle bold>Inactive Ingredients: </StyledSubtitle> &nbsp;
           <StyledText>
-            {productData.inactiveIngredients.length > 0 &&
-              productData.inactiveIngredients.map((name) => name).join(", ")}
+            {productData.inactiveIngredients.length === 0
+              ? "N/A"
+              : productData.inactiveIngredients.map((name) => name).join(", ")}
           </StyledText>
         </StyledTextWrapper>
-        <StyledLink to="/">Buy Product</StyledLink>
+        <StyledTextWrapper>
+          <StyledSubtitle bold>Health Concerns: </StyledSubtitle> &nbsp;
+          <StyledText>
+            {productData.healthConcerns.length === 0
+              ? "N/A"
+              : productData.healthConcerns.map((healthConcern, i) => (
+                  <HealthConcernWrapper>
+                    <StyledChip label={healthConcern} key={i} />
+                    &nbsp;
+                  </HealthConcernWrapper>
+                ))}
+          </StyledText>
+        </StyledTextWrapper>
+
+        <StyledLink to={productData.url} target="_blank">
+          Buy Product
+        </StyledLink>
       </InnerCardWrapper>
       {screenSize === WindowSizeEnum.SMALL && (
         <ImageWrapper src={productData.image ?? productImage} />
