@@ -118,7 +118,7 @@ const ProductsPage = () => {
       input,
       {
         headers: {
-          Authorization: `${currentUser?.idToken}`,
+          Authorization: currentUser?.idToken,
         },
       }
     );

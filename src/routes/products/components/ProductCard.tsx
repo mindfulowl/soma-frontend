@@ -112,9 +112,7 @@ const ProductCard = (props: ProductCardProps) => {
         <StyledLink to="/">Buy Product</StyledLink>
       </InnerCardWrapper>
       {screenSize === WindowSizeEnum.SMALL && (
-        <ImageWrapper
-          src={productData.image ? productData.image : productImage}
-        />
+        <ImageWrapper src={productData.image ?? productImage} />
       )}
     </CardWrapper>
   );
