@@ -3,9 +3,24 @@ import { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import MultiSelect, { MultiSelectOption } from "./MultiSelect";
 
+export type FilterOptions = {
+  activeIngredients?: Array<MultiSelectOption>;
+  allergens?: Array<MultiSelectOption>;
+  brands?: Array<MultiSelectOption>;
+  capsuleIngredients?: Array<MultiSelectOption>;
+  countries?: Array<MultiSelectOption>;
+  kids?: Array<MultiSelectOption>;
+  pregnancyFriendlyFlags?: Array<MultiSelectOption>;
+  dietaryRequirements?: Array<MultiSelectOption>;
+  healthConcerns?: Array<MultiSelectOption>;
+  inactiveIngredients?: Array<MultiSelectOption>;
+  productForms?: Array<MultiSelectOption>;
+};
+
 type FilterControlsProps = {
   filterName: string;
-  filterQueryStringName: string;
+  filterApiKey: string;
+  filterOptions: FilterOptions;
   constructApiFilters: (
     filterName: string,
     values: Array<MultiSelectOption> | null,
@@ -18,7 +33,8 @@ const Wrapper = styled.div`
 `;
 
 const FilterControls = (props: FilterControlsProps) => {
-  const { filterName, constructApiFilters, filterQueryStringName } = props;
+  const { filterOptions, filterName, constructApiFilters, filterApiKey } =
+    props;
 
   const [selectedFilterValues, setSelectedFilterValues] =
     useState<Array<MultiSelectOption> | null>(null);
@@ -27,18 +43,22 @@ const FilterControls = (props: FilterControlsProps) => {
 
   useEffect(() => {
     if (!selectedFilterValues) return;
-    constructApiFilters(filterQueryStringName, selectedFilterValues);
-  }, [selectedFilterValues]);
+    constructApiFilters(filterApiKey, selectedFilterValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFilterValues, filterApiKey]);
 
   useEffect(() => {
     constructApiFilters("name", null, productNameFilter);
-  }, [productNameFilter]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productNameFilter, filterApiKey]);
+
+  console.log(filterOptions);
 
   return (
     <Wrapper>
       {filterName !== "Product Name" ? (
         <MultiSelect
-          options={top100Films}
+          options={filterOptions[filterApiKey as keyof FilterOptions]}
           required={false}
           currentValue={null}
           handleChange={setSelectedFilterValues}
@@ -59,13 +79,3 @@ const FilterControls = (props: FilterControlsProps) => {
 };
 
 export default FilterControls;
-
-const top100Films = [
-  { name: "Vitamin C" },
-  { name: "Herblore" },
-  { name: "Snapdragon" },
-  { name: "Oak Leaf" },
-  { name: "Acorns" },
-  { name: "Lactobacillius" },
-  { name: "Salivarius" },
-];

@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import MenuIcon from "@mui/icons-material/Menu";
 import FilterList from "../../shared/components/FilterList";
@@ -13,71 +14,24 @@ import useWindowResize, {
 import { Breakpoints } from "../../shared/styles";
 import { removeNullProperties } from "./product.utils";
 import { MultiSelectOption } from "../../shared/components/MultiSelect";
+import { UserContext } from "../../shared/contexts/UserContext";
+import LoadingProgress from "../../shared/components/LoadingProgress";
+import NotFoundCard from "../../shared/components/NotFoundCard";
+import { FilterOptions } from "../../shared/components/FilterControls";
 
 export const FILTER_BUTTON_DATA = [
   { name: "Product Name", apiKey: "name" },
-  { name: "Brand", apiKey: "brand" },
+  { name: "Brand", apiKey: "brands" },
   { name: "Active Ingredients", apiKey: "activeIngredients" },
   { name: "Inactive Ingredients", apiKey: "inactiveIngredients" },
-  { name: "Allergns", apiKey: "allergns" },
-  { name: "Product Form", apiKey: "productForm" },
+  { name: "Health Concerns", apiKey: "healthConcerns" },
+  { name: "Capsule Ingredients", apiKey: "capsuleIngredients" },
+  { name: "Allergens", apiKey: "allergens" },
+  { name: "Product Form", apiKey: "productForms" },
   { name: "Dietary Requirements", apiKey: "dietaryRequirements" },
-  { name: "Adults", apiKey: "adults" },
-  { name: "Kids Friendly", apiKey: "kidsFriendly" },
-  { name: "Pregnancy Friendly", apiKey: "pregnancyFriendly" },
-  { name: "Brand Recommendation", apiKey: "brandRecommendation" },
-  { name: "Country", apiKey: "country" },
-];
-
-const FAKE_PRODUCT_DATA: Array<Product> = [
-  {
-    name: "Happy Tummy",
-    activeIngredients: ["Salivarius", "Lactobacillius", "Vitamin C"],
-    inActiveIngredients: [
-      "purified talc",
-      "stearic acid",
-      "povidone",
-      "starch pregelatinised",
-    ],
-    imageUrl:
-      "https://www.sbs.com.au/food/sites/sbs.com.au.food/files/styles/full/public/gettyimages-169371459.jpg?itok=eZUqM9o2",
-  },
-  {
-    name: "Mega Strength",
-    activeIngredients: ["Salivarius", "Lactobacillius", "Vitamin C"],
-    inActiveIngredients: [
-      "purified talc",
-      "stearic acid",
-      "povidone",
-      "starch pregelatinised",
-    ],
-    imageUrl:
-      "https://www.sbs.com.au/food/sites/sbs.com.au.food/files/styles/full/public/gettyimages-169371459.jpg?itok=eZUqM9o2",
-  },
-  {
-    name: "Pre Natal Complex",
-    activeIngredients: ["Salivarius", "Lactobacillius", "Vitamin C"],
-    inActiveIngredients: [
-      "purified talc",
-      "stearic acid",
-      "povidone",
-      "starch pregelatinised",
-    ],
-    imageUrl:
-      "https://www.sbs.com.au/food/sites/sbs.com.au.food/files/styles/full/public/gettyimages-169371459.jpg?itok=eZUqM9o2",
-  },
-  {
-    name: "Night Nurse Cold & Flu",
-    activeIngredients: ["Salivarius", "Lactobacillius", "Vitamin C"],
-    inActiveIngredients: [
-      "purified talc",
-      "stearic acid",
-      "povidone",
-      "starch pregelatinised",
-    ],
-    imageUrl:
-      "https://www.sbs.com.au/food/sites/sbs.com.au.food/files/styles/full/public/gettyimages-169371459.jpg?itok=eZUqM9o2",
-  },
+  { name: "Kids Friendly", apiKey: "kids" },
+  { name: "Pregnancy Friendly", apiKey: "pregnancyFriendlyFlags" },
+  { name: "Country", apiKey: "countries" },
 ];
 
 const PageWrapper = styled.div`
@@ -97,12 +51,16 @@ const ProductsPage = () => {
     null
   );
   const [productFilterApiParams, setProductFilterApiParams] = useState({});
+  const [products, setProducts] = useState<Array<Product>>([]);
   const [isMobileDrawOpen, setIsMobileDrawOpen] = useState(false);
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>();
   const [screenSize, setScreenSize] = useState<WindowSizeEnum>(
     window.innerWidth > Breakpoints.md
       ? WindowSizeEnum.LARGE
       : WindowSizeEnum.SMALL
   );
+
+  const { currentUser } = useContext(UserContext);
 
   const updateFilters = (newFilter: string) => {
     setSelectedFilters([...(selectedFilters || []), newFilter]);
@@ -150,13 +108,62 @@ const ProductsPage = () => {
     });
   };
 
-  useEffect(() => {
-    const removeNullValues = removeNullProperties({
+  const getProducts = async () => {
+    const input = removeNullProperties({
       ...productFilterApiParams,
     });
-    // Test Purposes
-    console.log(removeNullValues);
-  }, [constructApiFilters]);
+
+    const newProductList = await axios.post(
+      `${process.env.REACT_APP_API_BASE_URL}/products/search`,
+      input,
+      {
+        headers: {
+          Authorization: currentUser?.idToken,
+        },
+      }
+    );
+    setProducts(newProductList.data);
+  };
+
+  const getFilterOptions = async () => {
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_BASE_URL}/filter-options`
+    );
+
+    const filterListOptions = Object.keys(res.data).map(
+      (filterOption: string) => {
+        return {
+          filterName: [filterOption],
+          value: res.data[filterOption].map((values: Array<string>) => {
+            return { name: values };
+          }),
+        };
+      }
+    );
+
+    const filters: FilterOptions = filterListOptions.reduce(
+      (obj, filter) => ({
+        ...obj,
+        [filter.filterName.toString()]: filter.value,
+      }),
+      {}
+    );
+
+    setFilterOptions(filters);
+  };
+
+  useEffect(() => {
+    getProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productFilterApiParams, currentUser?.idToken]);
+
+  useEffect(() => {
+    getFilterOptions();
+  }, []);
+
+  if (!filterOptions || !currentUser) {
+    return <LoadingProgress />;
+  }
 
   return (
     <PageWrapper>
@@ -167,11 +174,13 @@ const ProductsPage = () => {
           clearFilters={clearFilters}
           constructApiFilters={constructApiFilters}
           filterButtons={FILTER_BUTTON_DATA}
+          filterOptions={filterOptions}
         />
       ) : (
         <>
           <MenuIcon onClick={toggleMobileFilters} />
           <MobileFilterList
+            filterOptions={filterOptions}
             setSelectedFilters={updateFilters}
             selectedFilters={selectedFilters}
             isOpen={isMobileDrawOpen}
@@ -184,9 +193,13 @@ const ProductsPage = () => {
         </>
       )}
       <ProductsWrapper>
-        {FAKE_PRODUCT_DATA.map((product) => {
-          return <ProductCard productData={product} key={product.name} />;
-        })}
+        {products.length > 0 ? (
+          products.map((product, i) => (
+            <ProductCard key={i} productData={product} />
+          ))
+        ) : (
+          <NotFoundCard />
+        )}
       </ProductsWrapper>
     </PageWrapper>
   );
