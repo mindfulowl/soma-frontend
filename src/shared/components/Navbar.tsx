@@ -43,7 +43,7 @@ const Navbar = () => {
 
   return (
     <NavigationContainer>
-      <StyledLink to="/welcome">
+      <StyledLink to="/">
         <StyledImage src={require("../../assets/images/logo.png")} />
       </StyledLink>
 

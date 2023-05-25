@@ -15,9 +15,9 @@ import { Breakpoints } from "../../shared/styles";
 import { removeNullProperties } from "./product.utils";
 import { MultiSelectOption } from "../../shared/components/MultiSelect";
 import { UserContext } from "../../shared/contexts/UserContext";
-import LoadingProgress from "../../shared/components/LoadingProgress";
 import NotFoundCard from "../../shared/components/NotFoundCard";
 import { FilterOptions } from "../../shared/components/FilterControls";
+import NotAMemberCard from "./components/NotAMember";
 
 export const FILTER_BUTTON_DATA = [
   { name: "Product Name", apiKey: "name" },
@@ -32,6 +32,7 @@ export const FILTER_BUTTON_DATA = [
   { name: "Kids Friendly", apiKey: "kids" },
   { name: "Pregnancy Friendly", apiKey: "pregnancyFriendlyFlags" },
   { name: "Country", apiKey: "countries" },
+  { name: "Adult", apiKey: "adult" },
 ];
 
 const PageWrapper = styled.div`
@@ -161,10 +162,6 @@ const ProductsPage = () => {
     getFilterOptions();
   }, []);
 
-  if (!filterOptions || !currentUser) {
-    return <LoadingProgress />;
-  }
-
   return (
     <PageWrapper>
       {screenSize === WindowSizeEnum.LARGE ? (
@@ -193,7 +190,9 @@ const ProductsPage = () => {
         </>
       )}
       <ProductsWrapper>
-        {products.length > 0 ? (
+        {!currentUser?.isMember ? (
+          <NotAMemberCard />
+        ) : products.length > 0 ? (
           products.map((product, i) => (
             <ProductCard key={i} productData={product} />
           ))

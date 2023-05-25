@@ -1,10 +1,9 @@
+import React from "react";
 import { Button } from "@mui/material";
 import styled from "styled-components";
 import { MultiSelectOption } from "./MultiSelect";
 import { screenMdMin } from "../styles";
 import FilterControls, { FilterOptions } from "./FilterControls";
-import LoadingProgress from "./LoadingProgress";
-import React from "react";
 
 export type FilterButtonData = {
   name: string;
@@ -72,10 +71,6 @@ const FilterList = (props: FilterListProps) => {
     filterOptions,
   } = props;
 
-  if (!filterOptions) {
-    return <LoadingProgress />;
-  }
-
   return (
     <FilterWrapper>
       <StyledButtonFilter
@@ -99,7 +94,7 @@ const FilterList = (props: FilterListProps) => {
             </StyledButtonFilter>
             {selectedFilters?.includes(filter.name) && (
               <FilterControls
-                filterOptions={filterOptions}
+                filterOptions={filterOptions || {}}
                 filterName={filter.name}
                 filterApiKey={filter.apiKey || ""}
                 constructApiFilters={constructApiFilters}

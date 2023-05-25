@@ -21,7 +21,7 @@ const App = () => {
         open={currentUser?.hasCompletedRegistration === false}
       />
       <Routes>
-        <Route path="/welcome" element={<WelcomePage />} />
+        <Route path="/" element={<WelcomePage />} />
         {["/sign-in", "/sign-up", "/verification"].map((path, index) => (
           <Route path={path} element={<SignUp />} key={index} />
         ))}

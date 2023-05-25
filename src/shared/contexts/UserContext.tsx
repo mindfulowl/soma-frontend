@@ -71,6 +71,8 @@ export const UserProvider = (props: React.PropsWithChildren<{}>) => {
           lastName: userDbInfo?.lastName,
           postcode: userDbInfo?.postcode,
           hasCompletedRegistration: !!userDbInfo,
+          // Update Below once API is complete
+          isMember: !!userDbInfo,
         });
       } catch (error) {
         console.log("error", error);
@@ -81,6 +83,8 @@ export const UserProvider = (props: React.PropsWithChildren<{}>) => {
   }, [currentUser?.email, currentUser?.hasCompletedRegistration]);
 
   const value = { currentUser, setCurrentUser };
+
+  console.log("context", currentUser);
 
   return (
     <UserContext.Provider value={value}>{props.children}</UserContext.Provider>
