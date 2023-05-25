@@ -15,7 +15,6 @@ import { Breakpoints } from "../../shared/styles";
 import { removeNullProperties } from "./product.utils";
 import { MultiSelectOption } from "../../shared/components/MultiSelect";
 import { UserContext } from "../../shared/contexts/UserContext";
-import LoadingProgress from "../../shared/components/LoadingProgress";
 import NotFoundCard from "../../shared/components/NotFoundCard";
 import { FilterOptions } from "../../shared/components/FilterControls";
 import NotAMemberCard from "./components/NotAMember";
@@ -163,10 +162,6 @@ const ProductsPage = () => {
     getFilterOptions();
   }, []);
 
-  if (!filterOptions || !currentUser) {
-    return <LoadingProgress />;
-  }
-
   return (
     <PageWrapper>
       {screenSize === WindowSizeEnum.LARGE ? (
@@ -195,7 +190,7 @@ const ProductsPage = () => {
         </>
       )}
       <ProductsWrapper>
-        {!currentUser.isMember ? (
+        {!currentUser?.isMember ? (
           <NotAMemberCard />
         ) : products.length > 0 ? (
           products.map((product, i) => (

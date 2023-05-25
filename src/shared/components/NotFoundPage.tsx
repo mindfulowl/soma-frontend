@@ -28,7 +28,7 @@ const ImageContainer = styled.img`
 const NotFoundPage = () => {
   const navigate = useNavigate();
 
-  const navToHome = () => navigate("/welcome");
+  const navToHome = () => navigate("/");
 
   return (
     <Container component="main" maxWidth="xs">

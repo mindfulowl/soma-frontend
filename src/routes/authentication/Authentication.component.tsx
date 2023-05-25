@@ -98,12 +98,14 @@ const Authentication = () => {
     e.preventDefault();
     setLoading(true);
 
-    if(await isEmailRegistered(formFields.email)) {
-      setSnackbarConfig(showErrorSnackbar("An account with the given email already exists"));
+    if (await isEmailRegistered(formFields.email)) {
+      setSnackbarConfig(
+        showErrorSnackbar("An account with the given email already exists")
+      );
       setLoading(false);
       return;
     }
-    
+
     await userPool.signUp(
       formFields.email,
       formFields.password,
@@ -145,7 +147,7 @@ const Authentication = () => {
           idToken: data.idToken.jwtToken,
         });
         setLoading(false);
-        navigate("/welcome");
+        navigate("/");
       },
     });
   };
@@ -200,7 +202,7 @@ const Authentication = () => {
         }
 
         setLoading(false);
-        navigate("/welcome");
+        navigate("/");
         return;
       }
     );

@@ -84,6 +84,8 @@ export const UserProvider = (props: React.PropsWithChildren<{}>) => {
 
   const value = { currentUser, setCurrentUser };
 
+  console.log("context", currentUser);
+
   return (
     <UserContext.Provider value={value}>{props.children}</UserContext.Provider>
   );
