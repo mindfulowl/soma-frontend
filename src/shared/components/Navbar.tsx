@@ -48,8 +48,8 @@ const Navbar = () => {
       </StyledLink>
 
       <NavLinks>
-        <StyledLink to="/events" marginRight>
-          Events
+        <StyledLink to="/practitioner-search" marginRight>
+          Practitioners
         </StyledLink>
         <StyledLink to="/news" marginRight>
           News
