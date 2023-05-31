@@ -1,13 +1,9 @@
-import { Chip, IconButton } from "@mui/material";
+import { Chip, IconButton, Tooltip } from "@mui/material";
 import styled from "styled-components";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { H3, H4, P } from "../../../shared/styles";
-import {
-  CardWrapper,
-  InnerCardWrapper,
-} from "../../../shared/styles/cardStyles/CardStyles";
+import { H3, H4, P, screenMdMin } from "../../../shared/styles";
 
 export type Practitioner = {
   name: string;
@@ -15,11 +11,25 @@ export type Practitioner = {
   discipline: string;
   distance: string;
   healthConcerns: Array<string>;
+  number: string;
+  email: string;
 };
 
 type PractitionerCardProps = {
   practitionerData: Practitioner;
 };
+
+const CardWrapper = styled.div`
+  background-color: var(--color-white);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-md);
+  @media ${screenMdMin} {
+    display: flex;
+    align-items: center;
+    height: 400px;
+  }
+`;
 
 const StyledHeader = styled(H3)`
   margin-top: var(--spacing-sm);
@@ -28,6 +38,16 @@ const StyledHeader = styled(H3)`
 const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
+  @media ${screenMdMin} {
+    flex-direction: row;
+  }
+`;
+
+const InnerCardWrapper = styled.div`
+  @media ${screenMdMin} {
+    margin-left: var(--spacing-md);
+  }
 `;
 
 const LocationWrapper = styled.div`
@@ -46,8 +66,13 @@ const ChipWrapper = styled.div`
 const StyledImageContainer = styled.img`
   border: 3px solid var(--color-grey);
   border-radius: 100px;
-  width: 30%;
-  height: 100%;
+  width: 100%;
+  height: 30%;
+  @media ${screenMdMin} {
+    border-radius: 100px;
+    width: 30%;
+    height: 100%;
+  }
 `;
 
 const StyledText = styled(H4)`
@@ -89,14 +114,18 @@ const PractitionerCard = (props: PractitionerCardProps) => {
           <StyledHeader>{practitionerData.name}</StyledHeader>
           <div>
             <IconButton color="primary" size="large">
-              <StyledIconBackdrop>
-                <StyledPhoneIcon />
-              </StyledIconBackdrop>
+              <Tooltip title={practitionerData.number}>
+                <StyledIconBackdrop>
+                  <StyledPhoneIcon />
+                </StyledIconBackdrop>
+              </Tooltip>
             </IconButton>
             <IconButton color="primary" size="large">
-              <StyledIconBackdrop>
-                <StyledPersonIcon />
-              </StyledIconBackdrop>
+              <Tooltip title={practitionerData.email}>
+                <StyledIconBackdrop>
+                  <StyledPersonIcon />
+                </StyledIconBackdrop>
+              </Tooltip>
             </IconButton>
           </div>
         </HeaderWrapper>
