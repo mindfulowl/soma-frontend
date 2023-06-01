@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext, useEffect } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import styled from "styled-components";
 import MobileFilterList, {
@@ -12,20 +12,25 @@ import useWindowResize, {
 import { Breakpoints } from "../../../shared/styles";
 import PractitionerCard from "../components/PractitionerCard";
 import FilterList from "../../../shared/components/FilterList";
-import { FilterOptions } from "../../../shared/components/FilterControls";
+import { removeNullProperties } from "../../products/product.utils";
+import axios from "axios";
+import { UserContext } from "../../../shared/contexts/UserContext";
+import {
+  practitioner_CONSULATION_TYPE_OPTIONS,
+  practitioner_DISCIPLINE_OPTIONS,
+  practitioner_HEALTH_CONCERNS_OPTIONS,
+} from "../types/practitioner.types";
 
 export const FILTER_PRACTITIONER_BUTTON_DATA = [
-  { name: "Consultation Type", apiKey: "consultationType" },
-  { name: "Discipline", apiKey: "discipline" },
+  { name: "Consultation Type", apiKey: "consultations" },
+  { name: "Discipline", apiKey: "disciplines" },
   { name: "Health Concerns", apiKey: "healthConcerns" },
 ];
 
-const PRACTITIONER_FILTER_OPTIONS: FilterOptions = {
-  healthConcerns: [
-    { name: "Snapdragon" },
-    { name: "Ranrarr" },
-    { name: "Torstol" },
-  ],
+export const FILTER_PRACTITIONER_OPTIONS = {
+  consultations: practitioner_CONSULATION_TYPE_OPTIONS,
+  healthConcerns: practitioner_HEALTH_CONCERNS_OPTIONS,
+  disciplines: practitioner_DISCIPLINE_OPTIONS,
 };
 
 export const FAKE_PRACTITIONER_DATA = [
@@ -33,6 +38,8 @@ export const FAKE_PRACTITIONER_DATA = [
     name: "Joshua Da Costa",
     discipline: "Chemist",
     distance: "0.5 from E5",
+    number: "0751483970",
+    email: "Test@Test.com",
     profile:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     healthConcerns: ["Gut Health", "Immunity", "Dietary"],
@@ -41,6 +48,8 @@ export const FAKE_PRACTITIONER_DATA = [
     name: "Daniel Holmes",
     discipline: "Doctor",
     distance: "0.5 from E5",
+    number: "0751483970",
+    email: "Test@Test.com",
     profile:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     healthConcerns: ["Gut Health", "Immunity", "Dietary"],
@@ -49,6 +58,8 @@ export const FAKE_PRACTITIONER_DATA = [
     name: "Francais Drake",
     discipline: "Chemist",
     distance: "0.5 from E5",
+    number: "0751483970",
+    email: "Test@Test.com",
     profile:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     healthConcerns: ["Gut Health", "Immunity", "Dietary"],
@@ -71,6 +82,7 @@ const ProductsPage = () => {
   const [selectedFilters, setSelectedFilters] = useState<Array<string> | null>(
     null
   );
+  const [practitioners, setPractitioners] = useState<Array<any>>([]);
   const [productFilterApiParams, setProductFilterApiParams] = useState({});
   const [isMobileDrawOpen, setIsMobileDrawOpen] = useState(false);
   const [screenSize, setScreenSize] = useState<WindowSizeEnum>(
@@ -82,6 +94,10 @@ const ProductsPage = () => {
   const updateFilters = (newFilter: string) => {
     setSelectedFilters([...(selectedFilters || []), newFilter]);
   };
+
+  const { currentUser } = useContext(UserContext);
+
+  console.log(practitioners);
 
   const clearFilters = () => {
     setSelectedFilters(null);
@@ -116,6 +132,27 @@ const ProductsPage = () => {
     });
   };
 
+  const getPractitioners = async () => {
+    const input = removeNullProperties({
+      ...productFilterApiParams,
+    });
+
+    const newPractitionerList = await axios.post(
+      `${process.env.REACT_APP_API_BASE_URL}/practitioners/search`,
+      input,
+      {
+        headers: {
+          Authorization: currentUser?.idToken,
+        },
+      }
+    );
+    setPractitioners(newPractitionerList.data);
+  };
+
+  useEffect(() => {
+    getPractitioners();
+  }, [productFilterApiParams, currentUser?.idToken]);
+
   return (
     <PageWrapper>
       {screenSize === WindowSizeEnum.LARGE ? (
@@ -125,12 +162,13 @@ const ProductsPage = () => {
           clearFilters={clearFilters}
           constructApiFilters={constructApiFilters}
           filterButtons={FILTER_PRACTITIONER_BUTTON_DATA}
-          filterOptions={PRACTITIONER_FILTER_OPTIONS}
+          filterOptions={FILTER_PRACTITIONER_OPTIONS}
         />
       ) : (
         <>
           <MenuIcon onClick={toggleMobileFilters} />
           <MobileFilterList
+            filterOptions={FILTER_PRACTITIONER_OPTIONS}
             setSelectedFilters={updateFilters}
             selectedFilters={selectedFilters}
             isOpen={isMobileDrawOpen}

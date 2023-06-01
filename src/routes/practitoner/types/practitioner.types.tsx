@@ -1,7 +1,7 @@
 import { MultiSelectOption } from "../../../shared/components/MultiSelect";
 
-export type practitioner = {
-  consultationType: string;
+export type Practitioner = {
+  consultation: string;
   email: string;
   phoneNumber: string;
   discipline: string;
@@ -32,7 +32,7 @@ export const practitioner_SIGN_UP_TEXTFIELDS = [
     xs: 12,
   },
   {
-    name: "websiteUrl",
+    name: "url",
     label: "Website Url",
     type: "url",
     sm: 6,

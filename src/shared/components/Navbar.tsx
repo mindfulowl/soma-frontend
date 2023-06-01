@@ -4,6 +4,12 @@ import { UserContext } from "../contexts/UserContext";
 import { CognitoUser, CognitoUserPool } from "amazon-cognito-identity-js";
 import { UserPoolData } from "../../routes/authentication/types/types.auth";
 import { StyledLink } from "./Link";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
+const Wrapper = styled.div`
+  display: flex;
+`;
 
 const NavigationContainer = styled.div`
   height: 110px;
@@ -26,8 +32,22 @@ const NavLinks = styled.div`
   justify-content: flex-end;
 `;
 
+const StyledPracButton = styled(Button)`
+  color: var(--color-black);
+  border: 2px solid var(--color-grey-light);
+  border-radius: 20px;
+  font-size: var(--font-size-medium-sm);
+  margin: var(--spacing-xs) 0;
+  margin-top: var(--spacing-sm);
+
+  :hover {
+    border: 2px solid var(--color-grey-light);
+  }
+`;
+
 const Navbar = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const user =
     currentUser &&
@@ -41,15 +61,24 @@ const Navbar = () => {
     setCurrentUser(null);
   };
 
+  const navToPracSignUp = () => navigate("practitioner-sign-up");
+
   return (
     <NavigationContainer>
-      <StyledLink to="/">
-        <StyledImage src={require("../../assets/images/logo.png")} />
-      </StyledLink>
+      <Wrapper>
+        <StyledLink to="/">
+          <StyledImage src={require("../../assets/images/logo.png")} />
+        </StyledLink>
+        {currentUser && (
+          <StyledPracButton variant="outlined" onClick={navToPracSignUp}>
+            Become A Practitioner
+          </StyledPracButton>
+        )}
+      </Wrapper>
 
       <NavLinks>
-        <StyledLink to="/events" marginRight>
-          Events
+        <StyledLink to="/practitioner-search" marginRight>
+          Practitioners
         </StyledLink>
         <StyledLink to="/news" marginRight>
           News

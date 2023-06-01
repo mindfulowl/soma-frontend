@@ -4,18 +4,17 @@ import { StandaloneSearchBox } from "@react-google-maps/api";
 
 type AddressAutoCompleteProps = {
   setAddress: (address: string) => void;
-  addressValue: string;
 };
 
 const AddressAutoComplete = (props: AddressAutoCompleteProps) => {
-  const { setAddress, addressValue } = props;
+  const { setAddress } = props;
   const inputRef: any = useRef(null);
 
   const handlePlaceChanged = () => {
-    if (inputRef.current !== null && addressValue) {
+    if (inputRef.current !== null) {
       const [place] = inputRef?.current.getPlaces();
       if (place) {
-        setAddress(place.formatted_address);
+        setAddress(place.place_id);
       }
     }
   };

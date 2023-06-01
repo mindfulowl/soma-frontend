@@ -7,7 +7,7 @@ import MultiSelect, {
   MultiSelectOption,
 } from "../../../shared/components/MultiSelect";
 import {
-  practitioner,
+  Practitioner,
   practitioner_CONSULATION_TYPE_OPTIONS,
   practitioner_DISCIPLINE_OPTIONS,
   practitioner_HEALTH_CONCERNS_OPTIONS,
@@ -46,7 +46,7 @@ const StyledSubtitleText = styled(P)`
 `;
 
 const defaultFormFields = {
-  consultationType: "",
+  consultation: "",
   email: "",
   phoneNumber: "",
   discipline: "",
@@ -54,7 +54,7 @@ const defaultFormFields = {
 };
 
 const PractitionerSignUp = () => {
-  const [formFields, setFormFields] = useState<practitioner>(defaultFormFields);
+  const [formFields, setFormFields] = useState<Practitioner>(defaultFormFields);
   const [address, setAddress] = useState("");
   const [fileData, setFileData] = useState<File | null>(null);
   const [snackbarConfig, setSnackbarConfig] = useState<SnackBarConfig>();
@@ -100,9 +100,35 @@ const PractitionerSignUp = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLDivElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault();
-    s3ImageUpload();
+    try {
+      await s3ImageUpload();
+      const practitionerSignUpInput = {
+        ...formFields,
+        imageReference: formFields.email,
+        healthConcerns: ["Test"],
+        userId: currentUser?.id,
+        googlePlaceId: address,
+      };
+
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/practitioners`,
+        practitionerSignUpInput,
+        {
+          headers: {
+            Authorization: currentUser?.idToken,
+          },
+        }
+      );
+      setSnackbarConfig({
+        message: "You have succesfully registered as a practitioner!",
+        type: "success",
+        open: true,
+      });
+    } catch (error) {
+      setSnackbarConfig(showErrorSnackbar(error.message));
+    }
   };
 
   return (
@@ -139,9 +165,9 @@ const PractitionerSignUp = () => {
           <Grid item xs={12} sm={6}>
             <Select
               options={practitioner_CONSULATION_TYPE_OPTIONS}
-              currentValue={formFields.consultationType}
+              currentValue={formFields.consultation}
               onChange={handleFormFieldChange}
-              name="consultationType"
+              name="consultation"
               label="Consultation Type"
               required
             />
@@ -158,9 +184,9 @@ const PractitionerSignUp = () => {
           </Grid>
           <Grid item xs={12}>
             <MultiSelect
-              required
+              required={false}
               options={practitioner_HEALTH_CONCERNS_OPTIONS}
-              currentValue={practitionerHealthConcerns || null}
+              currentValue={practitionerHealthConcerns}
               handleChange={setpractitionerHealthConcerns}
               label="Offered Health Concerns"
             />
@@ -177,10 +203,7 @@ const PractitionerSignUp = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <AddressAutoComplete
-              setAddress={setAddress}
-              addressValue={address}
-            />
+            <AddressAutoComplete setAddress={setAddress} />
           </Grid>
           <Grid item xs={12}>
             <ImageUpload

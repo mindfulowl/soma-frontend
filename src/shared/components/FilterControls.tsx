@@ -52,8 +52,6 @@ const FilterControls = (props: FilterControlsProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productNameFilter, filterApiKey]);
 
-  console.log(filterOptions);
-
   return (
     <Wrapper>
       {filterName !== "Product Name" ? (
