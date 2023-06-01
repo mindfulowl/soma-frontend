@@ -49,7 +49,7 @@ export type IdTokenData = {
 };
 
 export const UserPoolData = {
-  UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID as string,
+  UserPoolId: "eu-west-2_siv7j3Ap4" as string,
   ClientId: process.env.REACT_APP_COGNITO_CLIENT_ID as string,
 };
 
