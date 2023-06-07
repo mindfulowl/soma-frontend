@@ -2,6 +2,7 @@ import { MultiSelectOption } from "../../../shared/components/MultiSelect";
 
 export type Practitioner = {
   consultation: string;
+  institute: string;
   email: string;
   phoneNumber: string;
   discipline: string;
@@ -20,13 +21,6 @@ export const practitioner_SIGN_UP_TEXTFIELDS = [
   {
     name: "phoneNumber",
     label: "Phone Number",
-    type: "text",
-    sm: 6,
-    xs: 12,
-  },
-  {
-    name: "university",
-    label: "University",
     type: "text",
     sm: 6,
     xs: 12,
@@ -209,6 +203,21 @@ export const practitioner_DISCIPLINE_OPTIONS = [
   {
     name: "Pilates Instructor",
   },
+  {
+    name: "Psychotherapist",
+  },
+  {
+    name: "Counselor",
+  },
+  {
+    name: "Hypnotherapist",
+  },
+  {
+    name: "Osteopath",
+  },
+  {
+    name: "Chiropractor",
+  },
 ];
 
 export const practitioner_CONSULATION_TYPE_OPTIONS = [
@@ -220,5 +229,47 @@ export const practitioner_CONSULATION_TYPE_OPTIONS = [
   },
   {
     name: "Both",
+  },
+];
+
+export const practitioner_INSTITUTE_OPTIONS = [
+  {
+    name: "BANT",
+  },
+  {
+    name: "ANP",
+  },
+  {
+    name: "AfN",
+  },
+  {
+    name: "UKVRN",
+  },
+  {
+    name: "CNHC",
+  },
+  {
+    name: "BAcC",
+  },
+  {
+    name: "NRPT",
+  },
+  {
+    name: "CIMSPA",
+  },
+  {
+    name: "British Wheel of Yoga",
+  },
+  {
+    name: "URHP",
+  },
+  {
+    name: "AMH",
+  },
+  {
+    name: "BISMA",
+  },
+  {
+    name: "N/A",
   },
 ];
