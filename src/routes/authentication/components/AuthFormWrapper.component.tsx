@@ -27,6 +27,13 @@ type FormWrapperProps = {
 
 const StyledLink = styled(Link)`
   color: var(--color-black);
+  margin-bottom: var(--spacing-sm);
+`;
+
+const LinkWrapper = styled.div`
+  flex-direction: column;
+  display: flex;
+  text-align: right;
 `;
 
 const FormWrapper = (props: FormWrapperProps) => {
@@ -82,13 +89,20 @@ const FormWrapper = (props: FormWrapperProps) => {
           <Grid container justifyContent="flex-end">
             <Grid item>
               {authType === AuthEnum.SIGN_UP ? (
-                <StyledLink to="/sign-in">
-                  Already have an account? Sign In
-                </StyledLink>
+                <>
+                  <StyledLink to="/sign-in">
+                    Already have an account? Sign In
+                  </StyledLink>
+                </>
               ) : authType === AuthEnum.SIGN_IN ? (
-                <StyledLink to="/sign-up">
-                  Don't have an account yet? Sign Up
-                </StyledLink>
+                <LinkWrapper>
+                  <StyledLink to="/sign-up">
+                    Don't have an account yet? Sign Up
+                  </StyledLink>
+                  <StyledLink to="/forgot-password">
+                    Forgot Password?
+                  </StyledLink>
+                </LinkWrapper>
               ) : (
                 <></>
               )}

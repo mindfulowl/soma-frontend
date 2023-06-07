@@ -3,7 +3,7 @@ export const NAV_CARD_DATA = [
     title: "Find Your practitioner",
     subtitle: "Acccessible to All",
     text: "Search the platform for a nutritionist, naturopath, osteopath, herbalist or any other disciplines. You will find the best practitioners on our platform that will create personalised protocols to help and support you in achieving your health and well-being goals.",
-    navLink: "/practitioner-sign-up",
+    navLink: "/practitioner-search",
   },
   {
     title: "Find Your Supplements",

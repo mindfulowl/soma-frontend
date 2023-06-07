@@ -66,6 +66,9 @@ export const practitioner_HEALTH_CONCERNS_OPTIONS = [
     name: "Men’s Health",
   },
   {
+    name: "Women's Health",
+  },
+  {
     name: "Ageing",
   },
   {
@@ -73,6 +76,111 @@ export const practitioner_HEALTH_CONCERNS_OPTIONS = [
   },
   {
     name: "Stress Management",
+  },
+  {
+    name: "Phlebotomy",
+  },
+  {
+    name: "Sports Nutrition",
+  },
+  {
+    name: "Sports Performance",
+  },
+  {
+    name: "Mindfulness",
+  },
+  {
+    name: "Bone Health",
+  },
+  {
+    name: "Post Surgery Wellbeing",
+  },
+  {
+    name: "Post Pregnancy Wellbeing",
+  },
+  {
+    name: "Muscle Health",
+  },
+  {
+    name: "Mindful Eating",
+  },
+  {
+    name: "Visualisation Technique",
+  },
+  {
+    name: "Relaxation Technique",
+  },
+  {
+    name: "Handshake Technique",
+  },
+  {
+    name: "Eye Cues",
+  },
+  {
+    name: "Eye Fixation Technique",
+  },
+  {
+    name: "Bodyscan",
+  },
+  {
+    name: "Countdown Breathing",
+  },
+  {
+    name: "Anxiety",
+  },
+  {
+    name: "Couples Counseling",
+  },
+  {
+    name: "Children’s Counseling",
+  },
+  {
+    name: "Stress",
+  },
+  {
+    name: "Trauma",
+  },
+  {
+    name: "Anger Management",
+  },
+  {
+    name: "ADHD Support",
+  },
+  {
+    name: "Emotional Abuse",
+  },
+  {
+    name: "Phobias",
+  },
+  {
+    name: "Postnatal Depression",
+  },
+  {
+    name: "Relationship issues",
+  },
+  {
+    name: "Family Issues",
+  },
+  {
+    name: "Gender Dysphoria",
+  },
+  {
+    name: "Bereavement",
+  },
+  {
+    name: "Bipolar Disorder",
+  },
+  {
+    name: "Self-Harm",
+  },
+  {
+    name: "Imposter Syndrome",
+  },
+  {
+    name: "Sexual Abuse",
+  },
+  {
+    name: "Eating Disorders",
   },
 ];
 
