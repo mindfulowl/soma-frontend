@@ -10,6 +10,7 @@ import PractitionerSignUp from "./routes/practitoner/practitonerSignUp/Practitio
 import NewsPage from "./routes/news/NewsPage";
 import ProductsPage from "./routes/products/ProductsPage";
 import PractitionerSearch from "./routes/practitoner/practitionerSearch/PractitionerSearch";
+import BrandsPage from "./routes/brands/BrandsPage";
 
 const App = () => {
   const { currentUser } = useContext(UserContext);
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/practitioner-sign-up" element={<PractitionerSignUp />} />
         <Route path="/practitioner-search" element={<PractitionerSearch />} />
         <Route path="/news" element={<NewsPage />} />
+        <Route path="/brands" element={<BrandsPage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>

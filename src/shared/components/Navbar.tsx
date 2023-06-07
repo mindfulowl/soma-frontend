@@ -77,6 +77,9 @@ const Navbar = () => {
       </Wrapper>
 
       <NavLinks>
+        <StyledLink to="/brands" marginRight>
+          Meet the Brands
+        </StyledLink>
         <StyledLink to="/practitioner-search" marginRight>
           Practitioners
         </StyledLink>
