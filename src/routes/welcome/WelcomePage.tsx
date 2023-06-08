@@ -8,7 +8,7 @@ const ImageContainer = styled.img`
   width: 100%;
 `;
 
-const NavCardWrapper = styled.div`
+export const NavCardWrapper = styled.div`
   flex-direction: column;
   @media ${screenMdMin} {
     flex-direction: row;
