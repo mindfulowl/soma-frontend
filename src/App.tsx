@@ -11,6 +11,7 @@ import NewsPage from "./routes/news/NewsPage";
 import ProductsPage from "./routes/products/ProductsPage";
 import PractitionerSearch from "./routes/practitoner/practitionerSearch/PractitionerSearch";
 import BrandsPage from "./routes/brands/BrandsPage";
+import ForgotPassword from "./routes/authentication/components/ForgotPassword";
 
 const App = () => {
   const { currentUser } = useContext(UserContext);
@@ -26,6 +27,7 @@ const App = () => {
         {["/sign-in", "/sign-up", "/verification"].map((path, index) => (
           <Route path={path} element={<SignUp />} key={index} />
         ))}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/practitioner-sign-up" element={<PractitionerSignUp />} />
         <Route path="/practitioner-search" element={<PractitionerSearch />} />
         <Route path="/news" element={<NewsPage />} />

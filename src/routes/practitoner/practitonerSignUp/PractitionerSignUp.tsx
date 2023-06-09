@@ -11,6 +11,7 @@ import {
   practitioner_CONSULATION_TYPE_OPTIONS,
   practitioner_DISCIPLINE_OPTIONS,
   practitioner_HEALTH_CONCERNS_OPTIONS,
+  practitioner_INSTITUTE_OPTIONS,
   practitioner_SIGN_UP_TEXTFIELDS,
 } from "../types/practitioner.types";
 
@@ -51,6 +52,7 @@ const defaultFormFields = {
   phoneNumber: "",
   discipline: "",
   profile: "",
+  institute: "",
 };
 
 const PractitionerSignUp = () => {
@@ -179,6 +181,16 @@ const PractitionerSignUp = () => {
               currentValue={formFields.discipline}
               name="discipline"
               label="Discipline"
+              required
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Select
+              options={practitioner_INSTITUTE_OPTIONS}
+              onChange={handleFormFieldChange}
+              currentValue={formFields.institute}
+              name="institute"
+              label="Institute"
               required
             />
           </Grid>
