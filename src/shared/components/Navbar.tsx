@@ -1,11 +1,16 @@
 import styled from "styled-components";
-import { useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { CognitoUser, CognitoUserPool } from "amazon-cognito-identity-js";
 import { UserPoolData } from "../../routes/authentication/types/types.auth";
 import { StyledLink } from "./Link";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import useWindowResize, {
+  Dimensions,
+  WindowSizeEnum,
+} from "../hooks/useWindowResize";
+import { Breakpoints } from "../styles";
 
 const Wrapper = styled.div`
   display: flex;
@@ -47,6 +52,11 @@ const StyledPracButton = styled(Button)`
 
 const Navbar = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
+  const [screenSize, setScreenSize] = useState<WindowSizeEnum>(
+    window.innerWidth > Breakpoints.md
+      ? WindowSizeEnum.LARGE
+      : WindowSizeEnum.SMALL
+  );
   const navigate = useNavigate();
 
   const user =
@@ -63,13 +73,23 @@ const Navbar = () => {
 
   const navToPracSignUp = () => navigate("practitioner-sign-up");
 
+  const setSize = useCallback((dimensions: Dimensions) => {
+    if (dimensions.width > Breakpoints.md) {
+      setScreenSize(WindowSizeEnum.LARGE);
+    } else {
+      setScreenSize(WindowSizeEnum.SMALL);
+    }
+  }, []);
+
+  useWindowResize(setSize);
+
   return (
     <NavigationContainer>
       <Wrapper>
         <StyledLink to="/">
           <StyledImage src={require("../../assets/images/logo.png")} />
         </StyledLink>
-        {currentUser && (
+        {currentUser && screenSize === WindowSizeEnum.LARGE && (
           <StyledPracButton variant="outlined" onClick={navToPracSignUp}>
             Become A Practitioner
           </StyledPracButton>
@@ -77,6 +97,9 @@ const Navbar = () => {
       </Wrapper>
 
       <NavLinks>
+        <StyledLink to="/brands" marginRight>
+          Meet the Brands
+        </StyledLink>
         <StyledLink to="/practitioner-search" marginRight>
           Practitioners
         </StyledLink>

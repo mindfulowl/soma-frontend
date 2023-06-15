@@ -25,14 +25,14 @@ export const FILTER_BUTTON_DATA = [
   { name: "Active Ingredients", apiKey: "activeIngredients" },
   { name: "Inactive Ingredients", apiKey: "inactiveIngredients" },
   { name: "Health Concerns", apiKey: "healthConcerns" },
+  { name: "Product Form", apiKey: "productForms" },
   { name: "Capsule Ingredients", apiKey: "capsuleIngredients" },
   { name: "Allergens", apiKey: "allergens" },
-  { name: "Product Form", apiKey: "productForms" },
   { name: "Dietary Requirements", apiKey: "dietaryRequirements" },
+  { name: "Adult", apiKey: "adult" },
   { name: "Kids Friendly", apiKey: "kids" },
   { name: "Pregnancy Friendly", apiKey: "pregnancyFriendlyFlags" },
   { name: "Country", apiKey: "countries" },
-  { name: "Adult", apiKey: "adult" },
 ];
 
 const PageWrapper = styled.div`

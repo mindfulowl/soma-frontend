@@ -13,6 +13,8 @@ import PractitionerSearch from "./routes/practitoner/practitionerSearch/Practiti
 import PaymentPage from "./routes/payment/PaymentPage";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
+import BrandsPage from "./routes/brands/BrandsPage";
+import ForgotPassword from "./routes/authentication/components/ForgotPassword";
 
 const App = () => {
   const [stripePromise, setStripePromise] = useState<any>(null);
@@ -51,6 +53,7 @@ const App = () => {
         {["/sign-in", "/sign-up", "/verification"].map((path, index) => (
           <Route path={path} element={<SignUp />} key={index} />
         ))}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/practitioner-sign-up" element={<PractitionerSignUp />} />
         <Route path="/practitioner-search" element={<PractitionerSearch />} />
         <Route
@@ -58,6 +61,7 @@ const App = () => {
           element={<PaymentPage stripePromise={stripePromise} />}
         />
         <Route path="/news" element={<NewsPage />} />
+        <Route path="/brands" element={<BrandsPage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
