@@ -72,7 +72,7 @@ export const UserProvider = (props: React.PropsWithChildren<{}>) => {
           postcode: userDbInfo?.postcode,
           id: userDbInfo?.id,
           hasCompletedRegistration: !!userDbInfo,
-          isMember: false,
+          isMember: !!userDbInfo,
         });
       } catch (error) {
         console.log("error", error);
