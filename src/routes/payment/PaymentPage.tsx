@@ -3,8 +3,12 @@ import axios from "axios";
 import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import LoadingProgress from "../../shared/components/LoadingProgress";
+import CustomSnackbar, {
+  SnackBarConfig,
+} from "../../shared/components/Snackbar";
 import { UserContext } from "../../shared/contexts/UserContext";
 import { H2 } from "../../shared/styles";
+import { showErrorSnackbar } from "../authentication/utils/auth.utils";
 import NavCard from "../welcome/components/NavCard";
 import { NAV_CARD_DATA } from "../welcome/types/welcome.types";
 import { NavCardWrapper } from "../welcome/WelcomePage";
@@ -28,21 +32,30 @@ const StyledHeader = styled(H2)`
 const PaymentPage = (props: PaymentPageProps) => {
   const { stripePromise } = props;
   const [clientSecret, setClientSecret] = useState("");
+  const [snackbarConfig, setSnackbarConfig] = useState<SnackBarConfig>();
   const [loading, setLoading] = useState(false);
 
   const { currentUser } = useContext(UserContext);
 
+  const handleSnackBarClose = () => {
+    setSnackbarConfig({ ...snackbarConfig, open: false });
+  };
+
   const createPaymentIntent = async () => {
-    const res = await axios.post(
-      `http://localhost:5252/payment/create-payment-intent`,
-      {},
-      {
-        headers: {
-          Authorization: currentUser?.idToken,
-        },
-      }
-    );
-    setClientSecret(res.data);
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/payment/create-payment-intent`,
+        {},
+        {
+          headers: {
+            Authorization: currentUser?.idToken,
+          },
+        }
+      );
+      setClientSecret(res.data);
+    } catch (error) {
+      setSnackbarConfig(showErrorSnackbar(error.message));
+    }
   };
 
   useEffect(() => {
@@ -72,6 +85,7 @@ const PaymentPage = (props: PaymentPageProps) => {
           return <NavCard key={navCardData.title} navCardData={navCardData} />;
         })}
       </NavCardWrapper>
+      <CustomSnackbar config={snackbarConfig} setOpen={handleSnackBarClose} />
     </>
   );
 };

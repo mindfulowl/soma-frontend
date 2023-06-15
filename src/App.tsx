@@ -17,17 +17,18 @@ import axios from "axios";
 const App = () => {
   const [stripePromise, setStripePromise] = useState<any>(null);
   const [stripeKey, setStripeKey] = useState<string>("");
-  const [loading, setLoading] = useState(false);
-  const [clientSecret, setClientSecret] = useState("");
 
   const { currentUser } = useContext(UserContext);
 
   const getStripeKey = async () => {
-    const res = await axios.get(`http://localhost:5252/payment/config`, {
-      headers: {
-        Authorization: currentUser?.idToken,
-      },
-    });
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_BASE_URL}/payment/config`,
+      {
+        headers: {
+          Authorization: currentUser?.idToken,
+        },
+      }
+    );
 
     setStripeKey(res.data);
   };
