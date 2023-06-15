@@ -4,17 +4,43 @@ import WelcomePage from "./routes/welcome/WelcomePage";
 import Navbar from "./shared/components/Navbar";
 import NotFoundPage from "./shared/components/NotFoundPage";
 import CompleteRegistrationModal from "./shared/components/CompleteRegistrationModal";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./shared/contexts/UserContext";
 import PractitionerSignUp from "./routes/practitoner/practitonerSignUp/PractitionerSignUp";
 import NewsPage from "./routes/news/NewsPage";
 import ProductsPage from "./routes/products/ProductsPage";
 import PractitionerSearch from "./routes/practitoner/practitionerSearch/PractitionerSearch";
+import PaymentPage from "./routes/payment/PaymentPage";
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
 import BrandsPage from "./routes/brands/BrandsPage";
 import ForgotPassword from "./routes/authentication/components/ForgotPassword";
 
 const App = () => {
+  const [stripePromise, setStripePromise] = useState<any>(null);
+  const [stripeKey, setStripeKey] = useState<string>("");
+
   const { currentUser } = useContext(UserContext);
+
+  const getStripeKey = async () => {
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_BASE_URL}/payment/config`,
+      {
+        headers: {
+          Authorization: currentUser?.idToken,
+        },
+      }
+    );
+
+    setStripeKey(res.data);
+  };
+
+  useEffect(() => {
+    getStripeKey();
+    if (stripeKey) {
+      setStripePromise(loadStripe(stripeKey));
+    }
+  }, [currentUser?.idToken, stripeKey]);
 
   return (
     <>
@@ -30,6 +56,10 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/practitioner-sign-up" element={<PractitionerSignUp />} />
         <Route path="/practitioner-search" element={<PractitionerSearch />} />
+        <Route
+          path="/membership"
+          element={<PaymentPage stripePromise={stripePromise} />}
+        />
         <Route path="/news" element={<NewsPage />} />
         <Route path="/brands" element={<BrandsPage />} />
         <Route path="/products" element={<ProductsPage />} />

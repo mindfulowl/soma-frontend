@@ -34,7 +34,7 @@ const NotAMemberCard = () => {
         <StyledTextWrapper>
           <StyledText>
             Please head to our
-            <StyledLink to="membership"> Membership Page</StyledLink> to gain
+            <StyledLink to="/membership"> Membership Page</StyledLink> to gain
             access to this feature.
           </StyledText>
         </StyledTextWrapper>
