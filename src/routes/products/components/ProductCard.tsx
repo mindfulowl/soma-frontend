@@ -139,7 +139,7 @@ const ProductCard = (props: ProductCardProps) => {
         </StyledTextWrapper>
 
         <StyledLink to={productData.url} target="_blank">
-          Buy Product
+          Go To Product
         </StyledLink>
       </InnerCardWrapper>
       {screenSize === WindowSizeEnum.SMALL && (

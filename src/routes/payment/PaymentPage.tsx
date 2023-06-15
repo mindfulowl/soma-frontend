@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import LoadingProgress from "../../shared/components/LoadingProgress";
+import NotFoundCard from "../../shared/components/StaticTextCard";
 import CustomSnackbar, {
   SnackBarConfig,
 } from "../../shared/components/Snackbar";
@@ -17,6 +18,10 @@ import CheckoutForm from "./components/CheckoutForm";
 type PaymentPageProps = {
   stripePromise: any;
 };
+
+const CardWrapper = styled.div`
+  margin: var(--spacing-md);
+`;
 
 const HeaderWrapper = styled.div`
   align-items: center;
@@ -44,7 +49,7 @@ const PaymentPage = (props: PaymentPageProps) => {
   const createPaymentIntent = async () => {
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/payment/create-payment-intent`,
+        `http://localhost:5252/payment/create-payment-intent`,
         {},
         {
           headers: {
@@ -75,10 +80,17 @@ const PaymentPage = (props: PaymentPageProps) => {
         <StyledHeader>Become a Member</StyledHeader>
       </HeaderWrapper>
 
-      {clientSecret && stripePromise && (
+      {!currentUser?.isMember && clientSecret && stripePromise ? (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
           <CheckoutForm />
         </Elements>
+      ) : (
+        <CardWrapper>
+          <NotFoundCard
+            title="Thanks!"
+            text="It seems that you are already a member!"
+          />
+        </CardWrapper>
       )}
       <NavCardWrapper>
         {NAV_CARD_DATA.map((navCardData) => {

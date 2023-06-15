@@ -54,7 +54,9 @@ const BrandsPage = () => {
               <StyledText>{brand.profile}</StyledText>
 
               <ImageContainer src={brand.image} />
-              <StyledLink to={brand.link}>Company Link</StyledLink>
+              <StyledLink to={brand.link} target="_blank">
+                Company Link
+              </StyledLink>
             </BrandWrapper>
             <DividerLine />
           </>

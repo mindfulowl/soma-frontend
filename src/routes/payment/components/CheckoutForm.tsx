@@ -47,6 +47,7 @@ const CheckoutForm = () => {
       setSnackbarConfig(
         showErrorSnackbar("An account with the given email already exists")
       );
+      return;
     }
 
     setIsProcessing(false);

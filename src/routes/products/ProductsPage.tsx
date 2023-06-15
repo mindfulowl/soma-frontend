@@ -15,7 +15,7 @@ import { Breakpoints } from "../../shared/styles";
 import { removeNullProperties } from "./product.utils";
 import { MultiSelectOption } from "../../shared/components/MultiSelect";
 import { UserContext } from "../../shared/contexts/UserContext";
-import NotFoundCard from "../../shared/components/NotFoundCard";
+import NotFoundCard from "../../shared/components/StaticTextCard";
 import { FilterOptions } from "../../shared/components/FilterControls";
 import NotAMemberCard from "./components/NotAMember";
 
@@ -197,7 +197,10 @@ const ProductsPage = () => {
             <ProductCard key={i} productData={product} />
           ))
         ) : (
-          <NotFoundCard />
+          <NotFoundCard
+            title="Product Not Found"
+            text="We couldn't find a product matching these filters. Please try again!"
+          />
         )}
       </ProductsWrapper>
     </PageWrapper>
