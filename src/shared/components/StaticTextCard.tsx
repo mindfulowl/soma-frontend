@@ -2,6 +2,11 @@ import styled from "styled-components";
 import { H4, P, screenMdMin } from "../styles";
 import { CardWrapper, InnerCardWrapper } from "../styles/cardStyles/CardStyles";
 
+type StaticTextCardProps = {
+  title: string;
+  text: string;
+};
+
 const StyledHeader = styled(H4)`
   margin-bottom: var(--spacing-md);
   text-decoration: underline;
@@ -22,19 +27,18 @@ const StyledText = styled(P)`
   }
 `;
 
-const NotFoundCard = () => {
+const StaticTextCard = (props: StaticTextCardProps) => {
+  const { title, text } = props;
   return (
     <CardWrapper>
       <InnerCardWrapper>
-        <StyledHeader>No Product Found</StyledHeader>
+        <StyledHeader>{title}</StyledHeader>
         <StyledTextWrapper>
-          <StyledText>
-            Please use our filters to find your required products
-          </StyledText>
+          <StyledText>{text}</StyledText>
         </StyledTextWrapper>
       </InnerCardWrapper>
     </CardWrapper>
   );
 };
 
-export default NotFoundCard;
+export default StaticTextCard;
