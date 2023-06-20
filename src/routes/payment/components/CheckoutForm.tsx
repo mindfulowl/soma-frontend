@@ -8,6 +8,10 @@ import CustomSnackbar, {
   SnackBarConfig,
 } from "../../../shared/components/Snackbar";
 
+type CheckoutFormProps = {
+  paymentIntentId: string;
+};
+
 const StyledCheckoutButton = styled(Button)`
   margin-top: var(--spacing-md);
 `;
@@ -16,7 +20,7 @@ const Container = styled.div`
   padding: var(--spacing-md);
 `;
 
-const CheckoutForm = () => {
+const CheckoutForm = (props: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -39,7 +43,7 @@ const CheckoutForm = () => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/membership`,
+        return_url: `${window.location.origin}/payment-successful`,
       },
     });
 
