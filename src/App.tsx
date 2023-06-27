@@ -15,6 +15,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import BrandsPage from "./routes/brands/BrandsPage";
 import ForgotPassword from "./routes/authentication/components/ForgotPassword";
+import Footer from "./shared/components/Footer";
+import { Container } from "./shared/components/Container";
 
 const App = () => {
   const [stripePromise, setStripePromise] = useState<any>(null);
@@ -62,6 +64,9 @@ const App = () => {
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
+      <Container>
+        <Footer />
+      </Container>
     </>
   );
 };
