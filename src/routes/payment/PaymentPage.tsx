@@ -49,7 +49,7 @@ const PaymentPage = (props: PaymentPageProps) => {
   const createPaymentIntent = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:5252/payment/create-payment-intent`,
+        `${process.env.REACT_APP_API_BASE_URL}/payment/create-payment-intent`,
         {},
         {
           headers: {

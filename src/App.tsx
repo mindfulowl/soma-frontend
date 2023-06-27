@@ -25,11 +25,14 @@ const App = () => {
   const { currentUser } = useContext(UserContext);
 
   const getStripeKey = async () => {
-    const res = await axios.get(`http://localhost:5252/payment/config`, {
-      headers: {
-        Authorization: currentUser?.idToken,
-      },
-    });
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_BASE_URL}/payment/config`,
+      {
+        headers: {
+          Authorization: currentUser?.idToken,
+        },
+      }
+    );
 
     setStripeKey(res.data);
   };
