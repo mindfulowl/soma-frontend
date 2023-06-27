@@ -14,6 +14,7 @@ import NavCard from "../welcome/components/NavCard";
 import { NAV_CARD_DATA } from "../welcome/types/welcome.types";
 import { NavCardWrapper } from "../welcome/WelcomePage";
 import CheckoutForm from "./components/CheckoutForm";
+import { loadStripe } from "@stripe/stripe-js";
 
 type PaymentPageProps = {
   stripePromise: any;
@@ -34,9 +35,11 @@ const StyledHeader = styled(H2)`
   text-decoration: underline;
 `;
 
-const PaymentPage = (props: PaymentPageProps) => {
-  const { stripePromise } = props;
+const PaymentPage = () => {
+  const [stripePromise, setStripePromise] = useState<any>(null);
+  const [stripeKey, setStripeKey] = useState<string>("");
   const [clientSecret, setClientSecret] = useState("");
+  const [paymentIntentId, setPaymentIntentId] = useState("");
   const [snackbarConfig, setSnackbarConfig] = useState<SnackBarConfig>();
   const [loading, setLoading] = useState(false);
 
@@ -46,10 +49,27 @@ const PaymentPage = (props: PaymentPageProps) => {
     setSnackbarConfig({ ...snackbarConfig, open: false });
   };
 
+  const getStripeKey = async () => {
+    const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/payment/config`, {
+      headers: {
+        Authorization: currentUser?.idToken,
+      },
+    });
+
+    setStripeKey(res.data);
+  };
+
+  useEffect(() => {
+    getStripeKey();
+    if (stripeKey) {
+      setStripePromise(loadStripe(stripeKey));
+    }
+  }, [currentUser?.idToken, stripeKey]);
+
   const createPaymentIntent = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:5252/payment/create-payment-intent`,
+        `${process.env.REACT_APP_API_BASE_URL}/payment/create-payment-intent`,
         {},
         {
           headers: {
@@ -57,7 +77,8 @@ const PaymentPage = (props: PaymentPageProps) => {
           },
         }
       );
-      setClientSecret(res.data);
+      setClientSecret(res.data.clientSecret);
+      setPaymentIntentId(res.data.paymentIntentId);
     } catch (error) {
       setSnackbarConfig(showErrorSnackbar(error.message));
     }
@@ -80,9 +101,9 @@ const PaymentPage = (props: PaymentPageProps) => {
         <StyledHeader>Become a Member</StyledHeader>
       </HeaderWrapper>
 
-      {!currentUser?.isMember && clientSecret && stripePromise ? (
+      {currentUser?.isPaidMember !== true && clientSecret && stripePromise ? (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <CheckoutForm />
+          <CheckoutForm paymentIntentId={paymentIntentId} />
         </Elements>
       ) : (
         <CardWrapper>
