@@ -13,32 +13,10 @@ import PractitionerSearch from "./routes/practitoner/practitionerSearch/Practiti
 import PaymentPage from "./routes/payment/PaymentPage";
 import BrandsPage from "./routes/brands/BrandsPage";
 import ForgotPassword from "./routes/authentication/components/ForgotPassword";
-import Footer from "./shared/components/Footer";
-import { Container } from "./shared/components/Container";
 import { PaymentSuccessful } from "./routes/payment/PaymentSuccessful";
 
 const App = () => {
   const { currentUser } = useContext(UserContext);
-
-  const getStripeKey = async () => {
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_BASE_URL}/payment/config`,
-      {
-        headers: {
-          Authorization: currentUser?.idToken,
-        },
-      }
-    );
-
-    setStripeKey(res.data);
-  };
-
-  useEffect(() => {
-    getStripeKey();
-    if (stripeKey) {
-      setStripePromise(loadStripe(stripeKey));
-    }
-  }, [currentUser?.idToken, stripeKey]);
 
   return (
     <>
@@ -64,9 +42,6 @@ const App = () => {
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
-      <Container>
-        <Footer />
-      </Container>
     </>
   );
 };

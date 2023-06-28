@@ -6,7 +6,7 @@ import { H3, H4, P } from "../../../shared/styles";
 export type NavCardData = {
   title: string;
   subtitle: string;
-  text: string | JSX.Element;
+  text: string;
   navLink: string;
 };
 
@@ -14,7 +14,7 @@ type NavCardProps = {
   navCardData: NavCardData;
 };
 
-export const StyledCardWrapper = styled(Container)`
+const StyledContainer = styled(Container)`
   background-color: var(--color-white);
   padding: var(--spacing-lg);
   margin: var(--spacing-md);
@@ -33,20 +33,19 @@ const StyledSubtitle = styled(H4)`
 
 const StyledText = styled(P)`
   margin-bottom: var(--spacing-lg);
-  text-align: left;
 `;
 
 const NavCard = (props: NavCardProps) => {
   const { title, subtitle, text, navLink } = props.navCardData;
   return (
-    <StyledCardWrapper>
+    <StyledContainer>
       <StyledTitle>{title.toUpperCase()}</StyledTitle>
       <StyledSubtitle>{subtitle}</StyledSubtitle>
       <StyledText>{text}</StyledText>
       <StyledLink to={navLink} marginTop>
         {title}
       </StyledLink>
-    </StyledCardWrapper>
+    </StyledContainer>
   );
 };
 

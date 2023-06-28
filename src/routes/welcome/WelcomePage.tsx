@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { screenMdMin } from "../../shared/styles";
-import NavCard, { StyledCardWrapper } from "./components/NavCard";
-import { MEMBERSHIP_DATA, NAV_CARD_DATA } from "./types/welcome.types";
+import NavCard from "./components/NavCard";
+import { NAV_CARD_DATA } from "./types/welcome.types";
 
 const ImageContainer = styled.img`
   max-height: 80vh;
@@ -30,7 +30,6 @@ const WelcomePage = () => {
           return <NavCard key={navCardData.title} navCardData={navCardData} />;
         })}
       </NavCardWrapper>
-      <NavCard navCardData={MEMBERSHIP_DATA} />
     </>
   );
 };

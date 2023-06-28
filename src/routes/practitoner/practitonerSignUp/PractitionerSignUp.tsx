@@ -184,13 +184,13 @@ const PractitionerSignUp = () => {
               required
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <Select
               options={practitioner_INSTITUTE_OPTIONS}
               onChange={handleFormFieldChange}
               currentValue={formFields.institute}
-              name="registeringBody"
-              label="Registering Body"
+              name="institute"
+              label="Institute"
               required
             />
           </Grid>

@@ -32,13 +32,6 @@ export const practitioner_SIGN_UP_TEXTFIELDS = [
     sm: 6,
     xs: 12,
   },
-  {
-    name: "institute",
-    label: "Institute",
-    type: "text",
-    sm: 6,
-    xs: 12,
-  },
 ];
 
 export const practitioner_HEALTH_CONCERNS_OPTIONS = [
