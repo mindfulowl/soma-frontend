@@ -40,7 +40,7 @@ export type User = {
   lastName?: string;
   idToken?: string;
   hasCompletedRegistration?: boolean;
-  isMember?: boolean;
+  isPaidMember?: boolean;
 };
 
 export type IdTokenData = {

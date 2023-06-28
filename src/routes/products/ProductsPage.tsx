@@ -190,7 +190,7 @@ const ProductsPage = () => {
         </>
       )}
       <ProductsWrapper>
-        {!currentUser?.isMember ? (
+        {!currentUser?.isPaidMember ? (
           <NotAMemberCard />
         ) : products.length > 0 ? (
           products.map((product, i) => (
