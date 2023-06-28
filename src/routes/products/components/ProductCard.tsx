@@ -1,5 +1,6 @@
 import { Chip } from "@mui/material";
 import { useState, useCallback } from "react";
+import AWS from "aws-sdk";
 import styled from "styled-components";
 import { StyledLink } from "../../../shared/components/Link";
 import useWindowResize, {
@@ -81,6 +82,7 @@ const StyledText = styled(P)`
 
 const ProductCard = (props: ProductCardProps) => {
   const { productData } = props;
+  const [downloadedImage, setDownloadedImage] = useState<any>();
 
   const [screenSize, setScreenSize] = useState<WindowSizeEnum>(
     window.innerWidth > Breakpoints.md
@@ -103,9 +105,7 @@ const ProductCard = (props: ProductCardProps) => {
   return (
     <CardWrapper>
       {screenSize === WindowSizeEnum.LARGE && (
-        <ImageWrapper
-          src={productData.image ? productData.image : productImage}
-        />
+        <ImageWrapper src={productImage} />
       )}
       <InnerCardWrapper>
         <StyledHeader>{productData.name}</StyledHeader>
@@ -129,12 +129,14 @@ const ProductCard = (props: ProductCardProps) => {
           <StyledText>
             {productData.healthConcerns.length === 0
               ? "N/A"
-              : productData.healthConcerns.map((healthConcern, i) => (
-                  <HealthConcernWrapper>
-                    <StyledChip label={healthConcern} key={i} />
-                    &nbsp;
-                  </HealthConcernWrapper>
-                ))}
+              : productData.healthConcerns
+                  .slice(0, 5)
+                  .map((healthConcern, i) => (
+                    <HealthConcernWrapper>
+                      <StyledChip label={healthConcern} key={i} />
+                      &nbsp;
+                    </HealthConcernWrapper>
+                  ))}
           </StyledText>
         </StyledTextWrapper>
 
