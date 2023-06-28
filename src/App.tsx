@@ -20,26 +20,6 @@ import { PaymentSuccessful } from "./routes/payment/PaymentSuccessful";
 const App = () => {
   const { currentUser } = useContext(UserContext);
 
-  const getStripeKey = async () => {
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_BASE_URL}/payment/config`,
-      {
-        headers: {
-          Authorization: currentUser?.idToken,
-        },
-      }
-    );
-
-    setStripeKey(res.data);
-  };
-
-  useEffect(() => {
-    getStripeKey();
-    if (stripeKey) {
-      setStripePromise(loadStripe(stripeKey));
-    }
-  }, [currentUser?.idToken, stripeKey]);
-
   return (
     <>
       <Navbar />
@@ -54,10 +34,7 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/practitioner-sign-up" element={<PractitionerSignUp />} />
         <Route path="/practitioner-search" element={<PractitionerSearch />} />
-        <Route
-          path="/membership"
-          element={<PaymentPage />}
-        />
+        <Route path="/membership" element={<PaymentPage />} />
         <Route path="/payment-successful" element={<PaymentSuccessful />} />
         <Route path="/news" element={<NewsPage />} />
         <Route path="/brands" element={<BrandsPage />} />
