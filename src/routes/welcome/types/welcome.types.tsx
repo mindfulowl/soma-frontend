@@ -12,3 +12,20 @@ export const NAV_CARD_DATA = [
     navLink: "/products",
   },
 ];
+
+export const MEMBERSHIP_DATA = {
+  title: "Become a Member (£45)",
+  subtitle: "Membership Benefits Include: ",
+  text: (
+    <ul>
+      <li>
+        Access to the Mindful Owl Supplements Ingredients Search Directory
+      </li>
+      <li>Use of the Practitioner’s Directory</li>
+      <li>A Team that will be doing the Marketing for you</li>
+      <li>Network Group meet ups</li> <li>Access to daily trending News</li>
+      <li>Access to Newsletters and Supplements Brands Research papers</li>
+    </ul>
+  ),
+  navLink: "/membership",
+};

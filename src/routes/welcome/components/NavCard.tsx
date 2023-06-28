@@ -6,7 +6,7 @@ import { H3, H4, P } from "../../../shared/styles";
 export type NavCardData = {
   title: string;
   subtitle: string;
-  text: string;
+  text: string | JSX.Element;
   navLink: string;
 };
 

@@ -14,6 +14,8 @@ import PaymentPage from "./routes/payment/PaymentPage";
 import BrandsPage from "./routes/brands/BrandsPage";
 import ForgotPassword from "./routes/authentication/components/ForgotPassword";
 import { PaymentSuccessful } from "./routes/payment/PaymentSuccessful";
+import { Container } from "./shared/components/Container";
+import Footer from "./shared/components/Footer";
 
 const App = () => {
   const { currentUser } = useContext(UserContext);
@@ -39,6 +41,9 @@ const App = () => {
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
+      <Container>
+        <Footer />
+      </Container>
     </>
   );
 };
