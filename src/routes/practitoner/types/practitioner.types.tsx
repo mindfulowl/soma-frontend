@@ -1,12 +1,16 @@
 import { MultiSelectOption } from "../../../shared/components/MultiSelect";
 
 export type Practitioner = {
+  id?: string;
   consultation: string;
-  institute: string;
+  university: string;
   email: string;
   phoneNumber: string;
-  discipline: string;
+  url: string;
+  disciplines?: Array<MultiSelectOption>;
   profile: string;
+  registeringBody: string;
+  googlePlaceId?: string;
   healthConcerns?: Array<MultiSelectOption>;
 };
 
@@ -33,8 +37,8 @@ export const practitioner_SIGN_UP_TEXTFIELDS = [
     xs: 12,
   },
   {
-    name: "institute",
-    label: "Institute",
+    name: "university",
+    label: "University",
     type: "text",
     sm: 6,
     xs: 12,

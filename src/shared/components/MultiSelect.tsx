@@ -8,17 +8,18 @@ export type MultiSelectOption = {
 type MultiSelectProps = {
   options?: Array<MultiSelectOption>;
   label: string;
-  currentValue: Array<MultiSelectOption> | null;
+  currentValue: any | null;
   handleChange: (newValue: Array<MultiSelectOption>) => void;
-  required: boolean;
+  required?: boolean;
 };
 
 const MultiSelect = (props: MultiSelectProps) => {
-  const { options, label, handleChange, required } = props;
+  const { options, label, handleChange, required, currentValue } = props;
 
   return (
     <Autocomplete
       multiple
+      defaultValue={currentValue || undefined}
       fullWidth
       onChange={(e, v: Array<MultiSelectOption>) => {
         handleChange(v);

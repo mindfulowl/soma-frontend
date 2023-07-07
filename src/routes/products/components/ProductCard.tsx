@@ -1,6 +1,5 @@
 import { Chip } from "@mui/material";
-import { useState, useCallback } from "react";
-import AWS from "aws-sdk";
+import { useState, useCallback, SyntheticEvent } from "react";
 import styled from "styled-components";
 import { StyledLink } from "../../../shared/components/Link";
 import useWindowResize, {
@@ -82,8 +81,6 @@ const StyledText = styled(P)`
 
 const ProductCard = (props: ProductCardProps) => {
   const { productData } = props;
-  const [downloadedImage, setDownloadedImage] = useState<any>();
-
   const [screenSize, setScreenSize] = useState<WindowSizeEnum>(
     window.innerWidth > Breakpoints.md
       ? WindowSizeEnum.LARGE
@@ -100,12 +97,21 @@ const ProductCard = (props: ProductCardProps) => {
 
   const productImage = require("../../../assets/images/productImage.webp");
 
+  const defaultImage = (ev: SyntheticEvent<HTMLImageElement, Event>) => {
+    return ((
+      ev.target as HTMLImageElement
+    ).src = require("../../../assets/images/productImage.webp"));
+  };
+
   useWindowResize(setSize);
 
   return (
     <CardWrapper>
       {screenSize === WindowSizeEnum.LARGE && (
-        <ImageWrapper src={productImage} />
+        <ImageWrapper
+          src={`https://umus48msmg.execute-api.eu-west-2.amazonaws.com/prod/soma-ui-images?file=${productData.name}.jpg`}
+          onError={defaultImage}
+        />
       )}
       <InnerCardWrapper>
         <StyledHeader>{productData.name}</StyledHeader>

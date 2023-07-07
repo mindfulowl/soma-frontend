@@ -97,8 +97,6 @@ const ProductsPage = () => {
 
   const { currentUser } = useContext(UserContext);
 
-  console.log(practitioners);
-
   const clearFilters = () => {
     setSelectedFilters(null);
     setProductFilterApiParams({});

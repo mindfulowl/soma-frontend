@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Box, Grid, TextField } from "@mui/material";
 import axios from "axios";
 import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
@@ -32,6 +32,7 @@ import CustomSnackbar, {
 } from "../../../shared/components/Snackbar";
 import { showErrorSnackbar } from "../../authentication/utils/auth.utils";
 import { UserContext } from "../../../shared/contexts/UserContext";
+import LoadingProgress from "../../../shared/components/LoadingProgress";
 
 const ButtonContainer = styled.div`
   text-align: center;
@@ -50,17 +51,23 @@ const defaultFormFields = {
   consultation: "",
   email: "",
   phoneNumber: "",
-  discipline: "",
   profile: "",
-  institute: "",
+  university: "",
+  url: "",
+  registeringBody: "",
 };
 
 const PractitionerSignUp = () => {
+  const [currentPractitioner, setCurrentPractitioner] =
+    useState<Practitioner>();
+  const [loading, setLoading] = useState(false);
   const [formFields, setFormFields] = useState<Practitioner>(defaultFormFields);
   const [address, setAddress] = useState("");
   const [fileData, setFileData] = useState<File | null>(null);
   const [snackbarConfig, setSnackbarConfig] = useState<SnackBarConfig>();
   const [practitionerHealthConcerns, setpractitionerHealthConcerns] =
+    useState<Array<MultiSelectOption> | null>(null);
+  const [practitionerDisciplines, setpractitionerDisciplines] =
     useState<Array<MultiSelectOption> | null>(null);
 
   const { currentUser } = useContext(UserContext);
@@ -102,14 +109,69 @@ const PractitionerSignUp = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
+  const updatePractitioner = async () => {
+    const practitionerUpdateInput = {
+      id: currentPractitioner?.id,
+      email: formFields.email || currentPractitioner?.email,
+      phoneNumber: formFields.phoneNumber || currentPractitioner?.phoneNumber,
+      profile: formFields.profile || currentPractitioner?.profile,
+      university: formFields.university || currentPractitioner?.university,
+      url: formFields.url || currentPractitioner?.url,
+      consultation:
+        formFields.consultation || currentPractitioner?.consultation,
+      registeringBody:
+        formFields.registeringBody || currentPractitioner?.registeringBody,
+      imageReference: formFields.email || currentPractitioner?.email,
+      healthConcerns:
+        practitionerHealthConcerns?.map((option) => {
+          return option.name;
+        }) || currentPractitioner?.healthConcerns,
+      disciplines:
+        practitionerDisciplines?.map((option) => {
+          return option.name;
+        }) || currentPractitioner?.disciplines,
+      userId: currentUser?.id,
+      googlePlaceId: address,
+    };
+    await axios.put(
+      `${process.env.REACT_APP_API_BASE_URL}/practitioners`,
+      practitionerUpdateInput,
+      {
+        headers: {
+          Authorization: currentUser?.idToken,
+        },
+      }
+    );
+
+    setSnackbarConfig({
+      message: "You have succesfully updated your details!",
+      type: "success",
+      open: true,
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLDivElement>) => {
     e.preventDefault();
+    if (currentPractitioner) {
+      try {
+        updatePractitioner();
+        return;
+      } catch (error) {
+        setSnackbarConfig(showErrorSnackbar(error.message));
+        return;
+      }
+    }
     try {
       await s3ImageUpload();
       const practitionerSignUpInput = {
         ...formFields,
         imageReference: formFields.email,
-        healthConcerns: ["Test"],
+        healthConcerns: practitionerHealthConcerns?.map((option) => {
+          return option.name;
+        }),
+        disciplines: practitionerDisciplines?.map((option) => {
+          return option.name;
+        }),
         userId: currentUser?.id,
         googlePlaceId: address,
       };
@@ -133,13 +195,43 @@ const PractitionerSignUp = () => {
     }
   };
 
+  const getPractitioner = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/practitioners/${currentUser?.id}`,
+        {
+          headers: {
+            Authorization: currentUser?.idToken,
+          },
+        }
+      );
+      setCurrentPractitioner(res.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getPractitioner();
+  }, [currentUser?.idToken]);
+
+  if (loading) {
+    return <LoadingProgress />;
+  }
+
   return (
     <StyledFormContainer>
       <StyledAvatarWrapper>
         <LocalPharmacyIcon />
       </StyledAvatarWrapper>
 
-      <H2>Practitioner Sign Up</H2>
+      <H2>
+        {currentPractitioner
+          ? "Update Practitioner Details"
+          : "Practitioner Sign Up"}
+      </H2>
       <StyledSubtitleText>
         Upon signing up, users will be able to search for your profile on our
         <StyledLink to="/search-practitioners"> Practitioners Page</StyledLink>
@@ -158,6 +250,10 @@ const PractitionerSignUp = () => {
                   label={field.label}
                   type={field.type}
                   required
+                  defaultValue={
+                    currentPractitioner &&
+                    currentPractitioner[field.name as keyof Practitioner]
+                  }
                   fullWidth
                   onChange={handleFormFieldChange}
                 />
@@ -167,7 +263,9 @@ const PractitionerSignUp = () => {
           <Grid item xs={12} sm={6}>
             <Select
               options={practitioner_CONSULATION_TYPE_OPTIONS}
-              currentValue={formFields.consultation}
+              currentValue={
+                currentPractitioner?.consultation || formFields.consultation
+              }
               onChange={handleFormFieldChange}
               name="consultation"
               label="Consultation Type"
@@ -175,20 +273,25 @@ const PractitionerSignUp = () => {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Select
+            <MultiSelect
               options={practitioner_DISCIPLINE_OPTIONS}
-              onChange={handleFormFieldChange}
-              currentValue={formFields.discipline}
-              name="discipline"
+              handleChange={setpractitionerDisciplines}
+              currentValue={
+                currentPractitioner?.disciplines?.map((option) => {
+                  return { name: option };
+                }) || practitionerDisciplines
+              }
               label="Discipline"
-              required
             />
           </Grid>
           <Grid item xs={12}>
             <Select
               options={practitioner_INSTITUTE_OPTIONS}
               onChange={handleFormFieldChange}
-              currentValue={formFields.institute}
+              currentValue={
+                currentPractitioner?.registeringBody ||
+                formFields.registeringBody
+              }
               name="registeringBody"
               label="Registering Body"
               required
@@ -198,7 +301,13 @@ const PractitionerSignUp = () => {
             <MultiSelect
               required={false}
               options={practitioner_HEALTH_CONCERNS_OPTIONS}
-              currentValue={practitionerHealthConcerns}
+              currentValue={
+                (currentPractitioner &&
+                  currentPractitioner.healthConcerns?.map((option) => {
+                    return { name: option };
+                  })) ||
+                practitionerHealthConcerns
+              }
               handleChange={setpractitionerHealthConcerns}
               label="Offered Health Concerns"
             />
@@ -212,6 +321,7 @@ const PractitionerSignUp = () => {
               required
               placeholder="Summarise the services, or products, you specalise in"
               multiline
+              defaultValue={currentPractitioner && currentPractitioner.profile}
             />
           </Grid>
           <Grid item xs={12}>
@@ -229,7 +339,9 @@ const PractitionerSignUp = () => {
         </Grid>
         <ButtonContainer>
           <StyledFormButton type="submit" variant="outlined" sx={{ mt: 2 }}>
-            Register as a practitioner
+            {currentPractitioner
+              ? "Update Details"
+              : "Register as a practitioner"}
           </StyledFormButton>
         </ButtonContainer>
       </FormWrapper>
