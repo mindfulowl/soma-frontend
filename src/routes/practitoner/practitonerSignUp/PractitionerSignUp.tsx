@@ -278,7 +278,7 @@ const PractitionerSignUp = () => {
               handleChange={setpractitionerDisciplines}
               currentValue={
                 currentPractitioner?.disciplines?.map((option) => {
-                  return { name: option };
+                  return { name: option } as unknown as MultiSelectOption;
                 }) || practitionerDisciplines
               }
               label="Discipline"
@@ -304,7 +304,7 @@ const PractitionerSignUp = () => {
               currentValue={
                 (currentPractitioner &&
                   currentPractitioner.healthConcerns?.map((option) => {
-                    return { name: option };
+                    return { name: option } as unknown as MultiSelectOption;
                   })) ||
                 practitionerHealthConcerns
               }

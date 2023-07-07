@@ -8,7 +8,7 @@ export type MultiSelectOption = {
 type MultiSelectProps = {
   options?: Array<MultiSelectOption>;
   label: string;
-  currentValue: any | null;
+  currentValue: Array<MultiSelectOption> | null;
   handleChange: (newValue: Array<MultiSelectOption>) => void;
   required?: boolean;
 };
