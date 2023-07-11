@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import { Chip, IconButton, Tooltip } from "@mui/material";
 import styled from "styled-components";
 import PersonIcon from "@mui/icons-material/Person";
@@ -50,9 +50,12 @@ const LocationWrapper = styled.div`
 
 const ChipWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
   margin-bottom: var(--spacing-md);
   max-width: 80%;
+`;
+
+const StyledChip = styled(Chip)`
+  margin-left: var(--spacing-xs);
 `;
 
 const StyledImageContainer = styled.img`
@@ -92,33 +95,46 @@ const PractitionerCard = (props: PractitionerCardProps) => {
   const { practitionerData } = props;
   const [currentPractitioner, setCurrentPractitioner] = useState();
 
+  const defaultImage = (ev: SyntheticEvent<HTMLImageElement, Event>) => {
+    return ((
+      ev.target as HTMLImageElement
+    ).src = require("../../../assets/images/healthNewsImage.jpeg"));
+  };
+
   return (
     <CardWrapper>
       <StyledImageContainer
-        src={require("../../../assets/images/healthNewsImage.jpeg")}
+        src={`https://umus48msmg.execute-api.eu-west-2.amazonaws.com/prod/soma-ui-images?file=${practitionerData.email}.jpg`}
+        onError={defaultImage}
       />
 
       <InnerCardWrapper>
         <HeaderWrapper>
-          {/* TODO UPDATE */}
-
-          <StyledHeader>Joshua Da Costa</StyledHeader>
+          <StyledHeader>
+            {practitionerData.firstName + " " + practitionerData.lastName}
+          </StyledHeader>
         </HeaderWrapper>
         <ChipWrapper>
-          {practitionerData?.disciplines?.map((discipline) => {
-            return <Chip label={discipline as unknown as string} />;
+          {practitionerData?.disciplines?.slice(0, 5).map((discipline) => {
+            return <StyledChip label={discipline as unknown as string} />;
           })}
         </ChipWrapper>
         <ChipWrapper>
-          {practitionerData?.healthConcerns?.map((healthConcern) => {
-            return <Chip label={healthConcern as unknown as string} />;
-          })}
+          {practitionerData?.healthConcerns
+            ?.slice(0, 5)
+            .map((healthConcern) => {
+              return <StyledChip label={healthConcern as unknown as string} />;
+            })}
         </ChipWrapper>
 
         <P>{practitionerData.profile}</P>
         <LocationWrapper>
           <StyledLocationIcon />
-          <P>{practitionerData.distance}</P>
+          <P>
+            {Math.floor(Number(practitionerData.distance) * 0.000621371192) +
+              " " +
+              "Miles Away"}
+          </P>
 
           <IconButton color="primary" size="large">
             <Tooltip title={practitionerData.phoneNumber}>
