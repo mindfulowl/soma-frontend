@@ -1,5 +1,6 @@
 import { Chip } from "@mui/material";
-import { useState, useCallback, SyntheticEvent } from "react";
+import axios from "axios";
+import { useState, useCallback, SyntheticEvent, useEffect } from "react";
 import styled from "styled-components";
 import { StyledLink } from "../../../shared/components/Link";
 import useWindowResize, {
@@ -15,6 +16,7 @@ import {
 export type Product = {
   name: string;
   activeIngredients: Array<string>;
+  activeIngredientsWithQuantity: Array<string>;
   inactiveIngredients: Array<string>;
   healthConcerns: Array<string>;
   url: string;
@@ -33,8 +35,8 @@ const ImageWrapper = styled.img`
   width: 100%;
   @media ${screenMdMin} {
     margin-top: 0;
-    height: 70%;
-    max-width: 25%;
+    height: 80%;
+    max-width: 35%;
   }
 `;
 
@@ -81,6 +83,7 @@ const StyledText = styled(P)`
 
 const ProductCard = (props: ProductCardProps) => {
   const { productData } = props;
+  const [downloadedImage, setDownloadedImage] = useState();
   const [screenSize, setScreenSize] = useState<WindowSizeEnum>(
     window.innerWidth > Breakpoints.md
       ? WindowSizeEnum.LARGE
@@ -94,8 +97,6 @@ const ProductCard = (props: ProductCardProps) => {
       setScreenSize(WindowSizeEnum.SMALL);
     }
   }, []);
-
-  const productImage = require("../../../assets/images/productImage.webp");
 
   const defaultImage = (ev: SyntheticEvent<HTMLImageElement, Event>) => {
     return ((
@@ -118,8 +119,10 @@ const ProductCard = (props: ProductCardProps) => {
         <StyledTextWrapper>
           <StyledSubtitle bold>Active Ingredients:</StyledSubtitle> &nbsp;
           <StyledText>
-            {productData.activeIngredients.length > 0 &&
-              productData.activeIngredients.map((name) => name).join(", ")}
+            {productData.activeIngredientsWithQuantity.length > 0 &&
+              productData.activeIngredientsWithQuantity
+                .map((name) => name)
+                .join(", ")}
           </StyledText>
         </StyledTextWrapper>
         <StyledTextWrapper>
@@ -132,26 +135,45 @@ const ProductCard = (props: ProductCardProps) => {
         </StyledTextWrapper>
         <StyledTextWrapper>
           <StyledSubtitle bold>Health Concerns: </StyledSubtitle> &nbsp;
-          <StyledText>
+          {productData.healthConcerns.length === 0
+            ? "N/A"
+            : productData.healthConcerns
+                .slice(0, 5)
+                .filter((healthConcern) => healthConcern.length > 1)
+                .map((healthConcern, i) => (
+                  <HealthConcernWrapper>
+                    <StyledChip label={healthConcern} key={i} />
+                    &nbsp;
+                  </HealthConcernWrapper>
+                ))}
+        </StyledTextWrapper>
+
+        {productData.healthConcerns.length > 5 && (
+          <StyledTextWrapper>
+            <StyledSubtitle bold>Health Concerns Cont. </StyledSubtitle> &nbsp;
             {productData.healthConcerns.length === 0
               ? "N/A"
               : productData.healthConcerns
-                  .slice(0, 5)
+                  .slice(6, productData.healthConcerns.length)
+                  .filter((healthConcern) => healthConcern.length > 1)
                   .map((healthConcern, i) => (
                     <HealthConcernWrapper>
                       <StyledChip label={healthConcern} key={i} />
                       &nbsp;
                     </HealthConcernWrapper>
                   ))}
-          </StyledText>
-        </StyledTextWrapper>
+          </StyledTextWrapper>
+        )}
 
         <StyledLink to={productData.url} target="_blank">
           Go To Product
         </StyledLink>
       </InnerCardWrapper>
       {screenSize === WindowSizeEnum.SMALL && (
-        <ImageWrapper src={productData.image ?? productImage} />
+        <ImageWrapper
+          src={`https://umus48msmg.execute-api.eu-west-2.amazonaws.com/prod/soma-ui-images?file=${productData.name}.jpg`}
+          onError={defaultImage}
+        />
       )}
     </CardWrapper>
   );

@@ -22,6 +22,7 @@ import NotAMemberCard from "./components/NotAMember";
 export const FILTER_BUTTON_DATA = [
   { name: "Product Name", apiKey: "name" },
   { name: "Brand", apiKey: "brands" },
+  { name: "Categories", apiKey: "categories" },
   { name: "Active Ingredients", apiKey: "activeIngredients" },
   { name: "Inactive Ingredients", apiKey: "inactiveIngredients" },
   { name: "Health Concerns", apiKey: "healthConcerns" },

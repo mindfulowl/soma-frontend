@@ -12,6 +12,7 @@ export type Practitioner = {
   registeringBody: string;
   googlePlaceId?: string;
   healthConcerns?: Array<MultiSelectOption>;
+  distance?: string;
 };
 
 export const practitioner_SIGN_UP_TEXTFIELDS = [
