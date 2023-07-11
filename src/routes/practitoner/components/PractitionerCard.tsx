@@ -1,19 +1,11 @@
+import { useEffect, useState } from "react";
 import { Chip, IconButton, Tooltip } from "@mui/material";
 import styled from "styled-components";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { H3, H4, P, screenMdMin } from "../../../shared/styles";
-
-export type Practitioner = {
-  name: string;
-  profile: string;
-  discipline: string;
-  distance: string;
-  healthConcerns: Array<string>;
-  number: string;
-  email: string;
-};
+import { H3, P, screenMdMin } from "../../../shared/styles";
+import { Practitioner } from "../types/practitioner.types";
 
 type PractitionerCardProps = {
   practitionerData: Practitioner;
@@ -27,7 +19,6 @@ const CardWrapper = styled.div`
   @media ${screenMdMin} {
     display: flex;
     align-items: center;
-    height: 400px;
   }
 `;
 
@@ -41,6 +32,7 @@ const HeaderWrapper = styled.div`
   flex-direction: column;
   @media ${screenMdMin} {
     flex-direction: row;
+    margin-bottom: var(--spacing-md);
   }
 `;
 
@@ -60,7 +52,7 @@ const ChipWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: var(--spacing-md);
-  width: 35%;
+  max-width: 80%;
 `;
 
 const StyledImageContainer = styled.img`
@@ -73,11 +65,6 @@ const StyledImageContainer = styled.img`
     width: 30%;
     height: 100%;
   }
-`;
-
-const StyledText = styled(H4)`
-  color: var(--color-gold-font);
-  margin-bottom: var(--spacing-sm);
 `;
 
 const StyledIconBackdrop = styled.span`
@@ -103,6 +90,8 @@ const StyledLocationIcon = styled(LocationOnIcon)`
 
 const PractitionerCard = (props: PractitionerCardProps) => {
   const { practitionerData } = props;
+  const [currentPractitioner, setCurrentPractitioner] = useState();
+
   return (
     <CardWrapper>
       <StyledImageContainer
@@ -111,29 +100,18 @@ const PractitionerCard = (props: PractitionerCardProps) => {
 
       <InnerCardWrapper>
         <HeaderWrapper>
-          <StyledHeader>{practitionerData.name}</StyledHeader>
-          <div>
-            <IconButton color="primary" size="large">
-              <Tooltip title={practitionerData.number}>
-                <StyledIconBackdrop>
-                  <StyledPhoneIcon />
-                </StyledIconBackdrop>
-              </Tooltip>
-            </IconButton>
-            <IconButton color="primary" size="large">
-              <Tooltip title={practitionerData.email}>
-                <StyledIconBackdrop>
-                  <StyledPersonIcon />
-                </StyledIconBackdrop>
-              </Tooltip>
-            </IconButton>
-          </div>
-        </HeaderWrapper>
+          {/* TODO UPDATE */}
 
-        <StyledText bold>{practitionerData.discipline}</StyledText>
+          <StyledHeader>Joshua Da Costa</StyledHeader>
+        </HeaderWrapper>
         <ChipWrapper>
-          {practitionerData.healthConcerns.map((healthConcern) => {
-            return <Chip label={healthConcern} />;
+          {practitionerData?.disciplines?.map((discipline) => {
+            return <Chip label={discipline as unknown as string} />;
+          })}
+        </ChipWrapper>
+        <ChipWrapper>
+          {practitionerData?.healthConcerns?.map((healthConcern) => {
+            return <Chip label={healthConcern as unknown as string} />;
           })}
         </ChipWrapper>
 
@@ -141,6 +119,21 @@ const PractitionerCard = (props: PractitionerCardProps) => {
         <LocationWrapper>
           <StyledLocationIcon />
           <P>{practitionerData.distance}</P>
+
+          <IconButton color="primary" size="large">
+            <Tooltip title={practitionerData.phoneNumber}>
+              <StyledIconBackdrop>
+                <StyledPhoneIcon />
+              </StyledIconBackdrop>
+            </Tooltip>
+          </IconButton>
+          <IconButton color="primary" size="large">
+            <Tooltip title={practitionerData.email}>
+              <StyledIconBackdrop>
+                <StyledPersonIcon />
+              </StyledIconBackdrop>
+            </Tooltip>
+          </IconButton>
         </LocationWrapper>
       </InnerCardWrapper>
     </CardWrapper>

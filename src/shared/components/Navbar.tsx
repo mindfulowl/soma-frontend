@@ -91,7 +91,7 @@ const Navbar = () => {
         </StyledLink>
         {currentUser && screenSize === WindowSizeEnum.LARGE && (
           <StyledPracButton variant="outlined" onClick={navToPracSignUp}>
-            Become A Practitioner
+            Practitioner Area
           </StyledPracButton>
         )}
       </Wrapper>

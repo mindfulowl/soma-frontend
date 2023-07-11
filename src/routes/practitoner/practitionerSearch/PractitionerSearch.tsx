@@ -16,6 +16,7 @@ import { removeNullProperties } from "../../products/product.utils";
 import axios from "axios";
 import { UserContext } from "../../../shared/contexts/UserContext";
 import {
+  Practitioner,
   practitioner_CONSULATION_TYPE_OPTIONS,
   practitioner_DISCIPLINE_OPTIONS,
   practitioner_HEALTH_CONCERNS_OPTIONS,
@@ -134,22 +135,29 @@ const ProductsPage = () => {
     const input = removeNullProperties({
       ...productFilterApiParams,
     });
-
-    const newPractitionerList = await axios.post(
-      `${process.env.REACT_APP_API_BASE_URL}/practitioners/search`,
-      input,
-      {
-        headers: {
-          Authorization: currentUser?.idToken,
-        },
-      }
-    );
-    setPractitioners(newPractitionerList.data);
+    try {
+      const newPractitionerList = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/practitioners/search`,
+        input,
+        {
+          headers: {
+            Authorization: currentUser?.idToken,
+          },
+        }
+      );
+      setPractitioners(newPractitionerList.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  console.log(currentUser?.idToken);
 
   useEffect(() => {
     getPractitioners();
   }, [productFilterApiParams, currentUser?.idToken]);
+
+  console.log(practitioners);
 
   return (
     <PageWrapper>
@@ -179,7 +187,7 @@ const ProductsPage = () => {
         </>
       )}
       <ProductsWrapper>
-        {FAKE_PRACTITIONER_DATA.map((practitioner) => {
+        {practitioners.map((practitioner: Practitioner) => {
           return <PractitionerCard practitionerData={practitioner} />;
         })}
       </ProductsWrapper>
