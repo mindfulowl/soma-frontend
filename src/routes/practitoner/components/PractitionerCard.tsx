@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent } from "react";
 import { Chip, IconButton, Tooltip } from "@mui/material";
 import styled from "styled-components";
 import PersonIcon from "@mui/icons-material/Person";
@@ -93,7 +93,6 @@ const StyledLocationIcon = styled(LocationOnIcon)`
 
 const PractitionerCard = (props: PractitionerCardProps) => {
   const { practitionerData } = props;
-  const [currentPractitioner, setCurrentPractitioner] = useState();
 
   const defaultImage = (ev: SyntheticEvent<HTMLImageElement, Event>) => {
     return ((
@@ -104,7 +103,7 @@ const PractitionerCard = (props: PractitionerCardProps) => {
   return (
     <CardWrapper>
       <StyledImageContainer
-        src={`https://umus48msmg.execute-api.eu-west-2.amazonaws.com/prod/soma-ui-images?file=${practitionerData.email}.jpg`}
+        src={`https://practitioner-images.s3.eu-west-2.amazonaws.com/${practitionerData.imageReference}`}
         onError={defaultImage}
       />
 

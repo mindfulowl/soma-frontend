@@ -151,13 +151,9 @@ const ProductsPage = () => {
     }
   };
 
-  console.log(currentUser?.idToken);
-
   useEffect(() => {
     getPractitioners();
   }, [productFilterApiParams, currentUser?.idToken]);
-
-  console.log(practitioners);
 
   return (
     <PageWrapper>

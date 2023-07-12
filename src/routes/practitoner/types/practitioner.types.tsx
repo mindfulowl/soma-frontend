@@ -9,6 +9,7 @@ export type Practitioner = {
   url: string;
   disciplines?: Array<MultiSelectOption>;
   profile: string;
+  imageReference?: string;
   registeringBody: string;
   googlePlaceId?: string;
   healthConcerns?: Array<MultiSelectOption>;

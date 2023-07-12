@@ -65,6 +65,7 @@ const PractitionerSignUp = () => {
   const [address, setAddress] = useState("");
   const [fileData, setFileData] = useState<File | null>(null);
   const [snackbarConfig, setSnackbarConfig] = useState<SnackBarConfig>();
+  const [imageRef, setImageRef] = useState();
   const [practitionerHealthConcerns, setpractitionerHealthConcerns] =
     useState<Array<MultiSelectOption> | null>(null);
   const [practitionerDisciplines, setpractitionerDisciplines] =
@@ -86,19 +87,15 @@ const PractitionerSignUp = () => {
 
   const s3ImageUpload = async () => {
     try {
-      if (fileData) {
-        await axios.put(
-          `${process.env.REACT_APP_IMAGE_UPLOAD}/${formFields.email}.jpeg`,
-          fileData,
-          {
-            headers: {
-              Authorization: `${currentUser?.idToken}`,
-            },
-          }
-        );
-      }
+      const response = await axios({
+        method: "GET",
+        url: "https://npeg772hh6.execute-api.eu-west-2.amazonaws.com/default/upload-prac-images",
+      });
+      setImageRef(response.data.Key);
+      setTimeout(() => console.log("sad", 1000));
+      await axios.put(response.data.uploadURL, fileData);
     } catch (error) {
-      setSnackbarConfig(showErrorSnackbar(error.message));
+      console.log("error", error);
     }
   };
 
@@ -110,6 +107,7 @@ const PractitionerSignUp = () => {
   };
 
   const updatePractitioner = async () => {
+    await s3ImageUpload();
     const practitionerUpdateInput = {
       id: currentPractitioner?.id,
       email: formFields.email || currentPractitioner?.email,
@@ -121,7 +119,7 @@ const PractitionerSignUp = () => {
         formFields.consultation || currentPractitioner?.consultation,
       registeringBody:
         formFields.registeringBody || currentPractitioner?.registeringBody,
-      imageReference: formFields.email || currentPractitioner?.email,
+      imageReference: imageRef || currentPractitioner?.imageReference,
       healthConcerns:
         practitionerHealthConcerns?.map((option) => {
           return option.name;
@@ -165,7 +163,7 @@ const PractitionerSignUp = () => {
       await s3ImageUpload();
       const practitionerSignUpInput = {
         ...formFields,
-        imageReference: formFields.email,
+        imageReference: imageRef,
         healthConcerns: practitionerHealthConcerns?.map((option) => {
           return option.name;
         }),
@@ -321,7 +319,7 @@ const PractitionerSignUp = () => {
               required
               placeholder="Summarise the services, or products, you specalise in"
               multiline
-              defaultValue={currentPractitioner && currentPractitioner.profile}
+              defaultValue={currentPractitioner?.profile}
             />
           </Grid>
           <Grid item xs={12}>
