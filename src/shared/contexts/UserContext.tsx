@@ -21,7 +21,7 @@ export const amplifyConfig = Amplify.configure({
   oauth: {
     domain: process.env.REACT_APP_COGNITO_DOMAIN,
     scope: ["email", "openid", "profile"],
-    redirectSignIn: `${process.env.REACT_APP_FE_BASE_URL}/welcome`,
+    redirectSignIn: `${process.env.REACT_APP_FE_BASE_URL}`,
     redirectSignOut: `${process.env.REACT_APP_FE_BASE_URL}/sign-in`,
     responseType: "code",
   },

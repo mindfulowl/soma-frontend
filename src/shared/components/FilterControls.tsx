@@ -4,6 +4,7 @@ import styled from "styled-components";
 import MultiSelect, { MultiSelectOption } from "./MultiSelect";
 
 export type FilterOptions = {
+  adult?: Array<MultiSelectOption>;
   activeIngredients?: Array<MultiSelectOption>;
   allergens?: Array<MultiSelectOption>;
   brands?: Array<MultiSelectOption>;
@@ -54,7 +55,15 @@ const FilterControls = (props: FilterControlsProps) => {
 
   return (
     <Wrapper>
-      {filterName !== "Product Name" ? (
+      {filterName !== "Product Name" && filterName === "Adult" ? (
+        <MultiSelect
+          options={[{ name: "True" }, { name: "False" }]}
+          required={false}
+          currentValue={null}
+          handleChange={setSelectedFilterValues}
+          label={filterName}
+        />
+      ) : filterName !== "Product Name" && filterName !== "Adult" ? (
         <MultiSelect
           options={filterOptions[filterApiKey as keyof FilterOptions]}
           required={false}
