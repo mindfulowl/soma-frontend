@@ -22,7 +22,7 @@ const WelcomePage = () => {
   return (
     <>
       <ImageContainer
-        src={require("../../assets/images/mindfulOwlImage.jpg")}
+        src={require("../../assets/images/mindfulOwlWithText.png")}
       />
 
       <NavCardWrapper>

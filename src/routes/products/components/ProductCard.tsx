@@ -35,7 +35,7 @@ const ImageWrapper = styled.img`
   width: 100%;
   @media ${screenMdMin} {
     margin-top: 0;
-    height: 80%;
+    height: 60%;
     max-width: 35%;
   }
 `;

@@ -4,13 +4,21 @@ import styled from "styled-components";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { H3, P, screenMdMin } from "../../../shared/styles";
+import LanguageIcon from "@mui/icons-material/Language";
+import { H3, H5, P, screenMdMin } from "../../../shared/styles";
 import { Practitioner } from "../types/practitioner.types";
 
 type PractitionerCardProps = {
   practitionerData: Practitioner;
 };
-
+const StyledSubtitle = styled(H5)`
+  font-size: var(--font-size-small);
+  @media ${screenMdMin} {
+    font-size: var(--font-size-mobile);
+    max-width: 75px;
+    margin-top: var(--spacing-xs);
+  }
+`;
 const CardWrapper = styled.div`
   background-color: var(--color-white);
   border-radius: var(--border-radius);
@@ -66,7 +74,7 @@ const StyledImageContainer = styled.img`
   @media ${screenMdMin} {
     border-radius: 100px;
     width: 30%;
-    height: 100%;
+    height: 70%;
   }
 `;
 
@@ -91,6 +99,16 @@ const StyledLocationIcon = styled(LocationOnIcon)`
   font-size: 35px;
 `;
 
+const StyledUrlIcon = styled(LanguageIcon)`
+  font-size: 35px;
+  margin-top: var(--spacing-xs);
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  margin-bottom: var(--spacing-md);
+`;
+
 const PractitionerCard = (props: PractitionerCardProps) => {
   const { practitionerData } = props;
 
@@ -113,18 +131,27 @@ const PractitionerCard = (props: PractitionerCardProps) => {
             {practitionerData.firstName + " " + practitionerData.lastName}
           </StyledHeader>
         </HeaderWrapper>
-        <ChipWrapper>
-          {practitionerData?.disciplines?.slice(0, 5).map((discipline) => {
-            return <StyledChip label={discipline as unknown as string} />;
-          })}
-        </ChipWrapper>
-        <ChipWrapper>
-          {practitionerData?.healthConcerns
-            ?.slice(0, 5)
-            .map((healthConcern) => {
-              return <StyledChip label={healthConcern as unknown as string} />;
+        <Wrapper>
+          {" "}
+          <StyledSubtitle bold>Disciplines</StyledSubtitle> &nbsp;{" "}
+          <ChipWrapper>
+            {practitionerData?.disciplines?.slice(0, 5).map((discipline) => {
+              return <StyledChip label={discipline as unknown as string} />;
             })}
-        </ChipWrapper>
+          </ChipWrapper>
+        </Wrapper>
+        <Wrapper>
+          <StyledSubtitle bold>Health Concerns</StyledSubtitle> &nbsp;{" "}
+          <ChipWrapper>
+            {practitionerData?.healthConcerns
+              ?.slice(0, 5)
+              .map((healthConcern) => {
+                return (
+                  <StyledChip label={healthConcern as unknown as string} />
+                );
+              })}
+          </ChipWrapper>
+        </Wrapper>
 
         <P>{practitionerData.profile}</P>
         <LocationWrapper>
@@ -146,6 +173,13 @@ const PractitionerCard = (props: PractitionerCardProps) => {
             <Tooltip title={practitionerData.email}>
               <StyledIconBackdrop>
                 <StyledPersonIcon />
+              </StyledIconBackdrop>
+            </Tooltip>
+          </IconButton>
+          <IconButton color="primary" size="large">
+            <Tooltip title={practitionerData.url}>
+              <StyledIconBackdrop>
+                <StyledUrlIcon />
               </StyledIconBackdrop>
             </Tooltip>
           </IconButton>
