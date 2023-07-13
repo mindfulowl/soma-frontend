@@ -155,12 +155,19 @@ const PractitionerCard = (props: PractitionerCardProps) => {
 
         <P>{practitionerData.profile}</P>
         <LocationWrapper>
-          <StyledLocationIcon />
-          <P>
-            {Math.floor(Number(practitionerData.distance) * 0.000621371192) +
-              " " +
-              "Miles Away"}
-          </P>
+          {practitionerData?.distance && (
+            <>
+              <StyledLocationIcon />
+
+              <P>
+                {Math.floor(
+                  Number(practitionerData.distance) * 0.000621371192
+                ) +
+                  " " +
+                  "Miles Away"}
+              </P>
+            </>
+          )}
 
           <IconButton color="primary" size="large">
             <Tooltip title={practitionerData.phoneNumber}>
