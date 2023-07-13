@@ -154,8 +154,6 @@ const ProductsPage = () => {
     setFilterOptions(filters);
   };
 
-  console.log(filterOptions);
-
   useEffect(() => {
     getProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps

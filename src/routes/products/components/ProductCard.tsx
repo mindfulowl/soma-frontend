@@ -1,6 +1,5 @@
 import { Chip } from "@mui/material";
-import axios from "axios";
-import { useState, useCallback, SyntheticEvent, useEffect } from "react";
+import { useState, useCallback, SyntheticEvent } from "react";
 import styled from "styled-components";
 import { StyledLink } from "../../../shared/components/Link";
 import useWindowResize, {
@@ -20,7 +19,7 @@ export type Product = {
   inactiveIngredients: Array<string>;
   healthConcerns: Array<string>;
   url: string;
-  image: string;
+  image?: string;
 };
 
 type ProductCardProps = {
@@ -83,7 +82,6 @@ const StyledText = styled(P)`
 
 const ProductCard = (props: ProductCardProps) => {
   const { productData } = props;
-  const [downloadedImage, setDownloadedImage] = useState();
   const [screenSize, setScreenSize] = useState<WindowSizeEnum>(
     window.innerWidth > Breakpoints.md
       ? WindowSizeEnum.LARGE
@@ -110,7 +108,7 @@ const ProductCard = (props: ProductCardProps) => {
     <CardWrapper>
       {screenSize === WindowSizeEnum.LARGE && (
         <ImageWrapper
-          src={`https://umus48msmg.execute-api.eu-west-2.amazonaws.com/prod/soma-ui-images?file=${productData.name}.jpg`}
+          src={`https://product-card-images.s3.eu-west-2.amazonaws.com/${productData.image}.jpg`}
           onError={defaultImage}
         />
       )}
