@@ -76,15 +76,6 @@ const NewsCard = (props: NewsCardProps) => {
           Link to Article
         </StyledLink>
       </div>
-      <ImageWrapper
-        src={
-          articleType === NewsOptionsEnum.NUTRITION
-            ? require("../../../assets/images/nutritionNewsImage.jpeg")
-            : articleType === NewsOptionsEnum.HEALTH
-            ? require("../../../assets/images/healthNewsImage.jpeg")
-            : require("../../../assets/images/pharamcuticalsNewsImage.jpeg")
-        }
-      />
     </CardWrapper>
   );
 };

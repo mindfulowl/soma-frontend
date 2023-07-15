@@ -232,7 +232,7 @@ const PractitionerSignUp = () => {
       </H2>
       <StyledSubtitleText>
         Upon signing up, users will be able to search for your profile on our
-        <StyledLink to="/search-practitioners"> Practitioners Page</StyledLink>
+        <StyledLink to="/practitioner-search"> Practitioners Page</StyledLink>
       </StyledSubtitleText>
       <FormWrapper
         component="form"

@@ -53,6 +53,11 @@ const FilterControls = (props: FilterControlsProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productNameFilter, filterApiKey]);
 
+  console.log(
+    "sdaf",
+    filterOptions.pregnancyFriendlyFlags?.filter((filter) => filter.name)
+  );
+
   return (
     <Wrapper>
       {filterName !== "Product Name" && filterName === "Adult" ? (
@@ -65,7 +70,9 @@ const FilterControls = (props: FilterControlsProps) => {
         />
       ) : filterName !== "Product Name" && filterName !== "Adult" ? (
         <MultiSelect
-          options={filterOptions[filterApiKey as keyof FilterOptions]}
+          options={filterOptions[filterApiKey as keyof FilterOptions]?.filter(
+            (filter) => filter.name
+          )}
           required={false}
           currentValue={null}
           handleChange={setSelectedFilterValues}

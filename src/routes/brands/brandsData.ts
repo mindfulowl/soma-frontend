@@ -24,7 +24,7 @@ export const BRANDS_DATA: Array<Brand> = [
     title: "Hifas da Terra",
     profile:
       "Hifas da Terra (HdT) is the leading multinational biotech company in the development of medicinal mushroom-based products for human health. Our expertise is based on more than 20 years of experience researching and studying medicinal mushrooms' clinical applications. We use biotechnology, innovation and ecology to develop products and improve health and well-being worldwide. We are committed to Research and Development (R&D) and allocate 62% of our profits to R&D (currently more than 15 active human studies), including clinical trials, mainly in gastroenterology, oncology, immunology, the musculoskeletal.",
-    link: "https://healf.com/",
+    link: "https://hifasdaterra.com/en/",
     image: require("../../assets/images/healf.png"),
   },
 
