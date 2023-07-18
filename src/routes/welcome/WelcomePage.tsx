@@ -1,7 +1,16 @@
+import { useState, useCallback } from "react";
 import styled from "styled-components";
-import { screenMdMin } from "../../shared/styles";
+import useWindowResize, {
+  WindowSizeEnum,
+  Dimensions,
+} from "../../shared/hooks/useWindowResize";
+import { Breakpoints, screenMdMin } from "../../shared/styles";
 import NavCard from "./components/NavCard";
-import { MEMBERSHIP_DATA, NAV_CARD_DATA } from "./types/welcome.types";
+import {
+  MEMBERSHIP_DATA,
+  NAV_CARD_DATA,
+  PRACTITIONER_MOBILE,
+} from "./types/welcome.types";
 
 const ImageContainer = styled.img`
   max-height: 80vh;
@@ -19,11 +28,30 @@ export const NavCardWrapper = styled.div`
 `;
 
 const WelcomePage = () => {
+  const [screenSize, setScreenSize] = useState<WindowSizeEnum>(
+    window.innerWidth > Breakpoints.md
+      ? WindowSizeEnum.LARGE
+      : WindowSizeEnum.SMALL
+  );
+
+  const setSize = useCallback((dimensions: Dimensions) => {
+    if (dimensions.width > Breakpoints.md) {
+      setScreenSize(WindowSizeEnum.LARGE);
+    } else {
+      setScreenSize(WindowSizeEnum.SMALL);
+    }
+  }, []);
+
+  useWindowResize(setSize);
   return (
     <>
       <ImageContainer
         src={require("../../assets/images/mindfulOwlWithText.png")}
       />
+
+      {screenSize === WindowSizeEnum.SMALL && (
+        <NavCard navCardData={PRACTITIONER_MOBILE} />
+      )}
 
       <NavCardWrapper>
         {NAV_CARD_DATA.map((navCardData) => {

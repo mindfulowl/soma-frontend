@@ -169,7 +169,7 @@ const ProductCard = (props: ProductCardProps) => {
       </InnerCardWrapper>
       {screenSize === WindowSizeEnum.SMALL && (
         <ImageWrapper
-          src={`https://umus48msmg.execute-api.eu-west-2.amazonaws.com/prod/soma-ui-images?file=${productData.name}.jpg`}
+          src={`https://product-card-images.s3.eu-west-2.amazonaws.com/${productData.image}.jpg`}
           onError={defaultImage}
         />
       )}

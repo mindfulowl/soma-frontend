@@ -60,3 +60,16 @@ export const MEMBERSHIP_DATA = {
   ),
   navLink: "/membership",
 };
+
+export const PRACTITIONER_MOBILE = {
+  title: "Become A Practitioner",
+  subtitle: "Acccessible to All",
+  text: (
+    <div>
+      If you are a practitioner who would like to be publicly displayed on our
+      platform then click on the link below to create a profile
+      <br /> <br />
+    </div>
+  ),
+  navLink: "/practitioner-sign-up",
+};
