@@ -170,21 +170,21 @@ const PractitionerCard = (props: PractitionerCardProps) => {
           )}
 
           <IconButton color="primary" size="large">
-            <Tooltip title={practitionerData.phoneNumber}>
+            <Tooltip title={practitionerData.phoneNumber} enterTouchDelay={0}>
               <StyledIconBackdrop>
                 <StyledPhoneIcon />
               </StyledIconBackdrop>
             </Tooltip>
           </IconButton>
           <IconButton color="primary" size="large">
-            <Tooltip title={practitionerData.email}>
+            <Tooltip title={practitionerData.email} enterTouchDelay={0}>
               <StyledIconBackdrop>
                 <StyledPersonIcon />
               </StyledIconBackdrop>
             </Tooltip>
           </IconButton>
           <IconButton color="primary" size="large">
-            <Tooltip title={practitionerData.url}>
+            <Tooltip title={practitionerData.url} enterTouchDelay={0}>
               <StyledIconBackdrop>
                 <StyledUrlIcon />
               </StyledIconBackdrop>
