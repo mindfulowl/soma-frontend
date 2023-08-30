@@ -77,14 +77,6 @@ const PractitionerSignUp = () => {
     setSnackbarConfig({ ...snackbarConfig, open: false });
   };
 
-  const setFile = (file: File) => {
-    setFileData(file);
-  };
-
-  const resetFile = () => {
-    setFileData(null);
-  };
-
   const s3ImageUpload = async () => {
     try {
       const response = await axios({
@@ -92,11 +84,18 @@ const PractitionerSignUp = () => {
         url: "https://npeg772hh6.execute-api.eu-west-2.amazonaws.com/default/upload-prac-images",
       });
       setImageRef(response.data.Key);
-      setTimeout(() => console.log("sad", 1000));
       await axios.put(response.data.uploadURL, fileData);
     } catch (error) {
       console.log("error", error);
     }
+  };
+
+  const setFile = (file: File) => {
+    setFileData(file);
+  };
+
+  const resetFile = () => {
+    setFileData(null);
   };
 
   const handleFormFieldChange = (
@@ -107,7 +106,6 @@ const PractitionerSignUp = () => {
   };
 
   const updatePractitioner = async () => {
-    await s3ImageUpload();
     const practitionerUpdateInput = {
       id: currentPractitioner?.id,
       email: formFields.email || currentPractitioner?.email,
@@ -160,7 +158,6 @@ const PractitionerSignUp = () => {
       }
     }
     try {
-      await s3ImageUpload();
       const practitionerSignUpInput = {
         ...formFields,
         imageReference: imageRef,
@@ -214,6 +211,10 @@ const PractitionerSignUp = () => {
   useEffect(() => {
     getPractitioner();
   }, [currentUser?.idToken]);
+
+  useEffect(() => {
+    s3ImageUpload();
+  }, [fileData]);
 
   if (loading) {
     return <LoadingProgress />;

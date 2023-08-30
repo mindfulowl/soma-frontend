@@ -1,5 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import styled from "styled-components";
+import { UserContext } from "../../shared/contexts/UserContext";
 import useWindowResize, {
   WindowSizeEnum,
   Dimensions,
@@ -34,6 +35,8 @@ const WelcomePage = () => {
       : WindowSizeEnum.SMALL
   );
 
+  const { currentUser } = useContext(UserContext);
+
   const setSize = useCallback((dimensions: Dimensions) => {
     if (dimensions.width > Breakpoints.md) {
       setScreenSize(WindowSizeEnum.LARGE);
@@ -43,6 +46,8 @@ const WelcomePage = () => {
   }, []);
 
   useWindowResize(setSize);
+
+  console.log(currentUser);
   return (
     <>
       <ImageContainer

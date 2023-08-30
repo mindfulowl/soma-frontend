@@ -121,7 +121,7 @@ const PractitionerCard = (props: PractitionerCardProps) => {
   return (
     <CardWrapper>
       <StyledImageContainer
-        src={`https://practitioner-images.s3.eu-west-2.amazonaws.com/${practitionerData.imageReference}`}
+        src={`https://practitioner-images.s3.eu-west-2.amazonaws.com/${practitionerData?.imageReference}`}
         onError={defaultImage}
       />
 
