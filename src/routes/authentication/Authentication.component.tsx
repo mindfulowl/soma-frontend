@@ -244,7 +244,7 @@ const Authentication = () => {
             userNotConfirmed={userNotConfirmed}
             handleResendVerificationCode={handleResendVerificationCode}
           />
-          <GoogleSignIn />
+          {/* <GoogleSignIn /> */}
         </>
       ) : authType === AuthEnum.SIGN_UP ? (
         <FormWrapper

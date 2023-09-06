@@ -83,6 +83,7 @@ const PaymentPage = () => {
       setClientSecret(res.data.clientSecret);
       setPaymentIntentId(res.data.paymentIntentId);
     } catch (error) {
+      console.log(error);
       setSnackbarConfig(showErrorSnackbar(error.message));
     }
   };

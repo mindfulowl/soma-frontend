@@ -23,9 +23,9 @@ const App = () => {
   return (
     <>
       <Navbar />
-      <CompleteRegistrationModal
+      {/* <CompleteRegistrationModal
         open={currentUser?.hasCompletedRegistration === false}
-      />
+      /> */}
       <Routes>
         <Route path="/" element={<WelcomePage />} />
         {["/sign-in", "/sign-up", "/verification"].map((path, index) => (
